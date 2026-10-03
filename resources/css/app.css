@@ -1,77 +1,85 @@
-@import "tailwindcss" theme(static);
+@import 'tailwindcss' theme(static);
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
 
 @font-face {
-  font-family: "Inter";
-  src: url("../fonts/InterVariable.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
+	font-family: 'Inter';
+	src: url('../fonts/InterVariable.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
 }
 
 @theme {
-  --color-nova-ink: #171714;
-  --color-nova-text: #383834;
-  --color-nova-muted: #777771;
-  --color-nova-line: #deddd8;
-  --color-nova-background: #f8f7f3;
-  --color-nova-white: #ffffff;
+	--color-nova-ink: #171714;
+	--color-nova-text: #383834;
+	--color-nova-muted: #777771;
+	--color-nova-line: #deddd8;
+	--color-nova-background: #f8f7f3;
+	--color-nova-white: #ffffff;
 
-  --font-sans: "Inter", sans-serif;
-  --font-serif: "Georgia", "Times New Roman", serif;
+	--font-sans: 'Inter', sans-serif;
+	--font-serif: 'Georgia', 'Times New Roman', serif;
 }
 
 @layer base {
-  body {
-    @apply bg-nova-background font-sans text-nova-ink;
-  }
+	body {
+		@apply bg-nova-background font-sans text-nova-ink;
+	}
 }
 
 @layer components {
-  .project-content {
-    @apply text-base leading-8 text-nova-text;
-  }
+	.project-content {
+		@apply text-base leading-8 text-nova-text;
+	}
 
-  .project-content > * + * {
-    @apply mt-6;
-  }
+	.project-content > * + * {
+		@apply mt-6;
+	}
 
-  .project-content h2 {
-    @apply mt-12 font-serif text-3xl leading-tight text-nova-ink;
-  }
+	.project-content h2 {
+		@apply mt-12 font-serif text-3xl leading-tight text-nova-ink;
+	}
 
-  .project-content h3 {
-    @apply mt-10 font-serif text-2xl leading-tight text-nova-ink;
-  }
+	.project-content h3 {
+		@apply mt-10 font-serif text-2xl leading-tight text-nova-ink;
+	}
 
-  .project-content p {
-    @apply leading-8;
-  }
+	.project-content p {
+		@apply leading-8;
+	}
 
-  .project-content ul,
-  .project-content ol {
-    @apply ml-5;
-  }
+	.project-content ul,
+	.project-content ol {
+		@apply ml-5;
+	}
 
-  .project-content ul {
-    @apply list-disc;
-  }
+	.project-content ul {
+		@apply list-disc;
+	}
 
-  .project-content ol {
-    @apply list-decimal;
-  }
+	.project-content ol {
+		@apply list-decimal;
+	}
 
-  .project-content li + li {
-    @apply mt-2;
-  }
+	.project-content li + li {
+		@apply mt-2;
+	}
 
-  .project-content a {
-    @apply border-b border-nova-ink text-nova-ink transition hover:opacity-60;
-  }
+	.project-content a {
+		@apply border-b border-nova-ink text-nova-ink transition hover:opacity-60;
+	}
 
-  .project-content strong {
-    @apply font-semibold text-nova-ink;
-  }
+	.project-content strong {
+		@apply font-semibold text-nova-ink;
+	}
+}
+
+.testimonials-slider {
+	--swiper-pagination-color: var(--color-nova-ink);
+	--swiper-pagination-bullet-inactive-color: var(--color-nova-muted);
+	--swiper-pagination-bullet-inactive-opacity: 0.3;
+	--swiper-pagination-bullet-opacity: 1;
+	--swiper-pagination-bullet-size: 8px;
 }

@@ -33,4 +33,26 @@ add_action('init', function () {
             'slug' => 'projekty',
         ],
     ]);
+
+    register_post_type('testimonial', [
+        'labels' => [
+            'name' => 'Opinie',
+            'singular_name' => 'Opinia',
+            'add_new' => 'Dodaj opinię',
+            'add_new_item' => 'Dodaj nową opinię',
+            'edit_item' => 'Edytuj opinię',
+            'all_items' => 'Wszystkie opinie',
+        ],
+
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => true,
+
+        'menu_icon' => 'dashicons-format-quote',
+
+        'supports' => [
+            'title',
+            'editor',
+        ],
+    ]);
 });
