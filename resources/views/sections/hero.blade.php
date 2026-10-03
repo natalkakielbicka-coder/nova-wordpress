@@ -32,10 +32,12 @@
       </div>
     </div>
 
-    <div class="min-h-[520px] bg-nova-white lg:min-h-[650px]">
-      <div class="flex h-full items-center justify-center p-8 text-sm text-nova-muted">
-        Zdjęcie hero
-      </div>
+    <div class="min-h-[520px] lg:min-h-[650px]">
+        <img
+            src="{{ Vite::asset('resources/images/nova-hero.png') }}"
+            alt="Nowoczesne stanowisko pracy"
+            class="h-full w-full object-cover"
+        >
     </div>
   </div>
 </section>
