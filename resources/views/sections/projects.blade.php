@@ -19,8 +19,12 @@
 				</h2>
 			</div>
 
-			<a href="#" class="hidden border-b border-nova-ink pb-1 text-sm text-nova-ink md:block">
+			<a
+				href="{{ get_post_type_archive_link('project') }}"
+				class="inline-flex items-center gap-2 border-b border-nova-ink pb-1 text-sm text-nova-ink transition hover:opacity-60"
+			>
 				Zobacz wszystkie
+				<span aria-hidden="true">→</span>
 			</a>
 		</div>
 
