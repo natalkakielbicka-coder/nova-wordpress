@@ -3,5 +3,6 @@
 @section('content')
   <main>
      @include('sections.hero')
+     @include('sections.services')
   </main>
 @endsection
