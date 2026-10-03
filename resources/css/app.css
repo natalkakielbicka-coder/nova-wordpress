@@ -28,3 +28,50 @@
     @apply bg-nova-background font-sans text-nova-ink;
   }
 }
+
+@layer components {
+  .project-content {
+    @apply text-base leading-8 text-nova-text;
+  }
+
+  .project-content > * + * {
+    @apply mt-6;
+  }
+
+  .project-content h2 {
+    @apply mt-12 font-serif text-3xl leading-tight text-nova-ink;
+  }
+
+  .project-content h3 {
+    @apply mt-10 font-serif text-2xl leading-tight text-nova-ink;
+  }
+
+  .project-content p {
+    @apply leading-8;
+  }
+
+  .project-content ul,
+  .project-content ol {
+    @apply ml-5;
+  }
+
+  .project-content ul {
+    @apply list-disc;
+  }
+
+  .project-content ol {
+    @apply list-decimal;
+  }
+
+  .project-content li + li {
+    @apply mt-2;
+  }
+
+  .project-content a {
+    @apply border-b border-nova-ink text-nova-ink transition hover:opacity-60;
+  }
+
+  .project-content strong {
+    @apply font-semibold text-nova-ink;
+  }
+}
