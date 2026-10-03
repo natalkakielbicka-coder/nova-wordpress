@@ -28,12 +28,47 @@
 			<div>
 				<p class="mb-5 text-xs font-medium uppercase tracking-[0.15em] text-nova-muted">Kontakt</p>
 
-				<a
-					href="mailto:hello@example.com"
-					class="border-b border-nova-ink pb-1 text-sm text-nova-ink transition hover:opacity-60"
-				>
-					hello@example.com
-				</a>
+				<div class="flex flex-col items-start gap-3">
+					@if ($contactEmail)
+						<a
+							href="mailto:{{ $contactEmail }}"
+							class="text-sm text-nova-ink transition hover:opacity-60"
+						>
+							{{ $contactEmail }}
+						</a>
+					@endif
+
+					@if ($contactPhone)
+						<a
+							href="tel:{{ preg_replace('/\s+/', '', $contactPhone) }}"
+							class="text-sm text-nova-ink transition hover:opacity-60"
+						>
+							{{ $contactPhone }}
+						</a>
+					@endif
+
+					@if ($instagramUrl)
+						<a
+							href="{{ $instagramUrl }}"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-sm text-nova-muted transition hover:text-nova-ink"
+						>
+							Instagram ↗
+						</a>
+					@endif
+
+					@if ($linkedinUrl)
+						<a
+							href="{{ $linkedinUrl }}"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="text-sm text-nova-muted transition hover:text-nova-ink"
+						>
+							LinkedIn ↗
+						</a>
+					@endif
+				</div>
 			</div>
 		</div>
 
