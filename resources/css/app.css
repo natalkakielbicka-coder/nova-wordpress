@@ -2,3 +2,29 @@
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
+
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/InterVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme {
+  --color-nova-ink: #171714;
+  --color-nova-text: #383834;
+  --color-nova-muted: #777771;
+  --color-nova-line: #deddd8;
+  --color-nova-background: #f8f7f3;
+  --color-nova-white: #ffffff;
+
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Georgia", "Times New Roman", serif;
+}
+
+@layer base {
+  body {
+    @apply bg-nova-background font-sans text-nova-ink;
+  }
+}
