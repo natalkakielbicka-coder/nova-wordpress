@@ -6,5 +6,6 @@
 		@include ('sections.services')
 		@include ('sections.projects')
 		@include ('sections.testimonials')
+		@include ('sections.contact-cta')
 	</main>
 @endsection
