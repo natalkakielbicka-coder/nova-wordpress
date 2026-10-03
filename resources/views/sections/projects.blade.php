@@ -31,48 +31,10 @@
     @if ($projects->have_posts())
         <div class="grid gap-10 md:grid-cols-3">
             @while ($projects->have_posts())
-            @php($projects->the_post())
+                @php($projects->the_post())
 
-            <article>
-                <a
-                    href="{{ get_permalink() }}"
-                    class="group block"
-                    aria-label="Zobacz projekt: {{ get_the_title() }}"
-                >
-                    <div class="aspect-[4/3] overflow-hidden bg-nova-background">
-                    @if (has_post_thumbnail())
-                        {!! get_the_post_thumbnail(
-                        get_the_ID(),
-                        'large',
-                        [
-                            'class' => 'h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]',
-                        ]
-                        ) !!}
-                    @endif
-                    </div>
-                </a>
-
-                <p class="mt-5 text-xs uppercase tracking-[0.15em] text-nova-muted">
-                    {{ get_the_excerpt() }}
-                </p>
-
-                <h3 class="mt-2 font-serif text-2xl text-nova-ink">
-                    <a
-                    href="{{ get_permalink() }}"
-                    class="transition hover:opacity-60"
-                    >
-                    {{ get_the_title() }}
-                    </a>
-                </h3>
-
-                <a
-                    href="{{ get_permalink() }}"
-                    class="mt-4 inline-flex items-center gap-2 border-b border-nova-ink pb-1 text-sm text-nova-ink transition hover:opacity-60"
-                >
-                    Zobacz projekt
-                    <span aria-hidden="true">→</span>
-                </a>
-                </article>
+                <x-project-card />
+            
             @endwhile
         </div>
 
