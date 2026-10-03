@@ -1,5 +1,7 @@
 {
   "plugins": ["prettier-plugin-blade"],
   "printWidth": 100,
-  "singleQuote": true
+  "singleQuote": true,
+  "useTabs": true,
+  "tabWidth": 4
 }

@@ -1,7 +1,9 @@
 {
-  "editor.formatOnSave": true,
+	"editor.formatOnSave": true,
 
-  "[blade]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+	"[blade]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.insertSpaces": false,
+		"editor.tabSize": 4
+	}
 }
