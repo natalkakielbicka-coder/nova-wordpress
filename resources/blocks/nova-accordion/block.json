@@ -21,6 +21,10 @@
 					"answer": "WordPress, Sage, Tailwind CSS, JavaScript i nowoczesne API WordPressa."
 				}
 			]
+		},
+		"openFirstItem": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"supports": {

@@ -5,6 +5,7 @@ $wrapper_attributes = get_block_wrapper_attributes([
 ]);
 
 $items = $attributes['items'] ?? [];
+$open_first_item = $attributes['openFirstItem'] ?? false;
 ?>
 
 <section
@@ -19,7 +20,7 @@ $items = $attributes['items'] ?? [];
             <div
                 class="border-b border-nova-line"
                 data-wp-context='<?php echo wp_json_encode([
-                    'isOpen' => false,
+                    'isOpen' => $open_first_item && $index === 0,
                 ]); ?>'
             >
                 <button
