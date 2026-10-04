@@ -40,6 +40,23 @@ export default function Edit({ attributes, setAttributes }) {
 		});
 	};
 
+	const moveItem = (index, direction) => {
+		const newIndex = index + direction;
+
+		if (newIndex < 0 || newIndex >= items.length) {
+			return;
+		}
+
+		const updatedItems = [...items];
+
+		[updatedItems[index], updatedItems[newIndex]] = [
+			updatedItems[newIndex],
+			updatedItems[index],
+		];
+
+		setAttributes({ items: updatedItems });
+	};
+
 	return (
 		<section {...blockProps}>
 			<div className="mx-auto max-w-3xl">
@@ -69,6 +86,32 @@ export default function Edit({ attributes, setAttributes }) {
 							<Button variant="link" isDestructive onClick={() => removeItem(index)}>
 								Usuń pytanie
 							</Button>
+
+							<div className="mt-4 flex items-center gap-3">
+								<Button
+									variant="secondary"
+									disabled={index === 0}
+									onClick={() => moveItem(index, -1)}
+								>
+									↑
+								</Button>
+
+								<Button
+									variant="secondary"
+									disabled={index === items.length - 1}
+									onClick={() => moveItem(index, 1)}
+								>
+									↓
+								</Button>
+
+								<Button
+									variant="link"
+									isDestructive
+									onClick={() => removeItem(index)}
+								>
+									Usuń pytanie
+								</Button>
+							</div>
 						</div>
 					))}
 				</div>
