@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nova/cta",
+	"version": "1.0.0",
+	"title": "NOVA CTA",
+	"category": "design",
+	"icon": "megaphone",
+	"description": "Sekcja CTA z nagłówkiem, tekstem i przyciskiem.",
+	"keywords": ["cta", "nova", "kontakt"],
+	"textdomain": "nova-wordpress",
+	"attributes": {
+		"eyebrow": {
+			"type": "string",
+			"default": "Porozmawiajmy"
+		},
+		"title": {
+			"type": "string",
+			"default": "Masz pomysł na stronę?"
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Napisz do mnie"
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": "#kontakt"
+		}
+	}
+}

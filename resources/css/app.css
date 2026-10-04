@@ -2,6 +2,7 @@
 @source "../../app/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
+@source "../**/*.jsx";
 
 @font-face {
 	font-family: 'Inter';

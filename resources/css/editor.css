@@ -1,8 +1,22 @@
-@import "tailwindcss";
+@import 'tailwindcss' theme(static);
+
+@source "../blocks/**/*.jsx";
+
+@theme {
+	--color-nova-ink: #171714;
+	--color-nova-text: #383834;
+	--color-nova-muted: #777771;
+	--color-nova-line: #deddd8;
+	--color-nova-background: #f8f7f3;
+	--color-nova-white: #ffffff;
+
+	--font-sans: 'Inter', sans-serif;
+	--font-serif: 'Georgia', 'Times New Roman', serif;
+}
 
 .editor-styles-wrapper {
-  font-family: "Inter", sans-serif;
-  color: #383834;
+	font-family: 'Inter', sans-serif;
+	color: #383834;
 }
 
 .editor-styles-wrapper h1,
@@ -11,27 +25,27 @@
 .editor-styles-wrapper h4,
 .editor-styles-wrapper h5,
 .editor-styles-wrapper h6 {
-  font-family: Georgia, "Times New Roman", serif;
-  color: #171714;
+	font-family: Georgia, 'Times New Roman', serif;
+	color: #171714;
 }
 
 .editor-styles-wrapper h1 {
-  font-size: 3rem;
-  line-height: 1.1;
+	font-size: 3rem;
+	line-height: 1.1;
 }
 
 .editor-styles-wrapper h2 {
-  margin-top: 3rem;
-  font-size: 1.875rem;
-  line-height: 1.25;
+	margin-top: 3rem;
+	font-size: 1.875rem;
+	line-height: 1.25;
 }
 
 .editor-styles-wrapper h3 {
-  margin-top: 2.5rem;
-  font-size: 1.5rem;
-  line-height: 1.25;
+	margin-top: 2.5rem;
+	font-size: 1.5rem;
+	line-height: 1.25;
 }
 
 .editor-styles-wrapper p {
-  line-height: 2;
+	line-height: 2;
 }

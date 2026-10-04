@@ -107,5 +107,10 @@
 			</section>
 		@endif
 
+		@if (trim(get_the_content()))
+			<section class="page-content">
+				@php (the_content())
+			</section>
+		@endif
 	@endwhile
 @endsection
