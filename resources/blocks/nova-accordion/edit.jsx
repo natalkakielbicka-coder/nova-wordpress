@@ -1,29 +1,81 @@
-import { useBlockProps } from '@wordpress/block-editor';
+import { RichText, useBlockProps } from '@wordpress/block-editor';
+import { Button } from '@wordpress/components';
 
-export default function Edit() {
+export default function Edit({ attributes, setAttributes }) {
+	const { items } = attributes;
 	const blockProps = useBlockProps({
 		className: 'px-6 py-16 md:py-20',
 	});
+
+	const updateItem = (index, field, value) => {
+		const updatedItems = items.map((item, itemIndex) => {
+			if (itemIndex !== index) {
+				return item;
+			}
+
+			return {
+				...item,
+				[field]: value,
+			};
+		});
+
+		setAttributes({ items: updatedItems });
+	};
+
+	const addItem = () => {
+		setAttributes({
+			items: [
+				...items,
+				{
+					question: 'Nowe pytanie',
+					answer: 'Dodaj odpowiedź...',
+				},
+			],
+		});
+	};
+
+	const removeItem = (index) => {
+		setAttributes({
+			items: items.filter((_, itemIndex) => itemIndex !== index),
+		});
+	};
 
 	return (
 		<section {...blockProps}>
 			<div className="mx-auto max-w-3xl">
 				<div className="border-t border-nova-line">
-					<div className="border-b border-nova-line">
-						<div className="flex items-center justify-between gap-6 py-6">
-							<span className="font-serif text-xl text-nova-ink">
-								Jak wygląda proces realizacji projektu?
-							</span>
+					{items.map((item, index) => (
+						<div key={index} className="border-b border-nova-line py-6">
+							<div className="flex items-start justify-between gap-6">
+								<RichText
+									tagName="div"
+									className="font-serif text-xl text-nova-ink"
+									value={item.question}
+									onChange={(value) => updateItem(index, 'question', value)}
+									placeholder="Wpisz pytanie..."
+								/>
 
-							<span aria-hidden="true">+</span>
-						</div>
+								<span aria-hidden="true">+</span>
+							</div>
 
-						<div className="pb-6 text-nova-text">
-							Proces rozpoczynam od analizy potrzeb, następnie przechodzę do projektu,
-							wdrożenia i testów.
+							<RichText
+								tagName="div"
+								className="mt-4 text-nova-text"
+								value={item.answer}
+								onChange={(value) => updateItem(index, 'answer', value)}
+								placeholder="Wpisz odpowiedź..."
+							/>
+
+							<Button variant="link" isDestructive onClick={() => removeItem(index)}>
+								Usuń pytanie
+							</Button>
 						</div>
-					</div>
+					))}
 				</div>
+
+				<Button variant="secondary" className="mt-6" onClick={addItem}>
+					Dodaj pytanie
+				</Button>
 			</div>
 		</section>
 	);

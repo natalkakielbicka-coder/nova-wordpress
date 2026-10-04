@@ -8,6 +8,21 @@
 	"icon": "menu-alt3",
 	"description": "Interaktywny accordion oparty na WordPress Interactivity API.",
 	"textdomain": "nova-wordpress",
+	"attributes": {
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"question": "Jak wygląda proces realizacji projektu?",
+					"answer": "Proces rozpoczynam od analizy potrzeb, następnie przechodzę do projektu, wdrożenia i testów."
+				},
+				{
+					"question": "Jakich technologii używasz?",
+					"answer": "WordPress, Sage, Tailwind CSS, JavaScript i nowoczesne API WordPressa."
+				}
+			]
+		}
+	},
 	"supports": {
 		"html": false,
 		"anchor": true,
