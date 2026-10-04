@@ -9,12 +9,16 @@ $projects = new WP_Query([
     'posts_per_page' => $number_of_projects,
 ]);
 
+$wrapper_attributes = get_block_wrapper_attributes([
+    'class' => 'px-6 py-20',
+]);
+
 if (!$projects->have_posts()) {
     return;
 }
 ?>
 
-<section class="px-6 py-20">
+<section <?php echo $wrapper_attributes; ?>>
     <div class="mx-auto max-w-7xl">
         <h2 class="font-serif text-4xl leading-tight text-nova-ink">
             <?php echo esc_html($title); ?>

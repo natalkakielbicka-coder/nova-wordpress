@@ -2,6 +2,15 @@
 
 namespace App;
 
+add_filter('block_categories_all', function ($categories) {
+    array_unshift($categories, [
+        'slug' => 'nova',
+        'title' => __('NOVA', 'nova-wordpress'),
+    ]);
+
+    return $categories;
+});
+
 add_action('init', function () {
     $blocks = [
         'nova-cta',

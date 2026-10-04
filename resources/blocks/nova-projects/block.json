@@ -4,11 +4,15 @@
 	"name": "nova/projects",
 	"version": "1.0.0",
 	"title": "NOVA Projekty",
-	"category": "design",
+	"category": "nova",
 	"icon": "portfolio",
 	"description": "Wyświetla najnowsze projekty.",
 	"keywords": ["projekty", "portfolio", "nova"],
 	"textdomain": "nova-wordpress",
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
 	"attributes": {
 		"numberOfProjects": {
 			"type": "number",

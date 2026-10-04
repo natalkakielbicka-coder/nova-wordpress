@@ -8,9 +8,13 @@ $image_id = $attributes['imageId'] ?? 0;
 $image_alt = $image_id
     ? get_post_meta($image_id, '_wp_attachment_image_alt', true)
     : '';
+
+$wrapper_attributes = get_block_wrapper_attributes([
+    'class' => 'px-6 py-16 md:py-20 lg:py-24',
+]);
 ?>
 
-<section class="px-6 py-16 md:py-20 lg:py-24">
+<section <?php echo $wrapper_attributes; ?>>
     <div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
         <div>
             <?php if ($eyebrow) : ?>

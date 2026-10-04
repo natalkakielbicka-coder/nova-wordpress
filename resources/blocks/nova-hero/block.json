@@ -4,11 +4,15 @@
 	"name": "nova/hero",
 	"version": "1.0.0",
 	"title": "NOVA Hero",
-	"category": "design",
+	"category": "nova",
 	"icon": "cover-image",
 	"description": "Sekcja hero z treścią, przyciskiem i zdjęciem.",
 	"keywords": ["hero", "nova", "banner"],
 	"textdomain": "nova-wordpress",
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
 	"attributes": {
 		"eyebrow": {
 			"type": "string",

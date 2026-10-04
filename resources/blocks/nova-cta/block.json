@@ -4,11 +4,15 @@
 	"name": "nova/cta",
 	"version": "1.0.0",
 	"title": "NOVA CTA",
-	"category": "design",
+	"category": "nova",
 	"icon": "megaphone",
 	"description": "Sekcja CTA z nagłówkiem, tekstem i przyciskiem.",
 	"keywords": ["cta", "nova", "kontakt"],
 	"textdomain": "nova-wordpress",
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
 	"attributes": {
 		"eyebrow": {
 			"type": "string",

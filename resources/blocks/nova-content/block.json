@@ -4,11 +4,15 @@
 	"name": "nova/content",
 	"version": "1.0.0",
 	"title": "NOVA Content",
-	"category": "design",
+	"category": "nova",
 	"icon": "layout",
 	"description": "Elastyczna sekcja treści oparta na wewnętrznych blokach.",
 	"keywords": ["content", "sekcja", "nova"],
 	"textdomain": "nova-wordpress",
+	"supports": {
+		"html": false,
+		"anchor": true
+	},
 	"attributes": {
 		"width": {
 			"type": "string",
