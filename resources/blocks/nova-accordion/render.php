@@ -13,7 +13,9 @@ $items = $attributes['items'] ?? [];
 >
     <div class="mx-auto max-w-3xl">
         <div class="border-t border-nova-line">
-            <?php foreach ($items as $item) : ?>
+            <?php $accordion_id = wp_unique_id('nova-accordion-'); ?>
+            <?php foreach ($items as $index => $item) : ?>
+            <?php $panel_id = "{$accordion_id}-panel-{$index}"; ?>
             <div
                 class="border-b border-nova-line"
                 data-wp-context='<?php echo wp_json_encode([
@@ -24,7 +26,7 @@ $items = $attributes['items'] ?? [];
                     type="button"
                     class="flex w-full items-center justify-between gap-6 py-6 text-left"
                     data-wp-on--click="actions.toggle"
-                    data-wp-bind--aria-expanded="context.isOpen"
+                    data-wp-bind--aria-expanded="context.isOpen" aria-controls="<?php echo esc_attr($panel_id); ?>"
                 >
                     <span class="font-serif text-xl text-nova-ink">
                         <?php echo wp_kses_post($item['question'] ?? ''); ?>
@@ -45,7 +47,7 @@ $items = $attributes['items'] ?? [];
                     </span>
                 </button>
 
-                <div
+                <div id="<?php echo esc_attr($panel_id); ?>" 
                     class="pb-6 text-nova-text"
                     data-wp-bind--hidden="!context.isOpen"
                 >
