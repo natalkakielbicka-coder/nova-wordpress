@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nova/accordion",
+	"version": "1.0.0",
+	"title": "NOVA Accordion",
+	"category": "nova",
+	"icon": "menu-alt3",
+	"description": "Interaktywny accordion oparty na WordPress Interactivity API.",
+	"textdomain": "nova-wordpress",
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"interactivity": true
+	},
+	"render": "file:./render.php"
+}

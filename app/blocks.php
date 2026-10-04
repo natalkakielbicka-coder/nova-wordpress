@@ -17,6 +17,7 @@ add_action('init', function () {
         'nova-projects',
         'nova-hero',
         'nova-content',
+        'nova-accordion',
     ];
 
     foreach ($blocks as $block) {
@@ -24,4 +25,14 @@ add_action('init', function () {
             get_theme_file_path("resources/blocks/{$block}")
         );
     }
+});
+
+add_action('wp_enqueue_scripts', function () {
+    wp_register_script_module(
+        'nova/accordion',
+        get_theme_file_uri('resources/blocks/nova-accordion/view.js'),
+        ['@wordpress/interactivity']
+    );
+
+    wp_enqueue_script_module('nova/accordion');
 });
