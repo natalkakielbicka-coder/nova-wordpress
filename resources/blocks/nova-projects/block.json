@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nova/projects",
+	"version": "1.0.0",
+	"title": "NOVA Projekty",
+	"category": "design",
+	"icon": "portfolio",
+	"description": "Wyświetla najnowsze projekty.",
+	"keywords": ["projekty", "portfolio", "nova"],
+	"textdomain": "nova-wordpress",
+	"attributes": {
+		"numberOfProjects": {
+			"type": "number",
+			"default": 3
+		},
+		"title": {
+			"type": "string",
+			"default": "Wybrane projekty"
+		}
+	},
+	"render": "file:./render.php"
+}
