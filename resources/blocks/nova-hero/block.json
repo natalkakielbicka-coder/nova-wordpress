@@ -1,0 +1,46 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nova/hero",
+	"version": "1.0.0",
+	"title": "NOVA Hero",
+	"category": "design",
+	"icon": "cover-image",
+	"description": "Sekcja hero z treścią, przyciskiem i zdjęciem.",
+	"keywords": ["hero", "nova", "banner"],
+	"textdomain": "nova-wordpress",
+	"attributes": {
+		"eyebrow": {
+			"type": "string",
+			"default": "WordPress Developer"
+		},
+		"title": {
+			"type": "string",
+			"default": "Tworzę strony, które łączą design z technologią."
+		},
+		"text": {
+			"type": "string",
+			"default": "Projektuję i wdrażam nowoczesne strony internetowe oparte na WordPressie."
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Zobacz projekty"
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": "/projekty/"
+		},
+		"imageId": {
+			"type": "number"
+		},
+		"imageUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"imageAlt": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"render": "file:./render.php"
+}

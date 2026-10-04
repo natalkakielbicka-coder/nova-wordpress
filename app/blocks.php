@@ -6,6 +6,7 @@ add_action('init', function () {
     $blocks = [
         'nova-cta',
         'nova-projects',
+        'nova-hero',
     ];
 
     foreach ($blocks as $block) {
