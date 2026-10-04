@@ -25,6 +25,10 @@
 		"openFirstItem": {
 			"type": "boolean",
 			"default": false
+		},
+		"singleOpen": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"supports": {

@@ -2,7 +2,7 @@ import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-edi
 import { Button, PanelBody, ToggleControl } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
-	const { items, openFirstItem } = attributes;
+	const { items, openFirstItem, singleOpen } = attributes;
 	const blockProps = useBlockProps({
 		className: 'px-6 py-16 md:py-20',
 	});
@@ -65,6 +65,11 @@ export default function Edit({ attributes, setAttributes }) {
 						label="Otwórz pierwszy element"
 						checked={openFirstItem}
 						onChange={(value) => setAttributes({ openFirstItem: value })}
+					/>
+					<ToggleControl
+						label="Tylko jeden element otwarty"
+						checked={singleOpen}
+						onChange={(value) => setAttributes({ singleOpen: value })}
 					/>
 				</PanelBody>
 			</InspectorControls>

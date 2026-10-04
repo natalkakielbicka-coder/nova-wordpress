@@ -6,6 +6,7 @@ $wrapper_attributes = get_block_wrapper_attributes([
 
 $items = $attributes['items'] ?? [];
 $open_first_item = $attributes['openFirstItem'] ?? false;
+$single_open = $attributes['singleOpen'] ?? false;
 ?>
 
 <section
@@ -19,9 +20,13 @@ $open_first_item = $attributes['openFirstItem'] ?? false;
             <?php $panel_id = "{$accordion_id}-panel-{$index}"; ?>
             <div
                 class="border-b border-nova-line"
+                data-nova-accordion-item
                 data-wp-context='<?php echo wp_json_encode([
                     'isOpen' => $open_first_item && $index === 0,
+                    'singleOpen' => $single_open,
+                    'index' => $index,
                 ]); ?>'
+                data-wp-watch="callbacks.syncOpenState"
             >
                 <button
                     type="button"
