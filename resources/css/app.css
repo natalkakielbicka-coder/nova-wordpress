@@ -167,3 +167,12 @@
 	letter-spacing: 0.15em;
 	text-transform: uppercase;
 }
+
+.alignwide {
+	width: min(100% - 3rem, 80rem);
+	margin-inline: auto;
+}
+
+.alignfull {
+	width: 100%;
+}
