@@ -1,0 +1,24 @@
+.wp-block-button.is-style-nova-arrow .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0 0 0.25rem;
+	border-radius: 0;
+	border-bottom: 1px solid var(--color-nova-ink);
+	background: transparent;
+	color: var(--color-nova-ink);
+	font-size: 0.875rem;
+	text-decoration: none;
+	transition:
+		gap 200ms ease,
+		opacity 200ms ease;
+}
+
+.wp-block-button.is-style-nova-arrow .wp-block-button__link::after {
+	content: '→';
+}
+
+.wp-block-button.is-style-nova-arrow .wp-block-button__link:hover {
+	gap: 0.75rem;
+	opacity: 0.7;
+}
