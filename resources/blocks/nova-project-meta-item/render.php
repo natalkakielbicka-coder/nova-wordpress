@@ -1,18 +1,19 @@
 <?php
 
 $project_id = $block->context['nova/projectId'] ?? null;
+$field = $attributes['field'] ?? 'project_client';
 
 if (! $project_id) {
     return;
 }
 
-$project = get_post($project_id);
+$value = get_field($field, $project_id);
 
-if (! $project) {
+if (! $value) {
     return;
 }
 ?>
 
 <div <?php echo get_block_wrapper_attributes(); ?>>
-    <?php echo esc_html(get_the_title($project_id)); ?>
+    <?php echo esc_html($value); ?>
 </div>

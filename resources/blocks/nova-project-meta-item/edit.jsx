@@ -1,8 +1,10 @@
-import { useBlockProps } from '@wordpress/block-editor';
-import { Spinner } from '@wordpress/components';
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+
+import { PanelBody, SelectControl, Spinner } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 
-export default function Edit({ context }) {
+export default function Edit({ attributes, setAttributes, context }) {
+	const { field } = attributes;
 	const blockProps = useBlockProps();
 	const projectId = context['nova/projectId'];
 
@@ -17,6 +19,8 @@ export default function Edit({ context }) {
 		[projectId],
 	);
 
+	const value = project?.acf?.[field] || '';
+
 	if (!projectId) {
 		return <div {...blockProps}>Najpierw wybierz projekt.</div>;
 	}
@@ -29,5 +33,41 @@ export default function Edit({ context }) {
 		);
 	}
 
-	return <div {...blockProps}>{project.title.rendered}</div>;
+	return (
+		<>
+			<InspectorControls>
+				<PanelBody title="Dane projektu">
+					<SelectControl
+						label="Pole"
+						value={field}
+						options={[
+							{
+								label: 'Klient',
+								value: 'project_client',
+							},
+							{
+								label: 'Rok',
+								value: 'project_year',
+							},
+							{
+								label: 'Zakres',
+								value: 'project_scope',
+							},
+							{
+								label: 'Technologie',
+								value: 'project_technologies',
+							},
+						]}
+						onChange={(value) =>
+							setAttributes({
+								field: value,
+							})
+						}
+					/>
+				</PanelBody>
+			</InspectorControls>
+
+			<div {...blockProps}>{value || 'Brak wartości'}</div>
+		</>
+	);
 }

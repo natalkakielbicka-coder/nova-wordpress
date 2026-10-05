@@ -12,5 +12,11 @@
 	"supports": {
 		"html": false
 	},
-	"render": "file:./render.php"
+	"render": "file:./render.php",
+	"attributes": {
+		"field": {
+			"type": "string",
+			"default": "project_client"
+		}
+	}
 }
