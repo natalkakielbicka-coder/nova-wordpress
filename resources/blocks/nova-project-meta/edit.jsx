@@ -62,7 +62,11 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<InnerBlocks allowedBlocks={['nova/project-meta-item']} template={template} />
+				<InnerBlocks
+					allowedBlocks={['nova/project-meta-item']}
+					template={template}
+					templateLock="insert"
+				/>
 			</div>
 		</>
 	);
