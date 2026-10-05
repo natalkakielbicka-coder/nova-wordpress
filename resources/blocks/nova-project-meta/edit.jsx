@@ -47,7 +47,7 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<InnerBlocks />
+				<InnerBlocks allowedBlocks={['nova/project-meta-item']} />
 			</div>
 		</>
 	);
