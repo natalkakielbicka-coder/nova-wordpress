@@ -39,17 +39,11 @@ $single_open = $attributes['singleOpen'] ?? false;
                     </span>
 
                     <span
+                        class="nova-accordion__icon"
                         aria-hidden="true"
-                        data-wp-bind--hidden="context.isOpen"
+                        data-wp-class--is-open="context.isOpen"
                     >
                         +
-                    </span>
-
-                    <span
-                        aria-hidden="true"
-                        data-wp-bind--hidden="!context.isOpen"
-                    >
-                        −
                     </span>
                 </button>
 
