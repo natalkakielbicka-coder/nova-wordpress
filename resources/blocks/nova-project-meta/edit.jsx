@@ -25,6 +25,21 @@ export default function Edit({ attributes, setAttributes }) {
 		})),
 	];
 
+	const template = [
+		[
+			'nova/project-meta-item',
+			{
+				field: 'project_client',
+			},
+		],
+		[
+			'nova/project-meta-item',
+			{
+				field: 'project_year',
+			},
+		],
+	];
+
 	return (
 		<>
 			<InspectorControls>
@@ -47,7 +62,7 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div {...blockProps}>
-				<InnerBlocks allowedBlocks={['nova/project-meta-item']} />
+				<InnerBlocks allowedBlocks={['nova/project-meta-item']} template={template} />
 			</div>
 		</>
 	);
