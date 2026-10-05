@@ -18,6 +18,8 @@ add_action('init', function () {
         'nova-hero',
         'nova-content',
         'nova-accordion',
+        'nova-project-meta',
+        'nova-project-meta-item',
     ];
 
     foreach ($blocks as $block) {

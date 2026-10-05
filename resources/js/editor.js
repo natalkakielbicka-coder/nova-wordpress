@@ -5,6 +5,8 @@ import '../blocks/nova-projects';
 import '../blocks/nova-hero';
 import '../blocks/nova-content';
 import '../blocks/nova-accordion';
+import '../blocks/nova-project-meta';
+import '../blocks/nova-project-meta-item';
 
 domReady(() => {
 	registerBlockStyle('core/button', {

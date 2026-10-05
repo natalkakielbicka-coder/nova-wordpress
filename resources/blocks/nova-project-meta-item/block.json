@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nova/project-meta-item",
+	"version": "1.0.0",
+	"title": "NOVA Project Meta Item",
+	"category": "nova",
+	"icon": "info-outline",
+	"description": "Pojedyncza informacja o projekcie.",
+	"textdomain": "nova-wordpress",
+	"usesContext": ["nova/projectId"],
+	"supports": {
+		"html": false
+	},
+	"render": "file:./render.php"
+}
