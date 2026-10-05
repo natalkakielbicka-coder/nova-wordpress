@@ -14,6 +14,10 @@
 
 		<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"4/3"} /-->
 
+        <!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"nova/project-field","args":{"key":"project_client"}}}},"className":"nova-projects-query__client"} -->
+        <p class="nova-projects-query__client">Klient</p>
+        <!-- /wp:paragraph -->
+
 		<!-- wp:post-title {"level":3,"isLink":true} /-->
 
 		<!-- wp:post-excerpt /-->

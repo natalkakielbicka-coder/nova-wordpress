@@ -133,7 +133,7 @@
 }
 
 .nova-projects-query .wp-block-post-title {
-	margin-top: 1.25rem;
+	margin-top: 0.5rem;
 	margin-bottom: 0;
 	font-family: var(--font-serif);
 	font-size: 1.5rem;
@@ -154,4 +154,14 @@
 
 .nova-projects-query .wp-block-post-excerpt__excerpt {
 	margin: 0;
+}
+
+.nova-projects-query__client {
+	margin-top: 1.25rem;
+	margin-bottom: 0;
+	color: var(--color-nova-muted);
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
 }
