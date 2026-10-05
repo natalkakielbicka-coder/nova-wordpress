@@ -53,11 +53,16 @@ $single_open = $attributes['singleOpen'] ?? false;
                     </span>
                 </button>
 
-                <div id="<?php echo esc_attr($panel_id); ?>" 
-                    class="pb-6 text-nova-text"
-                    data-wp-bind--hidden="!context.isOpen"
+                <div
+                    id="<?php echo esc_attr($panel_id); ?>"
+                    class="nova-accordion__panel"
+                    data-wp-class--is-open="context.isOpen"
                 >
-                    <?php echo wp_kses_post($item['answer'] ?? ''); ?>
+                    <div class="nova-accordion__panel-inner">
+                        <div class="pb-6 text-nova-text">
+                            <?php echo wp_kses_post($item['answer'] ?? ''); ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>

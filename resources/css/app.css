@@ -84,3 +84,17 @@
 	--swiper-pagination-bullet-opacity: 1;
 	--swiper-pagination-bullet-size: 8px;
 }
+
+.nova-accordion__panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 300ms ease;
+}
+
+.nova-accordion__panel.is-open {
+	grid-template-rows: 1fr;
+}
+
+.nova-accordion__panel-inner {
+	overflow: hidden;
+}
