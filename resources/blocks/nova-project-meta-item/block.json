@@ -18,5 +18,6 @@
 			"type": "string",
 			"default": "project_client"
 		}
-	}
+	},
+	"parent": ["nova/project-meta"]
 }
