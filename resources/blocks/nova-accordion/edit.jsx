@@ -75,53 +75,42 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 			<section {...blockProps}>
 				<div className="mx-auto max-w-3xl">
-					<div className="border-t border-nova-line">
-						{items.map((item, index) => (
-							<div key={index} className="border-b border-nova-line py-6">
-								<div className="flex items-start justify-between gap-6">
+					{items.length === 0 && (
+						<div className="border border-dashed border-nova-line p-8 text-center">
+							<p className="text-nova-muted">
+								Accordion nie zawiera jeszcze żadnych pytań.
+							</p>
+
+							<Button variant="primary" className="mt-4" onClick={addItem}>
+								Dodaj pierwsze pytanie
+							</Button>
+						</div>
+					)}
+					{items.length > 0 && (
+						<div className="border-t border-nova-line">
+							{items.map((item, index) => (
+								<div key={index} className="border-b border-nova-line py-6">
+									<div className="flex items-start justify-between gap-6">
+										<RichText
+											tagName="div"
+											className="font-serif text-xl text-nova-ink"
+											value={item.question}
+											onChange={(value) =>
+												updateItem(index, 'question', value)
+											}
+											placeholder="Wpisz pytanie..."
+										/>
+
+										<span aria-hidden="true">+</span>
+									</div>
+
 									<RichText
 										tagName="div"
-										className="font-serif text-xl text-nova-ink"
-										value={item.question}
-										onChange={(value) => updateItem(index, 'question', value)}
-										placeholder="Wpisz pytanie..."
+										className="mt-4 text-nova-text"
+										value={item.answer}
+										onChange={(value) => updateItem(index, 'answer', value)}
+										placeholder="Wpisz odpowiedź..."
 									/>
-
-									<span aria-hidden="true">+</span>
-								</div>
-
-								<RichText
-									tagName="div"
-									className="mt-4 text-nova-text"
-									value={item.answer}
-									onChange={(value) => updateItem(index, 'answer', value)}
-									placeholder="Wpisz odpowiedź..."
-								/>
-
-								<Button
-									variant="link"
-									isDestructive
-									onClick={() => removeItem(index)}
-								>
-									Usuń pytanie
-								</Button>
-
-								<div className="mt-4 flex items-center gap-3">
-									<Button
-										variant="secondary"
-										disabled={index === 0}
-										onClick={() => moveItem(index, -1)}
-									>
-										↑
-									</Button>
-
-									<Button
-										variant="secondary"
-										disabled={index === items.length - 1}
-										onClick={() => moveItem(index, 1)}
-									>
-										↓
-									</Button>
 
 									<Button
 										variant="link"
@@ -130,11 +119,36 @@ export default function Edit({ attributes, setAttributes }) {
 									>
 										Usuń pytanie
 									</Button>
-								</div>
-							</div>
-						))}
-					</div>
 
+									<div className="mt-4 flex items-center gap-3">
+										<Button
+											variant="secondary"
+											disabled={index === 0}
+											onClick={() => moveItem(index, -1)}
+										>
+											↑
+										</Button>
+
+										<Button
+											variant="secondary"
+											disabled={index === items.length - 1}
+											onClick={() => moveItem(index, 1)}
+										>
+											↓
+										</Button>
+
+										<Button
+											variant="link"
+											isDestructive
+											onClick={() => removeItem(index)}
+										>
+											Usuń pytanie
+										</Button>
+									</div>
+								</div>
+							))}
+						</div>
+					)}
 					<Button variant="secondary" className="mt-6" onClick={addItem}>
 						Dodaj pytanie
 					</Button>
