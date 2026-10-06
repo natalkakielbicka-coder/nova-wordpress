@@ -12,7 +12,8 @@
 	"supports": {
 		"html": false,
 		"anchor": true,
-		"multiple": false
+		"multiple": false,
+		"lock": true
 	},
 	"attributes": {
 		"eyebrow": {
