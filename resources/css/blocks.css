@@ -46,3 +46,9 @@
 	text-transform: uppercase;
 	color: var(--color-nova-muted);
 }
+
+.nova-highlight {
+	padding-inline: 0.15em;
+	background: var(--color-nova-line);
+	color: var(--color-nova-ink);
+}

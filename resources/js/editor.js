@@ -1,5 +1,6 @@
 import domReady from '@wordpress/dom-ready';
 import { registerBlockStyle, registerBlockVariation } from '@wordpress/blocks';
+import '../formats/nova-highlight';
 import '../blocks/nova-cta';
 import '../blocks/nova-projects';
 import '../blocks/nova-hero';
