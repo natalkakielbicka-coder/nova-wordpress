@@ -12,7 +12,7 @@ export default function save({ attributes }) {
 	return (
 		<section {...blockProps}>
 			<div className={styles.container}>
-				<RichText.Content tagName="p" className={styles.eyebrow} value={eyebrow} />
+				<RichText.Content tagName="span" className={styles.eyebrow} value={eyebrow} />
 
 				<div className={styles.content}>
 					<RichText.Content tagName="h2" className={styles.title} value={title} />
