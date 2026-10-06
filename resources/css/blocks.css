@@ -22,3 +22,27 @@
 	gap: 0.75rem;
 	opacity: 0.7;
 }
+
+.wp-block-quote {
+	margin-block: 3rem;
+	padding-left: 2rem;
+	border-left: 1px solid var(--color-nova-ink);
+}
+
+.wp-block-quote p {
+	font-family: var(--font-serif);
+	font-size: 1.75rem;
+	line-height: 1.35;
+	color: var(--color-nova-ink);
+}
+
+.wp-block-quote cite {
+	display: block;
+	margin-top: 1rem;
+	font-family: var(--font-sans);
+	font-size: 0.75rem;
+	font-style: normal;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: var(--color-nova-muted);
+}
