@@ -11,7 +11,8 @@
 	"textdomain": "nova-wordpress",
 	"supports": {
 		"html": false,
-		"anchor": true
+		"anchor": true,
+		"multiple": false
 	},
 	"attributes": {
 		"eyebrow": {
