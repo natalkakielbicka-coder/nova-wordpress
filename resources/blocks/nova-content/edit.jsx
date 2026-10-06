@@ -35,7 +35,7 @@ const widthClasses = {
 export default function Edit({ attributes, setAttributes }) {
 	const { width } = attributes;
 	const blockProps = useBlockProps({
-		className: 'w-full px-6 py-16 md:py-20',
+		className: 'nova-content w-full px-6 py-16 md:py-20',
 	});
 
 	return (
