@@ -1,9 +1,9 @@
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, TextControl } from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import { styles } from './styles';
 
 export default function Edit({ attributes, setAttributes }) {
-	const { eyebrow, title, buttonText, buttonUrl } = attributes;
+	const { eyebrow, title, buttonText, buttonUrl, buttonTarget } = attributes;
 
 	const blockProps = useBlockProps({
 		className: styles.block,
@@ -18,6 +18,16 @@ export default function Edit({ attributes, setAttributes }) {
 						value={buttonUrl}
 						onChange={(value) => setAttributes({ buttonUrl: value })}
 						help="Np. #kontakt lub /kontakt/"
+					/>
+
+					<ToggleControl
+						label="Otwórz w nowej karcie"
+						checked={buttonTarget === '_blank'}
+						onChange={(value) => {
+							setAttributes({
+								buttonTarget: value ? '_blank' : '_self',
+							});
+						}}
 					/>
 				</PanelBody>
 			</InspectorControls>
