@@ -8,6 +8,7 @@ import '../blocks/nova-content';
 import '../blocks/nova-accordion';
 import '../blocks/nova-project-meta';
 import '../blocks/nova-project-meta-item';
+import '../editor/nova-sidebar';
 
 domReady(() => {
 	registerBlockStyle('core/button', {
