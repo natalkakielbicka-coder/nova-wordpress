@@ -23,6 +23,13 @@ const deprecated = [
 			},
 		},
 
+		migrate(attributes) {
+			return {
+				...attributes,
+				buttonTarget: '_self',
+			};
+		},
+
 		save({ attributes }) {
 			const { eyebrow, title, buttonText, buttonUrl } = attributes;
 

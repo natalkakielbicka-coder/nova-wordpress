@@ -29,6 +29,10 @@
 		"buttonUrl": {
 			"type": "string",
 			"default": "#kontakt"
+		},
+		"buttonTarget": {
+			"type": "string",
+			"default": "_self"
 		}
 	}
 }

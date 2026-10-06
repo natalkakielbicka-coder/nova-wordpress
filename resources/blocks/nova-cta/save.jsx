@@ -3,7 +3,7 @@ import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { styles } from './styles';
 
 export default function save({ attributes }) {
-	const { eyebrow, title, buttonText, buttonUrl } = attributes;
+	const { eyebrow, title, buttonText, buttonUrl, buttonTarget } = attributes;
 
 	const blockProps = useBlockProps.save({
 		className: styles.block,
@@ -19,6 +19,8 @@ export default function save({ attributes }) {
 
 					<a
 						href={buttonUrl}
+						target={buttonTarget}
+						rel={buttonTarget === '_blank' ? 'noopener noreferrer' : undefined}
 						className={`${styles.button} transition hover:bg-nova-white hover:text-nova-ink`}
 					>
 						<RichText.Content tagName="span" value={buttonText} />
