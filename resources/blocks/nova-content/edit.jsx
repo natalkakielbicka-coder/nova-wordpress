@@ -16,6 +16,10 @@ const TEMPLATE = [
 		{
 			level: 2,
 			placeholder: 'Nagłówek sekcji...',
+			lock: {
+				move: true,
+				remove: true,
+			},
 		},
 	],
 	[
