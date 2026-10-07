@@ -19,6 +19,7 @@ export default defineConfig({
 				'resources/css/editor.css',
 				'resources/js/editor.js',
 				'resources/blocks/nova-accordion/view.js',
+				'resources/js/admin-projects.jsx',
 			],
 			refresh: true,
 			assets: ['resources/images/**', 'resources/fonts/**'],
