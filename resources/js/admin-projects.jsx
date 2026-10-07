@@ -16,31 +16,42 @@ const NovaProjectsAdmin = () => {
 
 			{projects === null ? (
 				<p>Ładowanie projektów...</p>
+			) : projects.length === 0 ? (
+				<p>Nie znaleziono projektów.</p>
 			) : (
-				<ul>
-					{projects.map((project) => (
-						<div key={project.id}>
-							<h2>{project.title.rendered}</h2>
+				<table className="widefat striped">
+					<thead>
+						<tr>
+							<th>Projekt</th>
+							<th>Klient</th>
+							<th>Rok</th>
+							<th>Zakres</th>
+							<th>Technologie</th>
+						</tr>
+					</thead>
 
-							<p>
-								<strong>Klient:</strong> {project.acf?.project_client || '—'}
-							</p>
+					<tbody>
+						{projects.map((project) => (
+							<tr key={project.id}>
+								<td>
+									<strong>
+										<a href={`post.php?post=${project.id}&action=edit`}>
+											{project.title.rendered}
+										</a>
+									</strong>
+								</td>
 
-							<p>
-								<strong>Rok:</strong> {project.acf?.project_year || '—'}
-							</p>
+								<td>{project.acf?.project_client || '—'}</td>
 
-							<p>
-								<strong>Zakres:</strong> {project.acf?.project_scope || '—'}
-							</p>
+								<td>{project.acf?.project_year || '—'}</td>
 
-							<p>
-								<strong>Technologie:</strong>{' '}
-								{project.acf?.project_technologies || '—'}
-							</p>
-						</div>
-					))}
-				</ul>
+								<td>{project.acf?.project_scope || '—'}</td>
+
+								<td>{project.acf?.project_technologies || '—'}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
 			)}
 		</div>
 	);
