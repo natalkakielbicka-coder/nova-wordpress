@@ -1,5 +1,6 @@
 import domReady from '@wordpress/dom-ready';
 import { registerBlockStyle, registerBlockVariation } from '@wordpress/blocks';
+import { addFilter } from '@wordpress/hooks';
 import '../formats/nova-highlight';
 import '../blocks/nova-cta';
 import '../blocks/nova-projects';
@@ -9,6 +10,23 @@ import '../blocks/nova-accordion';
 import '../blocks/nova-project-meta';
 import '../blocks/nova-project-meta-item';
 import '../editor/nova-sidebar';
+
+addFilter('blocks.registerBlockType', 'nova/limit-heading-levels', (settings, name) => {
+	if (name !== 'core/heading') {
+		return settings;
+	}
+
+	return {
+		...settings,
+		attributes: {
+			...settings.attributes,
+			levelOptions: {
+				type: 'array',
+				default: [2, 3, 4, 5, 6],
+			},
+		},
+	};
+});
 
 domReady(() => {
 	registerBlockStyle('core/button', {
