@@ -11,6 +11,7 @@ import '../blocks/nova-accordion';
 import '../blocks/nova-project-meta';
 import '../blocks/nova-project-meta-item';
 import '../editor/nova-sidebar';
+import '../editor/landing-template';
 
 domReady(() => {
 	registerBlockStyle('core/button', {
