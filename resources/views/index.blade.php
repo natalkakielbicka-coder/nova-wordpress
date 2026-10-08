@@ -15,8 +15,41 @@
 				<p class="mt-6 max-w-xl text-base leading-7 text-nova-text">Wiedza, inspiracje i doświadczenia z tworzenia nowoczesnych stron internetowych.</p>
 			</div>
 
+			<div class="mb-12 max-w-xl">
+				<label for="nova-blog-search" class="mb-3 block text-sm font-medium text-nova-ink">
+					Szukaj artykułów
+				</label>
+
+				<div class="relative">
+					<input
+						id="nova-blog-search"
+						type="search"
+						placeholder="Wpisz szukaną frazę..."
+						autocomplete="off"
+						class="w-full border border-nova-line bg-nova-white px-5 py-4 pr-12 text-sm text-nova-ink outline-none transition focus:border-nova-ink"
+					/>
+
+					<span
+						class="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-nova-muted"
+						aria-hidden="true"
+					>
+						⌕
+					</span>
+				</div>
+
+				<p
+					id="nova-blog-search-status"
+					class="mt-3 text-sm text-nova-muted"
+					role="status"
+					aria-live="polite"
+				></p>
+			</div>
+
 			@if (have_posts())
-				<div class="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+				<div
+					id="nova-blog-results"
+					class="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3"
+				>
 					@while (have_posts())
 						@php (the_post())
 
@@ -70,7 +103,11 @@
 					@endwhile
 				</div>
 
-				<nav class="nova-pagination mt-16" aria-label="Paginacja bloga">
+				<nav
+					id="nova-blog-pagination"
+					class="nova-pagination mt-16"
+					aria-label="Paginacja bloga"
+				>
 					{!! paginate_links([
                     'mid_size' => 1,
                     'prev_text' => '← Poprzednia',
