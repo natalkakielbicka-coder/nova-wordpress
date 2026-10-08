@@ -1,11 +1,3 @@
-@php
-    $projects = new WP_Query([
-        'post_type' => 'project',
-        'post_status' => 'publish',
-        'posts_per_page' => 3,
-    ]);
-@endphp
-
 <section id="projekty" class="bg-nova-white px-6 py-24 lg:py-32">
 	<div class="mx-auto max-w-7xl">
 		<div class="mb-14 flex items-end justify-between gap-8">
