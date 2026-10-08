@@ -1,4 +1,4 @@
-<article>
+<article class="nova-project-card">
 	<a
 		href="{{ get_permalink() }}"
 		class="group block"
