@@ -31,6 +31,7 @@
     "@wordpress/data": "^10.56.0",
     "@wordpress/i18n": "^6.29.0",
     "@wordpress/interactivity": "^6.56.0",
+    "gsap": "^3.15.0",
     "swiper": "^14.3.0"
   }
 }
