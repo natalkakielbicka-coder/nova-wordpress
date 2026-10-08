@@ -333,6 +333,12 @@
 	padding: 0;
 }
 
+.nova-pagination .prev.page-numbers,
+.nova-pagination .next.page-numbers {
+	padding: 0 1.5rem;
+	white-space: nowrap;
+}
+
 @media (max-width: 767px) {
 	.nova-projects-grid.is-list .nova-project-card__link {
 		display: grid;
