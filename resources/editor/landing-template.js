@@ -3,22 +3,19 @@ import { select, subscribe, dispatch } from '@wordpress/data';
 import { createBlock } from '@wordpress/blocks';
 
 domReady(() => {
-	let previousTemplate = select('core/editor').getEditedPostAttribute('template');
+	const landingTemplate = 'template-landing.blade.php';
 
-	subscribe(() => {
-		const editor = select('core/editor');
-		const currentTemplate = editor.getEditedPostAttribute('template');
+	const getCurrentTemplate = () => select('core/editor').getEditedPostAttribute('template');
 
-		if (currentTemplate === previousTemplate) {
-			return;
-		}
+	const createLockedBlock = (name) =>
+		createBlock(name, {
+			lock: {
+				move: true,
+				remove: true,
+			},
+		});
 
-		previousTemplate = currentTemplate;
-
-		if (currentTemplate !== 'template-landing.blade.php') {
-			return;
-		}
-
+	const insertLandingBlocks = () => {
 		const blocks = select('core/block-editor').getBlocks();
 
 		const isEmpty =
@@ -31,11 +28,45 @@ domReady(() => {
 			return;
 		}
 
-		dispatch('core/block-editor').resetBlocks([
-			createBlock('nova/hero'),
-			createBlock('nova/content'),
-			createBlock('nova/projects'),
-			createBlock('nova/cta'),
-		]);
+		const landingGroup = createBlock(
+			'core/group',
+			{
+				className: 'nova-landing',
+				templateLock: 'contentOnly',
+				lock: {
+					move: true,
+					remove: true,
+				},
+				layout: {
+					type: 'default',
+				},
+			},
+			[
+				createLockedBlock('nova/hero'),
+				createLockedBlock('nova/content'),
+				createLockedBlock('nova/projects'),
+				createLockedBlock('nova/cta'),
+			],
+		);
+
+		dispatch('core/block-editor').resetBlocks([landingGroup]);
+	};
+
+	let previousTemplate = getCurrentTemplate();
+
+	subscribe(() => {
+		const currentTemplate = getCurrentTemplate();
+
+		if (currentTemplate === previousTemplate) {
+			return;
+		}
+
+		previousTemplate = currentTemplate;
+
+		if (currentTemplate !== landingTemplate) {
+			return;
+		}
+
+		insertLandingBlocks();
 	});
 });
