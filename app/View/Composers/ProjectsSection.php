@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\Support\ProjectData;
 use Roots\Acorn\View\Composer;
 use WP_Query;
 
@@ -21,27 +22,11 @@ class ProjectsSection extends Composer
             'ignore_sticky_posts' => true,
         ]);
 
-        $projects = array_map(
-            static function ($post): array {
-                return [
-                    'id' => $post->ID,
-                    'title' => get_the_title($post->ID),
-                    'url' => get_permalink($post->ID),
-                    'excerpt' => get_the_excerpt($post->ID),
-                    'image' => get_the_post_thumbnail(
-                        $post->ID,
-                        'large',
-                        [
-                            'class' => 'h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]',
-                        ]
-                    ),
-                ];
-            },
-            $query->posts
-        );
-
         return [
-            'projects' => $projects,
+            'projects' => array_map(
+                [ProjectData::class, 'fromPost'],
+                $query->posts
+            ),
         ];
     }
 }

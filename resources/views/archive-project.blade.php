@@ -15,12 +15,11 @@
 				<p class="mt-6 max-w-xl text-base leading-7 text-nova-text">Wybrane realizacje stron internetowych i sklepów opartych na WordPressie.</p>
 			</div>
 
-			@if (have_posts())
+			@if (count($projects))
 				<div class="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-					@while (have_posts())
-						@php (the_post())
-						<x-project-card />
-					@endwhile
+					@foreach ($projects as $project)
+						<x-project-card :project="$project" />
+					@endforeach
 				</div>
 
 				<nav class="nova-pagination mt-16" aria-label="Paginacja projektów">
