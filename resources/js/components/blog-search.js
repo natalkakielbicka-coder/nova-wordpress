@@ -146,6 +146,27 @@ export const initBlogSearch = () => {
 	let controller = null;
 	let requestId = 0;
 
+	const updateUrl = (query, page = 1) => {
+		const url = new URL(window.location.href);
+
+		// Usuwamy paginację WordPressa z adresu.
+		url.pathname = url.pathname.replace(/\/page\/\d+\/?$/, '/');
+
+		if (query.trim()) {
+			url.searchParams.set('search', query.trim());
+		} else {
+			url.searchParams.delete('search');
+		}
+
+		if (query.trim() && page > 1) {
+			url.searchParams.set('page', String(page));
+		} else {
+			url.searchParams.delete('page');
+		}
+
+		window.history.pushState({}, '', url);
+	};
+
 	const searchPosts = async (query, page = 1) => {
 		controller?.abort();
 		controller = null;
@@ -192,6 +213,8 @@ export const initBlogSearch = () => {
 			if (currentRequest !== requestId) {
 				return;
 			}
+
+			updateUrl(query, page);
 
 			results.replaceChildren();
 
@@ -255,5 +278,15 @@ export const initBlogSearch = () => {
 		debounceTimer = setTimeout(() => {
 			searchPosts(query);
 		}, 300);
+	});
+
+	window.addEventListener('popstate', () => {
+		const params = new URLSearchParams(window.location.search);
+
+		const query = params.get('search') || '';
+		const page = Math.max(1, Number(params.get('page')) || 1);
+
+		input.value = query;
+		searchPosts(query, page);
 	});
 };
