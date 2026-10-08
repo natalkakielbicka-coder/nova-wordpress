@@ -19,10 +19,18 @@
 				<div class="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
 					@while (have_posts())
 						@php (the_post())
-
 						<x-project-card />
 					@endwhile
 				</div>
+
+				<nav class="nova-pagination mt-16" aria-label="Paginacja projektów">
+					{!! paginate_links([
+                    'mid_size' => 1,
+                    'prev_text' => '← Poprzednia',
+                    'next_text' => 'Następna →',
+                    'type' => 'list',
+                ]) !!}
+				</nav>
 			@else
 				<p class="text-nova-muted">Brak projektów do wyświetlenia.</p>
 			@endif

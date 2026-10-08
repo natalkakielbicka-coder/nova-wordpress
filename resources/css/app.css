@@ -256,6 +256,83 @@
 	object-fit: cover;
 }
 
+.nova-pagination-item a,
+.nova-pagination-item span {
+	display: inline-flex;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	padding: 0.5rem 0.875rem;
+	border: 1px solid var(--color-nova-line);
+	color: var(--color-nova-text);
+	font-size: 0.875rem;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.nova-pagination-item a:hover,
+.nova-pagination-item .current {
+	background-color: var(--color-nova-ink);
+	border-color: var(--color-nova-ink);
+	color: var(--color-nova-white);
+}
+
+.nova-pagination-item a:focus-visible {
+	outline: 2px solid var(--color-nova-ink);
+	outline-offset: 3px;
+}
+
+.nova-pagination .page-numbers {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.nova-pagination li {
+	list-style: none;
+}
+
+.nova-pagination a,
+.nova-pagination span {
+	display: inline-flex;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	align-items: center;
+	justify-content: center;
+	padding: 0.5rem 0.875rem;
+	border: 1px solid var(--color-nova-line);
+	color: var(--color-nova-text);
+	font-size: 0.875rem;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.nova-pagination a:hover,
+.nova-pagination .current {
+	background-color: var(--color-nova-ink);
+	border-color: var(--color-nova-ink);
+	color: var(--color-nova-white);
+}
+
+.nova-pagination a:focus-visible {
+	outline: 2px solid var(--color-nova-ink);
+	outline-offset: 3px;
+}
+
+.nova-pagination .dots {
+	border-color: transparent;
+}
+
+.nova-pagination .page-numbers.page-numbers {
+	margin: 0;
+	padding: 0;
+}
+
 @media (max-width: 767px) {
 	.nova-projects-grid.is-list .nova-project-card__link {
 		display: grid;
