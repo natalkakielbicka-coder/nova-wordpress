@@ -20,16 +20,12 @@
 			</a>
 		</div>
 
-		@if ($projects->have_posts())
+		@if (count($projects))
 			<div class="grid gap-10 md:grid-cols-3">
-				@while ($projects->have_posts())
-					@php ($projects->the_post())
-
-					<x-project-card />
-				@endwhile
+				@foreach ($projects as $project)
+					<x-project-card :project="$project" />
+				@endforeach
 			</div>
-
-			@php (wp_reset_postdata())
 		@endif
 	</div>
 </section>
