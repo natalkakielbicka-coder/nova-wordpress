@@ -297,7 +297,8 @@
 }
 
 .nova-pagination a,
-.nova-pagination span {
+.nova-pagination span,
+.nova-pagination button {
 	display: inline-flex;
 	min-width: 2.75rem;
 	min-height: 2.75rem;
@@ -313,6 +314,7 @@
 }
 
 .nova-pagination a:hover,
+.nova-pagination button:not(:disabled):hover,
 .nova-pagination .current {
 	background-color: var(--color-nova-ink);
 	border-color: var(--color-nova-ink);
@@ -337,6 +339,19 @@
 .nova-pagination .next.page-numbers {
 	padding: 0 1.5rem;
 	white-space: nowrap;
+}
+
+.nova-pagination button {
+	cursor: pointer;
+}
+
+.nova-pagination button:disabled {
+	cursor: default;
+}
+
+.nova-pagination button:focus-visible {
+	outline: 2px solid var(--color-nova-ink);
+	outline-offset: 3px;
 }
 
 @media (max-width: 767px) {
