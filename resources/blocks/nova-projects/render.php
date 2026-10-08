@@ -20,11 +20,36 @@ if (!$projects->have_posts()) {
 
 <section <?php echo $wrapper_attributes; ?>>
     <div class="mx-auto max-w-7xl">
-        <h2 class="font-serif text-4xl leading-tight text-nova-ink">
-            <?php echo esc_html($title); ?>
-        </h2>
+        <div class="flex flex-wrap items-center justify-between gap-6">
+            <h2 class="font-serif text-4xl leading-tight text-nova-ink">
+                <?php echo esc_html($title); ?>
+            </h2>
+            <div
+                class="nova-projects-layout-switch flex items-center gap-2"
+                role="group"
+                aria-label="Układ projektów"
+            >
+                <button
+                    type="button"
+                    class="nova-layout-button is-active"
+                    data-layout="grid"
+                    aria-pressed="true"
+                >
+                    Siatka
+                </button>
 
-        <div class="mt-10 grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+                <button
+                    type="button"
+                    class="nova-layout-button"
+                    data-layout="list"
+                    aria-pressed="false"
+                >
+                    Lista
+                </button>
+            </div>
+        </div>
+
+        <div class="nova-projects-grid mt-10 grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
             <?php while ($projects->have_posts()) : ?>
                 <?php $projects->the_post(); ?>
 
