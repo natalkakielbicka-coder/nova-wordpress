@@ -524,6 +524,24 @@ html.theme-transition a {
 	width: 100%;
 }
 
+#nova-reading-progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 99999;
+	width: 100vw;
+	max-width: none;
+	height: 4px;
+	background-color: var(--color-nova-ink, #171714);
+	transform-origin: left center;
+	pointer-events: none;
+}
+
+body.admin-bar #nova-reading-progress {
+	top: 32px;
+}
+
 @media (max-width: 767px) {
 	.nova-projects-grid.is-list .nova-project-card__link {
 		display: grid;
@@ -554,6 +572,10 @@ html.theme-transition a {
 
 	.nova-projects-grid.is-list .nova-project-card__content > span {
 		margin-top: 0.75rem;
+	}
+
+	body.admin-bar #nova-reading-progress {
+		top: 46px;
 	}
 }
 
