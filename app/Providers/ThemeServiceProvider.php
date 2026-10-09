@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\ProjectRepository;
 use Roots\Acorn\Sage\SageServiceProvider;
 
 class ThemeServiceProvider extends SageServiceProvider
@@ -14,6 +15,11 @@ class ThemeServiceProvider extends SageServiceProvider
     public function register()
     {
         parent::register();
+
+        $this->app->bind(
+            ProjectRepository::class,
+            fn () => new ProjectRepository()
+        );
     }
 
     /**
