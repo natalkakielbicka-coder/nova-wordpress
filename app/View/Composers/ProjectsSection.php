@@ -11,12 +11,14 @@ class ProjectsSection extends Composer
         'sections.projects',
     ];
 
+    public function __construct(
+        protected ProjectRepository $repository
+    ) {}
+
     public function with(): array
     {
-        $repository = new ProjectRepository();
-
         return [
-            'projects' => $repository->getLatest(3),
+            'projects' => $this->repository->getLatest(3),
         ];
     }
 }

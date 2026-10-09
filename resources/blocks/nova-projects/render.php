@@ -3,7 +3,7 @@ use App\Repositories\ProjectRepository;
 $number_of_projects = $attributes['numberOfProjects'] ?? 3;
 $title = $attributes['title'] ?? 'Wybrane projekty';
 
-$repository = new ProjectRepository();
+$repository = app(ProjectRepository::class);
 $projects = $repository->getLatest((int) $number_of_projects);
 
 $wrapper_attributes = get_block_wrapper_attributes([
