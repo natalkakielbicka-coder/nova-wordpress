@@ -27,6 +27,21 @@
 	--font-serif: 'Georgia', 'Times New Roman', serif;
 }
 
+:root {
+	color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+
+	--color-nova-ink: #f2f0e9;
+	--color-nova-text: #d2d0c9;
+	--color-nova-muted: #aaa89f;
+	--color-nova-line: #393a36;
+	--color-nova-background: #171816;
+	--color-nova-white: #22231f;
+}
+
 @layer base {
 	body {
 		@apply bg-nova-background font-sans text-nova-ink;
@@ -372,6 +387,42 @@
 	color: var(--color-nova-ink);
 }
 
+html.theme-transition,
+html.theme-transition body,
+html.theme-transition header,
+html.theme-transition main,
+html.theme-transition footer,
+html.theme-transition section,
+html.theme-transition nav,
+html.theme-transition button,
+html.theme-transition a {
+	transition-property: background-color, border-color, color;
+	transition-duration: 250ms;
+	transition-timing-function: ease;
+}
+
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] textarea,
+:root[data-theme='dark'] select {
+	color: var(--color-nova-ink);
+}
+
+:root[data-theme='dark'] input::placeholder,
+:root[data-theme='dark'] textarea::placeholder {
+	color: var(--color-nova-muted);
+}
+
+:root[data-theme='dark'] input:focus-visible,
+:root[data-theme='dark'] textarea:focus-visible,
+:root[data-theme='dark'] select:focus-visible {
+	outline-color: var(--color-nova-ink);
+}
+
+::selection {
+	background-color: var(--color-nova-ink);
+	color: var(--color-nova-white);
+}
+
 @media (max-width: 767px) {
 	.nova-projects-grid.is-list .nova-project-card__link {
 		display: grid;
@@ -409,5 +460,17 @@
 	.nova-process-step::before,
 	.nova-process-step h3 {
 		transition: none;
+	}
+
+	html.theme-transition,
+	html.theme-transition body,
+	html.theme-transition header,
+	html.theme-transition main,
+	html.theme-transition footer,
+	html.theme-transition section,
+	html.theme-transition nav,
+	html.theme-transition button,
+	html.theme-transition a {
+		transition-duration: 0ms;
 	}
 }

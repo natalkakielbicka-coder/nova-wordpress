@@ -1,6 +1,25 @@
 <!doctype html>
 <html @php (language_attributes())>
 <head>
+	<script>
+		(() => {
+			try {
+				const saved = localStorage.getItem('nova-theme');
+
+				const theme =
+					saved === 'dark' || saved === 'light'
+						? saved
+						: window.matchMedia('(prefers-color-scheme: dark)').matches
+							? 'dark'
+							: 'light';
+
+				document.documentElement.dataset.theme = theme;
+			} catch {
+				document.documentElement.dataset.theme = 'light';
+			}
+		})();
+	</script>
+
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	@php (do_action('get_header'))
