@@ -354,6 +354,24 @@
 	outline-offset: 3px;
 }
 
+.nova-breadcrumbs {
+	font-size: 0.75rem;
+	color: var(--color-nova-muted);
+}
+
+.nova-breadcrumbs a {
+	color: var(--color-nova-muted);
+	transition: color 0.2s ease;
+}
+
+.nova-breadcrumbs a:hover {
+	color: var(--color-nova-ink);
+}
+
+.nova-breadcrumbs .breadcrumb_last {
+	color: var(--color-nova-ink);
+}
+
 @media (max-width: 767px) {
 	.nova-projects-grid.is-list .nova-project-card__link {
 		display: grid;
