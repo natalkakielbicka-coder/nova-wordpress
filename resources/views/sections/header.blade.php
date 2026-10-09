@@ -20,6 +20,31 @@
 
 		<button
 			type="button"
+			id="nova-search-toggle"
+			class="ml-auto flex size-11 items-center justify-center text-nova-ink transition hover:opacity-60 lg:ml-0"
+			aria-label="Otwórz wyszukiwarkę"
+			aria-expanded="false"
+			aria-controls="nova-search-panel"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="22"
+				height="22"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.5"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<circle cx="11" cy="11" r="8"></circle>
+				<path d="m21 21-4.35-4.35"></path>
+			</svg>
+		</button>
+
+		<button
+			type="button"
 			class="mobile-menu-toggle flex size-11 items-center justify-center lg:hidden"
 			aria-expanded="false"
 			aria-controls="mobile-navigation"
@@ -48,6 +73,47 @@
 		>
 			Porozmawiajmy
 		</a>
+	</div>
+
+	<div
+		id="nova-search-panel"
+		class="hidden border-t border-nova-line bg-nova-background px-6 py-8"
+	>
+		<div class="mx-auto max-w-3xl">
+			<form
+				id="nova-live-search-form"
+				role="search"
+				action="{{ home_url('/') }}"
+				method="get"
+			>
+				<label
+					for="nova-live-search-input"
+					class="mb-3 block text-sm font-medium text-nova-ink"
+				>
+					Czego szukasz?
+				</label>
+
+				<div class="relative">
+					<input
+						id="nova-live-search-input"
+						type="search"
+						name="s"
+						placeholder="Wpisz szukaną frazę..."
+						autocomplete="off"
+						aria-controls="nova-live-search-results"
+						aria-expanded="false"
+						class="w-full border-b border-nova-ink bg-transparent py-4 pr-12 text-lg text-nova-ink outline-none placeholder:text-nova-muted"
+					/>
+				</div>
+			</form>
+
+			<div
+				id="nova-live-search-results"
+				class="mt-6"
+				aria-live="polite"
+				aria-relevant="additions text"
+			></div>
+		</div>
 	</div>
 
 	@if (has_nav_menu('primary_navigation'))
