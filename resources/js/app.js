@@ -8,6 +8,7 @@ import { initBlogSearch } from './components/blog-search';
 import { initLoadMore } from './components/load-more';
 import { initHeaderSearch } from './components/header-search';
 import { initThemeToggle } from './components/theme-toggle';
+import { initReadingProgress } from './components/reading-progress';
 
 document.addEventListener('DOMContentLoaded', () => {
 	initProjectsLayout();
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	initLoadMore();
 	initHeaderSearch();
 	initThemeToggle();
+	initReadingProgress();
 });
 
 initTestimonialsSlider();
