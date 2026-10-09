@@ -1,6 +1,10 @@
 @extends ('layouts.app')
 
 @section ('content')
+	@php
+	global $wp_query;
+@endphp
+
 	<section class="px-6 py-20 lg:py-28">
 		<div class="mx-auto max-w-7xl">
 			<div class="mb-16 max-w-3xl">
@@ -102,6 +106,27 @@
 
 					@endwhile
 				</div>
+
+				@if ($wp_query->max_num_pages > 1)
+					<div id="nova-load-more-wrapper" class="mt-12 flex flex-col items-center gap-4">
+						<button
+							type="button"
+							id="nova-load-more"
+							data-page="{{ max(1, get_query_var('paged')) }}"
+							data-max-pages="{{ $wp_query->max_num_pages }}"
+							class="border border-nova-ink px-8 py-4 text-sm font-medium text-nova-ink transition hover:bg-nova-ink hover:text-nova-white disabled:cursor-wait disabled:opacity-50"
+						>
+							Załaduj więcej
+						</button>
+
+						<p
+							id="nova-load-more-status"
+							class="text-sm text-nova-muted"
+							role="status"
+							aria-live="polite"
+						></p>
+					</div>
+				@endif
 
 				<nav
 					id="nova-blog-pagination"

@@ -5,11 +5,13 @@ import { initMobileMenu } from './components/mobile-menu';
 import { initProjectsLayout } from './components/projects-layout';
 import { initAnimations } from './animations';
 import { initBlogSearch } from './components/blog-search';
+import { initLoadMore } from './components/load-more';
 
 document.addEventListener('DOMContentLoaded', () => {
 	initProjectsLayout();
 	initAnimations();
 	initBlogSearch();
+	initLoadMore();
 });
 
 initTestimonialsSlider();
