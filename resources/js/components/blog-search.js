@@ -58,7 +58,9 @@ export const initBlogSearch = () => {
 	let originalContent = results.innerHTML;
 
 	results.addEventListener('nova:posts-loaded', () => {
-		originalContent = results.innerHTML;
+		if (!input.value.trim()) {
+			originalContent = results.innerHTML;
+		}
 	});
 
 	let controller = null;
@@ -76,16 +78,18 @@ export const initBlogSearch = () => {
 			url.searchParams.delete('search');
 		}
 
+		url.searchParams.delete('page');
+
 		if (query.trim() && page > 1) {
-			url.searchParams.set('page', String(page));
+			url.searchParams.set('search_page', String(page));
 		} else {
-			url.searchParams.delete('page');
+			url.searchParams.delete('search_page');
 		}
 
 		window.history.pushState({}, '', url);
 	};
 
-	const searchPosts = async (query, page = 1) => {
+	const searchPosts = async (query, page = 1, updateHistory = true) => {
 		controller?.abort();
 		controller = null;
 
@@ -96,6 +100,10 @@ export const initBlogSearch = () => {
 		}
 
 		if (!query.trim()) {
+			if (updateHistory) {
+				updateUrl('', 1);
+			}
+
 			results.innerHTML = originalContent;
 			status.textContent = '';
 			if (pagination) {
@@ -136,7 +144,9 @@ export const initBlogSearch = () => {
 				return;
 			}
 
-			updateUrl(query, page);
+			if (updateHistory) {
+				updateUrl(query, page);
+			}
 
 			results.replaceChildren();
 
@@ -206,9 +216,19 @@ export const initBlogSearch = () => {
 		const params = new URLSearchParams(window.location.search);
 
 		const query = params.get('search') || '';
-		const page = Math.max(1, Number(params.get('page')) || 1);
+		const page = Math.max(1, Number(params.get('search_page')) || 1);
 
 		input.value = query;
-		searchPosts(query, page);
+		searchPosts(query, page, false);
 	});
+
+	const initialParams = new URLSearchParams(window.location.search);
+
+	const initialQuery = initialParams.get('search') || '';
+	const initialPage = Math.max(1, Number(initialParams.get('search_page')) || 1);
+
+	if (initialQuery) {
+		input.value = initialQuery;
+		searchPosts(initialQuery, initialPage, false);
+	}
 };
