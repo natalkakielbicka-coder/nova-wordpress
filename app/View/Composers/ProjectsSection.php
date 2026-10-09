@@ -2,9 +2,8 @@
 
 namespace App\View\Composers;
 
-use App\Support\ProjectData;
+use App\Repositories\ProjectRepository;
 use Roots\Acorn\View\Composer;
-use WP_Query;
 
 class ProjectsSection extends Composer
 {
@@ -14,19 +13,10 @@ class ProjectsSection extends Composer
 
     public function with(): array
     {
-        $query = new WP_Query([
-            'post_type' => 'project',
-            'post_status' => 'publish',
-            'posts_per_page' => 3,
-            'no_found_rows' => true,
-            'ignore_sticky_posts' => true,
-        ]);
+        $repository = new ProjectRepository();
 
         return [
-            'projects' => array_map(
-                [ProjectData::class, 'fromPost'],
-                $query->posts
-            ),
+            'projects' => $repository->getLatest(3),
         ];
     }
 }

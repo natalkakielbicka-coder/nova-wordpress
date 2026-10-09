@@ -1,21 +1,16 @@
 <?php
-
+use App\Repositories\ProjectRepository;
 $number_of_projects = $attributes['numberOfProjects'] ?? 3;
 $title = $attributes['title'] ?? 'Wybrane projekty';
 
-$projects = new WP_Query([
-    'post_type' => 'project',
-    'post_status' => 'publish',
-    'posts_per_page' => $number_of_projects,
-    'no_found_rows' => true,
-    'ignore_sticky_posts' => true,
-]);
+$repository = new ProjectRepository();
+$projects = $repository->getLatest((int) $number_of_projects);
 
 $wrapper_attributes = get_block_wrapper_attributes([
     'class' => 'px-6 py-20',
 ]);
 
-if (!$projects->have_posts()) {
+if (empty($projects)) {
     return;
 }
 ?>
@@ -50,12 +45,12 @@ if (!$projects->have_posts()) {
                 </button>
             </div>
         </div>
-
+        
         <div class="nova-projects-grid mt-10 grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-            <?php foreach ($projects->posts as $post) : ?>
+            <?php foreach ($projects as $project) : ?>
                 <?php
                 echo view('components.project-card', [
-                    'project' => \App\Support\ProjectData::fromPost($post),
+                    'project' => $project,
                 ])->render();
                 ?>
             <?php endforeach; ?>
