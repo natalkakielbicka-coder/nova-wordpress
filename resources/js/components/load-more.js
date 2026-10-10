@@ -43,7 +43,7 @@ export const initLoadMore = () => {
 		url.searchParams.set('page', String(nextPage));
 		url.searchParams.set('per_page', '9');
 		url.searchParams.set('_embed', '1');
-		url.searchParams.set('_fields', 'id,link,title,excerpt,date,reading_time,_links,_embedded');
+		url.searchParams.set('_fields', 'id,card_html');
 
 		try {
 			const response = await fetch(url);
@@ -61,7 +61,11 @@ export const initLoadMore = () => {
 			const fragment = document.createDocumentFragment();
 
 			posts.forEach((post) => {
-				fragment.append(createPostCard(post));
+				const card = createPostCard(post);
+
+				if (card) {
+					fragment.append(card);
+				}
 			});
 
 			results.append(fragment);

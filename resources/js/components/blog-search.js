@@ -125,7 +125,7 @@ export const initBlogSearch = () => {
 		url.searchParams.set('per_page', '9');
 		url.searchParams.set('page', String(page));
 		url.searchParams.set('_embed', '1');
-		url.searchParams.set('_fields', 'id,link,title,excerpt,date,reading_time,_links,_embedded');
+		url.searchParams.set('_fields', 'id,card_html');
 
 		try {
 			const response = await fetch(url, {
@@ -156,7 +156,11 @@ export const initBlogSearch = () => {
 			}
 
 			posts.forEach((post) => {
-				results.append(createPostCard(post));
+				const card = createPostCard(post);
+
+				if (card) {
+					results.append(card);
+				}
 			});
 
 			if (pagination) {

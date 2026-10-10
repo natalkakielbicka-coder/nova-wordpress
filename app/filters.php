@@ -30,3 +30,20 @@ add_action('rest_api_init', function () {
         ],
     ]);
 });
+
+
+add_action('rest_api_init', function () {
+    register_rest_field('post', 'card_html', [
+        'get_callback' => function ($post) {
+            return view('partials.post-card', [
+                'postId' => (int) $post['id'],
+            ])->render();
+        },
+        'schema' => [
+            'description' => 'Rendered NOVA blog card HTML.',
+            'type' => 'string',
+            'context' => ['view'],
+            'readonly' => true,
+        ],
+    ]);
+});

@@ -45,54 +45,9 @@
 				@while ($relatedPosts->have_posts())
 					@php ($relatedPosts->the_post())
 
-					<article class="group min-w-0">
-						<a href="{{ get_permalink() }}" class="block">
-							<div class="aspect-[4/3] overflow-hidden bg-nova-white">
-								@if (has_post_thumbnail())
-									{!! get_the_post_thumbnail(
-                                        get_the_ID(),
-                                        'large',
-                                        [
-                                            'class' => 'h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]',
-                                            'loading' => 'lazy',
-                                        ]
-                                    ) !!}
-								@endif
-							</div>
-
-							<div
-								class="mt-6 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.12em] text-nova-muted"
-							>
-								<time datetime="{{ get_the_date('c') }}">
-									{{ get_the_date('d.m.Y') }}
-								</time>
-
-								<span aria-hidden="true">/</span>
-
-								<span>
-									{{ \App\Support\ReadingTime::calculate(get_the_ID()) }} min
-									czytania
-								</span>
-							</div>
-
-							<h3
-								class="mt-4 font-serif text-2xl leading-tight text-nova-ink transition group-hover:opacity-60"
-							>
-								{{ get_the_title() }}
-							</h3>
-
-							<p class="mt-4 line-clamp-3 text-sm leading-7 text-nova-text">
-								{{ get_the_excerpt() }}
-							</p>
-
-							<span
-								class="mt-6 inline-flex items-center gap-2 border-b border-nova-ink pb-1 text-sm text-nova-ink"
-							>
-								Czytaj więcej
-								<span aria-hidden="true">→</span>
-							</span>
-						</a>
-					</article>
+					@include ('partials.post-card', [
+						'postId' => get_the_ID(),
+					])
 				@endwhile
 			</div>
 		</div>
