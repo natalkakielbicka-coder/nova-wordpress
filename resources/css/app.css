@@ -369,6 +369,15 @@
 	outline-offset: 3px;
 }
 
+/* Blog pagination — Previous / Next */
+
+.nova-pagination .page-numbers.prev,
+.nova-pagination .page-numbers.next {
+	padding-inline: 1.5rem;
+	min-width: max-content;
+	white-space: nowrap;
+}
+
 .nova-breadcrumbs {
 	font-size: 0.75rem;
 	color: var(--color-nova-muted);

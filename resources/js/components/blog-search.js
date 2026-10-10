@@ -10,7 +10,9 @@ const createPagination = (currentPage, totalPages, onPageChange) => {
 
 		button.type = 'button';
 		button.textContent = label;
-		button.className = `page-numbers${isCurrent ? ' current' : ''}`;
+		button.className = `page-numbers${isCurrent ? ' current' : ''}${
+			label.includes('Poprzednia') ? ' prev' : label.includes('Następna') ? ' next' : ''
+		}`;
 
 		if (isCurrent) {
 			button.setAttribute('aria-current', 'page');
