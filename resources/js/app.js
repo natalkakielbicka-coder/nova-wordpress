@@ -4,8 +4,6 @@ import { initTestimonialsSlider } from './components/testimonials-slider';
 import { initMobileMenu } from './components/mobile-menu';
 import { initProjectsLayout } from './components/projects-layout';
 import { initAnimations } from './animations';
-import { initBlogSearch } from './components/blog-search';
-import { initLoadMore } from './components/load-more';
 import { initHeaderSearch } from './components/header-search';
 import { initThemeToggle } from './components/theme-toggle';
 import { initReadingProgress } from './components/reading-progress';
@@ -13,11 +11,29 @@ import { initReadingProgress } from './components/reading-progress';
 document.addEventListener('DOMContentLoaded', () => {
 	initProjectsLayout();
 	initAnimations();
-	initBlogSearch();
-	initLoadMore();
 	initHeaderSearch();
 	initThemeToggle();
 	initReadingProgress();
+
+	if (document.querySelector('#nova-blog-search')) {
+		import('./components/blog-search')
+			.then(({ initBlogSearch }) => {
+				initBlogSearch();
+			})
+			.catch((error) => {
+				console.error('Failed to load blog search:', error);
+			});
+	}
+
+	if (document.querySelector('#nova-load-more')) {
+		import('./components/load-more')
+			.then(({ initLoadMore }) => {
+				initLoadMore();
+			})
+			.catch((error) => {
+				console.error('Failed to load more module:', error);
+			});
+	}
 });
 
 initTestimonialsSlider();
