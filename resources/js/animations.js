@@ -15,9 +15,14 @@ export const initAnimations = async () => {
 
 	if (document.querySelector('.nova-project-card')) {
 		animations.push(
-			import('./animations/projects').then(({ initProjectsAnimation }) => {
-				initProjectsAnimation();
-			}),
+			import('./animations/projects')
+				.then(({ initProjectsAnimation }) => {
+					initProjectsAnimation();
+				})
+				.catch((error) => {
+					document.documentElement.classList.remove('nova-motion-ready');
+					console.error('Failed to initialize project animations:', error);
+				}),
 		);
 	}
 

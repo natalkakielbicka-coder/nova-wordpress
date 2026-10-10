@@ -24,6 +24,29 @@
 		})();
 	</script>
 
+	<noscript>
+		<style>
+			html.nova-motion-ready .nova-project-card {
+				opacity: 1 !important;
+				transform: none !important;
+				visibility: visible !important;
+			}
+		</style>
+	</noscript>
+
+	<script>
+		(() => {
+			window.setTimeout(() => {
+				if (
+					document.documentElement.classList.contains('nova-motion-ready') &&
+					!window.novaProjectAnimationsReady
+				) {
+					document.documentElement.classList.remove('nova-motion-ready');
+				}
+			}, 5000);
+		})();
+	</script>
+
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	@php (do_action('get_header'))
