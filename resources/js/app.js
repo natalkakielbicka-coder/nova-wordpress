@@ -1,15 +1,11 @@
 import.meta.glob(['../images/**', '../fonts/**']);
 
 import { initMobileMenu } from './components/mobile-menu';
-import { initProjectsLayout } from './components/projects-layout';
-import { initAnimations } from './animations';
 import { initHeaderSearch } from './components/header-search';
 import { initThemeToggle } from './components/theme-toggle';
 import { initReadingProgress } from './components/reading-progress';
 
 document.addEventListener('DOMContentLoaded', () => {
-	initProjectsLayout();
-	initAnimations();
 	initHeaderSearch();
 	initThemeToggle();
 	initReadingProgress();
@@ -41,6 +37,32 @@ document.addEventListener('DOMContentLoaded', () => {
 			})
 			.catch((error) => {
 				console.error('Failed to load testimonials slider:', error);
+			});
+	}
+
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const hasAnimatedElements = document.querySelector(
+		'.nova-hero, .nova-project-card, .nova-pin-section',
+	);
+
+	if (hasAnimatedElements && !prefersReducedMotion) {
+		import('./animations')
+			.then(({ initAnimations }) => {
+				initAnimations();
+			})
+			.catch((error) => {
+				console.error('Failed to load animations:', error);
+			});
+	}
+
+	if (document.querySelector('.wp-block-nova-projects')) {
+		import('./components/projects-layout')
+			.then(({ initProjectsLayout }) => {
+				initProjectsLayout();
+			})
+			.catch((error) => {
+				console.error('Failed to load projects layout:', error);
 			});
 	}
 });
