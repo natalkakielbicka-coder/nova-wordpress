@@ -76,6 +76,58 @@
 		</section>
 
 		@php
+			$currentProjectId = get_the_ID();
+
+			$relatedProjects = get_posts([
+				'post_type' => 'project',
+				'posts_per_page' => 3,
+				'post__not_in' => [$currentProjectId],
+				'orderby' => 'date',
+				'order' => 'DESC',
+			]);
+		@endphp
+
+		@if (!empty($relatedProjects))
+			<section class="px-6 pb-20 lg:pb-28">
+				<div class="mx-auto max-w-7xl">
+					<div class="mb-12">
+						<p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">Portfolio</p>
+
+						<h2 class="font-serif text-4xl tracking-tight text-nova-ink md:text-5xl">
+							Zobacz również
+						</h2>
+					</div>
+
+					<div class="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+						@foreach ($relatedProjects as $relatedPost)
+							@php
+                        $relatedProjectId = $relatedPost->ID;
+
+                        $relatedProject = [
+                            'url' => get_permalink($relatedProjectId),
+                            'title' => get_the_title($relatedProjectId),
+                            'excerpt' => get_the_excerpt($relatedProjectId),
+                            'image' => get_the_post_thumbnail(
+                                $relatedProjectId,
+                                'large',
+                                [
+                                    'class' => 'h-full w-full object-cover',
+                                    'loading' => 'lazy',
+                                ]
+                            ),
+                        ];
+                    	@endphp
+
+							@include ('components.project-card', [
+                        'project' => $relatedProject,
+                    ])
+						@endforeach
+					</div>
+				</div>
+			</section>
+		@endif
+
+		@php
 			$previousProject = get_previous_post();
 			$nextProject = get_next_post();
 			$projectsUrl = get_post_type_archive_link('project');
