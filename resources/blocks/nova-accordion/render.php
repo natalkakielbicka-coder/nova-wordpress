@@ -7,25 +7,30 @@ $wrapper_attributes = get_block_wrapper_attributes([
 $items = $attributes['items'] ?? [];
 $open_first_item = $attributes['openFirstItem'] ?? false;
 $single_open = $attributes['singleOpen'] ?? false;
+$accordion_id = wp_unique_id('nova-accordion-');
 ?>
 
 <section
     <?php echo $wrapper_attributes; ?>
     data-wp-interactive="nova/accordion"
+    data-wp-context='<?php echo esc_attr(wp_json_encode([
+        'accordionId' => $accordion_id,
+        'openFirstItem' => $open_first_item,
+        'singleOpen' => $single_open,
+    ])); ?>'
 >
     <div class="mx-auto max-w-3xl">
         <div class="border-t border-nova-line">
-            <?php $accordion_id = wp_unique_id('nova-accordion-'); ?>
             <?php foreach ($items as $index => $item) : ?>
             <?php $panel_id = "{$accordion_id}-panel-{$index}"; ?>
             <div
                 class="border-b border-nova-line"
                 data-nova-accordion-item
-                data-wp-context='<?php echo wp_json_encode([
+                data-wp-context='<?php echo esc_attr(wp_json_encode([
                     'isOpen' => $open_first_item && $index === 0,
-                    'singleOpen' => $single_open,
                     'index' => $index,
-                ]); ?>'
+                ])); ?>'
+
                 data-wp-watch="callbacks.syncOpenState"
             >
                 <button

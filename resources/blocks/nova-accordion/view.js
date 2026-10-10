@@ -2,7 +2,7 @@ import { getContext, store } from '@wordpress/interactivity';
 
 const { state } = store('nova/accordion', {
 	state: {
-		openItem: null,
+		openItems: {},
 	},
 
 	actions: {
@@ -14,7 +14,10 @@ const { state } = store('nova/accordion', {
 				return;
 			}
 
-			state.openItem = state.openItem === context.index ? null : context.index;
+			const { accordionId, index } = context;
+			const currentOpenItem = state.openItems[accordionId];
+
+			state.openItems[accordionId] = currentOpenItem === index ? null : index;
 		},
 	},
 
@@ -26,11 +29,13 @@ const { state } = store('nova/accordion', {
 				return;
 			}
 
-			if (state.openItem === null && context.isOpen && context.index === 0) {
-				state.openItem = 0;
+			const { accordionId, index, openFirstItem } = context;
+
+			if (!(accordionId in state.openItems)) {
+				state.openItems[accordionId] = openFirstItem ? 0 : null;
 			}
 
-			context.isOpen = state.openItem === context.index;
+			context.isOpen = state.openItems[accordionId] === index;
 		},
 	},
 });
