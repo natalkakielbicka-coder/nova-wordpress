@@ -107,6 +107,18 @@ add_action('after_setup_theme', function () {
      * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
      */
     add_theme_support('post-thumbnails');
+    
+    /**
+     * WooCommerce support.
+     */
+    add_theme_support('woocommerce', [
+        'thumbnail_image_width' => 600,
+        'single_image_width' => 1200,
+    ]);
+
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
 
     /**
      * Enable responsive embed support.
