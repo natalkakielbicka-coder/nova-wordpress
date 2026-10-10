@@ -16,7 +16,7 @@ add_action('pre_get_posts', function (WP_Query $query) {
     }
 
     // Blog - 9 wpisów na stronę.
-    if ($query->is_home()) {
+    if ($query->is_home() || $query->is_search()) {
         $query->set('posts_per_page', 9);
     }
 });
