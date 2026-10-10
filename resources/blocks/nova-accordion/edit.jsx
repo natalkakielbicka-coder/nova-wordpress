@@ -1,10 +1,11 @@
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
-import { Button, PanelBody, ToggleControl } from '@wordpress/components';
+import { Button, PanelBody, ToggleControl, SelectControl } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
-	const { items, openFirstItem, singleOpen } = attributes;
+	const { eyebrow, heading, description, items, openFirstItem, singleOpen, headingAlignment } =
+		attributes;
 	const blockProps = useBlockProps({
-		className: 'px-6 py-16 md:py-20',
+		className: 'px-4 py-12 sm:px-6 md:py-20',
 	});
 
 	const updateItem = (index, field, value) => {
@@ -72,9 +73,56 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(value) => setAttributes({ singleOpen: value })}
 					/>
 				</PanelBody>
+
+				<PanelBody title="Ustawienia nagłówka" initialOpen={false}>
+					<SelectControl
+						label="Wyrównanie nagłówka"
+						value={headingAlignment}
+						options={[
+							{ label: 'Do lewej', value: 'left' },
+							{ label: 'Na środku', value: 'center' },
+						]}
+						onChange={(value) => setAttributes({ headingAlignment: value })}
+					/>
+				</PanelBody>
 			</InspectorControls>
 			<section {...blockProps}>
 				<div className="mx-auto max-w-3xl">
+					<div
+						className={`mb-8 md:mb-12 ${
+							headingAlignment === 'left' ? 'text-left' : 'text-center'
+						}`}
+					>
+						<RichText
+							tagName="p"
+							className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
+							value={eyebrow}
+							onChange={(value) => setAttributes({ eyebrow: value })}
+							placeholder="Nadtytuł sekcji..."
+							allowedFormats={[]}
+						/>
+
+						<RichText
+							tagName="h2"
+							className="font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
+							value={heading}
+							onChange={(value) => setAttributes({ heading: value })}
+							placeholder="Nagłówek FAQ..."
+							allowedFormats={[]}
+						/>
+
+						<RichText
+							tagName="p"
+							className={`mt-6 max-w-xl text-base leading-7 text-nova-text ${
+								headingAlignment === 'center' ? 'mx-auto' : ''
+							}`}
+							value={description}
+							onChange={(value) => setAttributes({ description: value })}
+							placeholder="Krótki opis sekcji..."
+							allowedFormats={[]}
+						/>
+					</div>
+
 					{items.length === 0 && (
 						<div className="border border-dashed border-nova-line p-8 text-center">
 							<p className="text-nova-muted">
@@ -89,11 +137,11 @@ export default function Edit({ attributes, setAttributes }) {
 					{items.length > 0 && (
 						<div className="border-t border-nova-line">
 							{items.map((item, index) => (
-								<div key={index} className="border-b border-nova-line py-6">
+								<div key={index} className="border-b border-nova-line py-5 md:py-6">
 									<div className="flex items-start justify-between gap-6">
 										<RichText
 											tagName="div"
-											className="font-serif text-xl text-nova-ink"
+											className="font-serif text-lg leading-snug text-nova-ink md:text-xl"
 											value={item.question}
 											onChange={(value) =>
 												updateItem(index, 'question', value)
