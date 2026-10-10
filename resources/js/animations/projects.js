@@ -10,8 +10,6 @@ export const initProjectsAnimation = () => {
 		return;
 	}
 
-	window.novaProjectAnimationsReady = true;
-
 	projects.forEach((project, index) => {
 		gsap.to(project, {
 			y: 0,
@@ -27,4 +25,6 @@ export const initProjectsAnimation = () => {
 			},
 		});
 	});
+
+	window.novaProjectAnimationsReady = true;
 };
