@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				initAnimations();
 			})
 			.catch((error) => {
+				document.documentElement.classList.remove('nova-motion-ready');
 				console.error('Failed to load animations:', error);
 			});
 	}

@@ -564,6 +564,13 @@ body.admin-bar #nova-reading-progress {
 	color: var(--color-nova-ink);
 }
 
+/* Initial state for project card animations */
+
+html.nova-motion-ready .nova-project-card {
+	opacity: 0;
+	transform: translate3d(0, 40px, 0);
+}
+
 @media (max-width: 767px) {
 	.nova-projects-grid.is-list .nova-project-card__link {
 		display: grid;

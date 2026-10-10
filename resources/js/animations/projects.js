@@ -11,25 +11,18 @@ export const initProjectsAnimation = () => {
 	}
 
 	projects.forEach((project, index) => {
-		gsap.fromTo(
-			project,
-			{
-				y: 40,
-				autoAlpha: 0,
+		gsap.to(project, {
+			y: 0,
+			autoAlpha: 1,
+			duration: 0.8,
+			delay: index * 0.12,
+			ease: 'power3.out',
+			overwrite: 'auto',
+			scrollTrigger: {
+				trigger: project,
+				start: 'top 90%',
+				once: true,
 			},
-			{
-				y: 0,
-				autoAlpha: 1,
-				duration: 0.8,
-				delay: index * 0.12,
-				ease: 'power3.out',
-				immediateRender: false,
-				scrollTrigger: {
-					trigger: project,
-					start: 'top 90%',
-					once: true,
-				},
-			},
-		);
+		});
 	});
 };

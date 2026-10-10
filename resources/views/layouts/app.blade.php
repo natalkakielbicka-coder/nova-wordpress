@@ -3,6 +3,10 @@
 <head>
 	<script>
 		(() => {
+			if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				document.documentElement.classList.add('nova-motion-ready');
+			}
+
 			try {
 				const saved = localStorage.getItem('nova-theme');
 
