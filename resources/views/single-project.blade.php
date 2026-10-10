@@ -74,5 +74,63 @@
 				</div>
 			</div>
 		</section>
+
+		@php
+			$previousProject = get_previous_post();
+			$nextProject = get_next_post();
+			$projectsUrl = get_post_type_archive_link('project');
+		@endphp
+
+		<section class="border-t border-nova-line px-6 py-16 lg:py-24">
+			<div class="mx-auto max-w-7xl">
+				<div class="grid gap-6 md:grid-cols-2">
+					@if ($previousProject)
+						<a
+							href="{{ get_permalink($previousProject) }}"
+							class="group border border-nova-line p-6 transition hover:border-nova-ink md:p-8"
+						>
+							<span class="text-xs uppercase tracking-[0.15em] text-nova-muted">
+								← Poprzedni projekt
+							</span>
+
+							<h2
+								class="mt-4 font-serif text-2xl text-nova-ink transition group-hover:opacity-60"
+							>
+								{{ get_the_title($previousProject) }}
+							</h2>
+						</a>
+					@endif
+
+					@if ($nextProject)
+						<a
+							href="{{ get_permalink($nextProject) }}"
+							class="group border border-nova-line p-6 text-right transition hover:border-nova-ink md:p-8"
+						>
+							<span class="text-xs uppercase tracking-[0.15em] text-nova-muted">
+								Następny projekt →
+							</span>
+
+							<h2
+								class="mt-4 font-serif text-2xl text-nova-ink transition group-hover:opacity-60"
+							>
+								{{ get_the_title($nextProject) }}
+							</h2>
+						</a>
+					@endif
+				</div>
+
+				@if ($projectsUrl)
+					<div class="mt-10 text-center">
+						<a
+							href="{{ $projectsUrl }}"
+							class="inline-flex border-b border-nova-ink pb-1 text-sm text-nova-ink transition hover:opacity-60"
+						>
+							← Wszystkie projekty
+						</a>
+					</div>
+				@endif
+			</div>
+		</section>
+
 	@endwhile
 @endsection
