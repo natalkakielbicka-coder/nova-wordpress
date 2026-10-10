@@ -83,6 +83,29 @@
 									<span>
 										{{ wp_strip_all_tags(get_the_category_list(', ')) }}
 									</span>
+
+									<span aria-hidden="true">/</span>
+
+									<span class="inline-flex items-center gap-1.5">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="14"
+											height="14"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="1.5"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											aria-hidden="true"
+										>
+											<circle cx="12" cy="12" r="9" />
+											<path d="M12 7v5l3 2" />
+										</svg>
+
+										{{ \App\Support\ReadingTime::calculate(get_the_ID()) }} min
+										czytania
+									</span>
 								</div>
 
 								<h2

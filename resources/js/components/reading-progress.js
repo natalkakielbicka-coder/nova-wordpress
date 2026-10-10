@@ -1,18 +1,27 @@
 export const initReadingProgress = () => {
 	const progressBar = document.querySelector('#nova-reading-progress');
+	const articleContent = document.querySelector('.nova-article-content');
 
-	if (!progressBar) {
+	if (!progressBar || !articleContent) {
 		return;
 	}
 
 	let ticking = false;
 
 	const updateProgress = () => {
-		const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+		const articleRect = articleContent.getBoundingClientRect();
+
+		const articleTop = articleRect.top + window.scrollY;
+		const articleBottom = articleRect.bottom + window.scrollY;
+
+		const viewportHeight = window.innerHeight;
+
+		const start = articleTop - viewportHeight;
+		const end = articleBottom - viewportHeight;
 
 		const progress =
-			scrollableHeight > 0
-				? Math.min(100, Math.max(0, (window.scrollY / scrollableHeight) * 100))
+			end > start
+				? Math.min(100, Math.max(0, ((window.scrollY - start) / (end - start)) * 100))
 				: 100;
 
 		progressBar.style.transform = `scaleX(${progress / 100})`;
