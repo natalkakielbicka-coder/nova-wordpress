@@ -148,3 +148,5 @@
 		</div>
 	@endif
 </article>
+
+@include ('partials.related-posts')
