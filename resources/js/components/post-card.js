@@ -54,6 +54,37 @@ export const createPostCard = (post) => {
 		meta.append(separator, category);
 	}
 
+	if (Number.isFinite(post.reading_time)) {
+		const separator = document.createElement('span');
+		separator.textContent = '/';
+		separator.setAttribute('aria-hidden', 'true');
+
+		const readingTime = document.createElement('span');
+		readingTime.className = 'inline-flex items-center gap-1.5';
+
+		readingTime.innerHTML = `
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+        >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+        </svg>
+    `;
+
+		readingTime.append(document.createTextNode(`${post.reading_time} min czytania`));
+
+		meta.append(separator, readingTime);
+	}
+
 	// Tytuł.
 	const title = document.createElement('h2');
 	title.className =

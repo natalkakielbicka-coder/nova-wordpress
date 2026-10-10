@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Theme filters.
  */
@@ -13,4 +12,21 @@ namespace App;
  */
 add_filter('excerpt_more', function () {
     return sprintf(' &hellip; <a href="%s">%s</a>', get_permalink(), __('Continued', 'sage'));
+});
+
+
+add_action('rest_api_init', function () {
+    register_rest_field('post', 'reading_time', [
+        'get_callback' => function ($post) {
+            return \App\Support\ReadingTime::calculate(
+                (int) $post['id']
+            );
+        },
+        'schema' => [
+            'description' => 'Estimated reading time in minutes.',
+            'type' => 'integer',
+            'context' => ['view'],
+            'readonly' => true,
+        ],
+    ]);
 });
