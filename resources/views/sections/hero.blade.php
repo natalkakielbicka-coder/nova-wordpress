@@ -36,6 +36,11 @@
 			<img
 				src="{{ Vite::asset('resources/images/nova-hero.png') }}"
 				alt="Nowoczesne stanowisko pracy"
+				width="1600"
+				height="1200"
+				loading="eager"
+				fetchpriority="high"
+				decoding="async"
 				class="absolute inset-0 h-full w-full object-cover"
 			/>
 		</div>
