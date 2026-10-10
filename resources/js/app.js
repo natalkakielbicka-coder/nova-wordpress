@@ -1,6 +1,5 @@
 import.meta.glob(['../images/**', '../fonts/**']);
 
-import { initTestimonialsSlider } from './components/testimonials-slider';
 import { initMobileMenu } from './components/mobile-menu';
 import { initProjectsLayout } from './components/projects-layout';
 import { initAnimations } from './animations';
@@ -34,7 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
 				console.error('Failed to load more module:', error);
 			});
 	}
+
+	if (document.querySelector('.testimonials-slider')) {
+		import('./components/testimonials-slider')
+			.then(({ initTestimonialsSlider }) => {
+				initTestimonialsSlider();
+			})
+			.catch((error) => {
+				console.error('Failed to load testimonials slider:', error);
+			});
+	}
 });
 
-initTestimonialsSlider();
 initMobileMenu();
