@@ -90,6 +90,12 @@
 						<path d="m21 21-4.35-4.35"></path>
 					</svg>
 				</button>
+
+				@if (class_exists('WooCommerce'))
+					<div class="nova-mini-cart">
+						{!! do_blocks('<!-- wp:woocommerce/mini-cart /-->') !!}
+					</div>
+				@endif
 			</div>
 
 			<button

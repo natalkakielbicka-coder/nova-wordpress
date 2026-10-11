@@ -159,3 +159,31 @@ add_action('wp', function () {
         echo '<p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">Collection / NOVA</p>';
     }, 4);
 });
+
+/**
+ * Prepare Mini-Cart block assets before wp_head().
+ */
+add_action('wp', function () {
+    if (! class_exists('WooCommerce')) {
+        return;
+    }
+
+    if (! class_exists('WP_Block_Type_Registry')) {
+        return;
+    }
+
+    $block = \WP_Block_Type_Registry::get_instance()
+        ->get_registered('woocommerce/mini-cart');
+
+    if (! $block) {
+        return;
+    }
+
+    foreach ((array) $block->script_handles as $handle) {
+        wp_enqueue_script($handle);
+    }
+
+    foreach ((array) $block->view_script_handles as $handle) {
+        wp_enqueue_script($handle);
+    }
+});

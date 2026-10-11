@@ -1183,6 +1183,44 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	margin-left: 0;
 }
 
+/* NOVA Mini Cart */
+
+.nova-mini-cart {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+}
+
+.nova-mini-cart .wc-block-mini-cart__button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--color-nova-ink);
+	cursor: pointer;
+}
+
+.nova-mini-cart .wc-block-mini-cart__icon {
+	width: 22px;
+	height: 22px;
+}
+
+.nova-mini-cart .wc-block-mini-cart__badge {
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-size: 10px;
+}
+
+.nova-mini-cart .wc-block-mini-cart__button:hover {
+	opacity: 0.6;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
