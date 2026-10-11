@@ -1212,13 +1212,88 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 }
 
 .nova-mini-cart .wc-block-mini-cart__badge {
-	background: var(--color-nova-ink);
-	color: var(--color-nova-white);
+	background: var(--color-nova-ink) !important;
+	color: var(--color-nova-white) !important;
 	font-size: 10px;
 }
 
 .nova-mini-cart .wc-block-mini-cart__button:hover {
 	opacity: 0.6;
+}
+
+/* NOVA Mini Cart Drawer */
+
+.wc-block-mini-cart__drawer .wc-block-components-drawer__content {
+	background: var(--color-nova-background);
+	color: var(--color-nova-text);
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__title {
+	font-family: var(--font-serif);
+	font-size: 1.75rem;
+	font-weight: 400;
+	color: var(--color-nova-ink);
+}
+
+.wc-block-mini-cart__drawer .wc-block-components-drawer__close {
+	color: var(--color-nova-ink);
+}
+
+.wc-block-mini-cart__drawer .wc-block-cart-items__row {
+	border-bottom: 1px solid var(--color-nova-line);
+}
+
+.wc-block-mini-cart__drawer .wc-block-components-product-name {
+	font-family: var(--font-serif);
+	font-size: 1.125rem;
+	font-weight: 400;
+	color: var(--color-nova-ink);
+	text-decoration: none;
+}
+
+.wc-block-mini-cart__drawer .wc-block-components-product-price {
+	color: var(--color-nova-ink);
+}
+
+.wc-block-mini-cart__drawer .wc-block-components-quantity-selector {
+	border: 1px solid var(--color-nova-line);
+	border-radius: 0;
+	background: var(--color-nova-white);
+}
+
+.wc-block-mini-cart__drawer .wc-block-components-quantity-selector input,
+.wc-block-mini-cart__drawer .wc-block-components-quantity-selector button {
+	color: var(--color-nova-ink);
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__footer {
+	border-top: 1px solid var(--color-nova-line);
+	background: var(--color-nova-background);
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__footer .wc-block-components-button {
+	min-height: 3.25rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: opacity 0.2s ease;
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__footer .wc-block-components-button:hover {
+	opacity: 0.8;
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__footer .wc-block-mini-cart__footer-cart {
+	background: transparent;
+	color: var(--color-nova-ink);
+}
+
+.wc-block-mini-cart__drawer .wc-block-components-totals-item__value {
+	color: var(--color-nova-ink);
+	font-weight: 500;
 }
 
 @media (min-width: 768px) {
