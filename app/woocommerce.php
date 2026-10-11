@@ -198,3 +198,25 @@ add_filter('woocommerce_thankyou_order_received_text', function ($message, $orde
 
     return 'Zamówienie zostało przyjęte. Szczegóły znajdziesz poniżej.';
 }, 10, 2);
+
+/**
+ * Fix missing WooCommerce Store API URL on cart and checkout pages.
+ */
+add_action('wp', function () {
+    if (! function_exists('is_cart') || ! function_exists('wp_interactivity_state')) {
+        return;
+    }
+
+    if (! is_cart() && ! is_checkout()) {
+        return;
+    }
+
+    $state = wp_interactivity_state('woocommerce');
+
+    if (empty($state['restUrl'])) {
+        wp_interactivity_state('woocommerce', [
+            'restUrl' => get_rest_url(),
+            'noticeId' => '',
+        ]);
+    }
+}, 20);
