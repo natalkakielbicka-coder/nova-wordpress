@@ -66,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
 				console.error('Failed to load projects layout:', error);
 			});
 	}
+
+	if (document.querySelector('.woocommerce-product-gallery')) {
+		import('./woocommerce-gallery').then(({ initWooCommerceGallery }) => {
+			initWooCommerceGallery();
+		});
+	}
 });
 
 initMobileMenu();
