@@ -11,7 +11,11 @@
 			<h1
 				class="font-serif text-5xl leading-tight tracking-tight text-nova-ink md:text-6xl lg:text-7xl"
 			>
-				{!! $title !!}
+				@if (function_exists('is_order_received_page') && is_order_received_page())
+					Dziękujemy za zamówienie
+				@else
+					{!! $title !!}
+				@endif
 			</h1>
 			@if (is_page() && has_excerpt())
 				<p class="mt-6 max-w-2xl text-base leading-8 text-nova-text md:text-lg">

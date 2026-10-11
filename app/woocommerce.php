@@ -187,3 +187,14 @@ add_action('wp', function () {
         wp_enqueue_script($handle);
     }
 });
+
+/**
+ * Custom order confirmation message.
+ */
+add_filter('woocommerce_thankyou_order_received_text', function ($message, $order) {
+    if (! $order instanceof \WC_Order) {
+        return $message;
+    }
+
+    return 'Zamówienie zostało przyjęte. Szczegóły znajdziesz poniżej.';
+}, 10, 2);
