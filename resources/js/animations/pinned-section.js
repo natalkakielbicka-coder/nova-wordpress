@@ -23,7 +23,15 @@ export const initPinnedSection = () => {
 			return;
 		}
 
+		let activeStepIndex = -1;
+
 		const setActiveStep = (activeIndex) => {
+			if (activeStepIndex === activeIndex) {
+				return;
+			}
+
+			activeStepIndex = activeIndex;
+
 			steps.forEach((step, index) => {
 				step.classList.toggle('is-active', index === activeIndex);
 			});
@@ -48,11 +56,17 @@ export const initPinnedSection = () => {
 				pinSpacing: true,
 				scrub: 1,
 				invalidateOnRefresh: true,
-				onUpdate: (self) => {
-					const activeIndex = Math.min(Math.floor(self.progress * 3), 2);
+			},
+			onUpdate: function () {
+				const time = this.time();
+				const activeIndex =
+					time >= this.labels['step-3-dominant']
+						? 2
+						: time >= this.labels['step-2-dominant']
+							? 1
+							: 0;
 
-					setActiveStep(activeIndex);
-				},
+				setActiveStep(activeIndex);
 			},
 		});
 
@@ -81,6 +95,8 @@ export const initPinnedSection = () => {
 				},
 				'<',
 			);
+
+		timeline.addLabel('step-2-dominant', 0.5).addLabel('step-3-dominant', 1.5);
 
 		return () => {
 			timeline.kill();
