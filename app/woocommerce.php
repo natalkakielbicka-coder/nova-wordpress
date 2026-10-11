@@ -81,3 +81,46 @@ add_filter('woocommerce_output_related_products_args', function ($args) {
 
     return $args;
 });
+
+/**
+ * Custom shop archive header.
+ */
+add_action('wp', function () {
+    if (! function_exists('is_shop')) {
+        return;
+    }
+
+    if (! is_shop() && ! is_product_taxonomy()) {
+        return;
+    }
+
+    remove_action('woocommerce_shop_loop_header', 'woocommerce_product_taxonomy_archive_header', 10);
+    remove_action('woocommerce_before_shop_loop', 'woocommerce_result_count', 20);
+    remove_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30);
+
+    add_action('woocommerce_before_shop_loop', function () {
+        ?>
+        <div class="mb-12 flex flex-col gap-6 border-b border-nova-line pb-8 md:flex-row md:items-end md:justify-between">
+            <div>
+                <p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
+                    Collection
+                </p>
+
+                <h1 class="font-serif text-5xl leading-tight tracking-tight text-nova-ink md:text-6xl">
+                    <?php echo esc_html(woocommerce_page_title(false)); ?>
+                </h1>
+            </div>
+
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
+                <div class="text-sm text-nova-muted">
+                    <?php woocommerce_result_count(); ?>
+                </div>
+
+                <div class="text-sm text-nova-text">
+                    <?php woocommerce_catalog_ordering(); ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    }, 20);
+});
