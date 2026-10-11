@@ -140,3 +140,22 @@ add_action('init', function () {
  * Remove default WooCommerce archive title.
  */
 add_filter('woocommerce_show_page_title', '__return_false');
+
+/**
+ * Custom single product layout.
+ */
+add_action('wp', function () {
+    if (! function_exists('is_product') || ! is_product()) {
+        return;
+    }
+
+    remove_action('woocommerce_before_single_product_summary', 'woocommerce_show_product_sale_flash', 10);
+
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10);
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_sharing', 50);
+
+    add_action('woocommerce_single_product_summary', function () {
+        echo '<p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">Collection / NOVA</p>';
+    }, 4);
+});
