@@ -1157,6 +1157,20 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	opacity: 0.8;
 }
 
+/* NOVA page banner */
+
+.nova-page-banner {
+	background: var(--color-nova-background);
+}
+
+.nova-page-banner h1 {
+	margin: 0;
+}
+
+.nova-page-banner p:last-child {
+	margin-bottom: 0;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
