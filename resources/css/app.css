@@ -1629,11 +1629,12 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 
 /* NOVA WooCommerce order received */
 
-.woocommerce-order {
+.woocommerce .woocommerce-order {
+	box-sizing: border-box;
 	width: 100%;
 	max-width: 1280px;
-	margin: 0 auto;
-	padding: 4rem 0 6rem;
+	margin-inline: auto;
+	padding: 4rem 1.25rem 6rem;
 	color: var(--color-nova-text);
 }
 
@@ -1898,10 +1899,43 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	}
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1281px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	.woocommerce .woocommerce-order {
+		padding-inline: 0;
+	}
+}
+
+@media (max-width: 1280px) {
+	/* NOVA mobile container spacing */
+
+	.nova-page-banner > div > .max-w-7xl,
+	.nova-page-banner > .max-w-7xl,
+	.nova-breadcrumbs-bar > .max-w-7xl {
+		padding-right: 1.25rem;
+		padding-left: 1.25rem;
+	}
+
+	.woocommerce-order {
+		padding-inline: 1.25rem;
+	}
+
+	.woocommerce-order .woocommerce-order-overview {
+		gap: 1.5rem;
+	}
+
+	.woocommerce-order table.shop_table th,
+	.woocommerce-order table.shop_table td {
+		padding: 0.875rem 0.5rem;
+		overflow-wrap: anywhere;
+	}
+
+	.woocommerce-order .woocommerce-columns--addresses {
+		gap: 1.5rem;
 	}
 }
 
