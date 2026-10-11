@@ -124,3 +124,19 @@ add_action('wp', function () {
         <?php
     }, 20);
 });
+
+/**
+ * Remove default WooCommerce breadcrumbs.
+ */
+add_action('init', function () {
+    remove_action(
+        'woocommerce_before_main_content',
+        'woocommerce_breadcrumb',
+        20
+    );
+});
+
+/**
+ * Remove default WooCommerce archive title.
+ */
+add_filter('woocommerce_show_page_title', '__return_false');
