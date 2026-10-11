@@ -41,7 +41,7 @@ add_action('wp', function () {
         return;
     }
 
-    if (! is_shop() && ! is_product_taxonomy()) {
+    if (! is_shop() && ! is_product_taxonomy() && ! is_product()) {
         return;
     }
 

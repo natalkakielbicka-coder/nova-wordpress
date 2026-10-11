@@ -936,6 +936,27 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	margin: 0;
 }
 
+/* WooCommerce related products */
+
+.woocommerce div.product .related {
+	margin-top: 1rem;
+	padding-top: 3rem;
+	border-top: 1px solid var(--color-nova-line);
+}
+
+.woocommerce div.product .related > h2 {
+	margin: 0 0 2.5rem;
+	font-family: var(--font-serif);
+	font-size: clamp(2rem, 3vw, 3rem);
+	font-weight: 400;
+	line-height: 1.2;
+	color: var(--color-nova-ink);
+}
+
+.woocommerce div.product .related ul.products {
+	margin-bottom: 0;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
