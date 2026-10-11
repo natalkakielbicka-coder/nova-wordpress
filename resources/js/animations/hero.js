@@ -13,6 +13,15 @@ export const initHeroAnimation = () => {
 
 	const button = hero.querySelector('.nova-hero__buttons');
 	const image = hero.querySelector('.nova-hero__image');
+	const animateButton =
+		button && document.documentElement.classList.contains('nova-motion-ready');
+
+	if (animateButton) {
+		gsap.set(button, {
+			y: 30,
+			autoAlpha: 0,
+		});
+	}
 
 	const timeline = gsap.timeline({
 		defaults: {
@@ -29,21 +38,16 @@ export const initHeroAnimation = () => {
 		});
 	}
 
-	if (button) {
-		gsap.fromTo(
+	if (animateButton) {
+		timeline.to(
 			button,
-			{
-				y: 30,
-				autoAlpha: 0,
-			},
 			{
 				y: 0,
 				autoAlpha: 1,
 				duration: 0.8,
-				delay: 0.5,
 				ease: 'power3.out',
-				immediateRender: false,
 			},
+			0.5,
 		);
 	}
 

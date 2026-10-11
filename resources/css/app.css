@@ -571,6 +571,12 @@ html.nova-motion-ready .nova-project-card {
 	transform: translate3d(0, 40px, 0);
 }
 
+html.nova-motion-ready .nova-hero__buttons {
+	opacity: 0;
+	transform: translate3d(0, 30px, 0);
+	visibility: hidden;
+}
+
 /* WooCommerce product grid */
 
 body.woocommerce ul.products,

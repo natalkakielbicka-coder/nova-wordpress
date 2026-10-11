@@ -38,6 +38,7 @@ export const initAnimations = async () => {
 
 	results.forEach((result) => {
 		if (result.status === 'rejected') {
+			document.documentElement.classList.remove('nova-motion-ready');
 			console.error('Failed to initialize animation:', result.reason);
 		}
 	});

@@ -31,6 +31,12 @@
 				transform: none !important;
 				visibility: visible !important;
 			}
+
+			html.nova-motion-ready .nova-hero__buttons {
+				opacity: 1 !important;
+				transform: none !important;
+				visibility: visible !important;
+			}
 		</style>
 	</noscript>
 
