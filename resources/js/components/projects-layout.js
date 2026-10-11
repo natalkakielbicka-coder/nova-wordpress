@@ -24,10 +24,12 @@ export const initProjectsLayout = () => {
 					return;
 				}
 
-				const cards = grid.querySelectorAll('.nova-project-card');
+				const flipTargets = grid.querySelectorAll(
+					'.nova-project-card, .nova-project-card__image, .nova-project-card__content',
+				);
 
 				// Zapamiętujemy pozycje kart przed zmianą.
-				const state = Flip.getState(cards);
+				const state = Flip.getState(flipTargets);
 
 				// Zmieniamy układ.
 				grid.classList.toggle('is-list', isList);
@@ -52,6 +54,7 @@ export const initProjectsLayout = () => {
 					ease: 'sine.inOut',
 					absolute: false,
 					simple: true,
+					nested: true,
 					onComplete: () => ScrollTrigger.refresh(),
 				});
 			});
