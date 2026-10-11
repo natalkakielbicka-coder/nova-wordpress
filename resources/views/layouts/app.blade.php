@@ -63,7 +63,7 @@
 
 		@include ('sections.header')
 
-		@if (!is_front_page())
+		@if (!is_front_page() && !is_page())
 			@include ('partials.breadcrumbs')
 		@endif
 

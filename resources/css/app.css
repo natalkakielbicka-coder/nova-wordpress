@@ -1171,6 +1171,18 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	margin-bottom: 0;
 }
 
+.nova-page-banner .nova-breadcrumbs {
+	padding-left: 0;
+	border: 0;
+	width: 100%;
+	max-width: none;
+}
+
+.nova-page-banner .nova-breadcrumbs > * {
+	padding-left: 0;
+	margin-left: 0;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
