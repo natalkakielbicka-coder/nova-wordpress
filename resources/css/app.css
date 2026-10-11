@@ -1751,6 +1751,348 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	content: none;
 }
 
+/* NOVA WooCommerce My Account */
+
+.woocommerce-account .woocommerce {
+	width: 100%;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 4rem 0 6rem;
+	color: var(--color-nova-text);
+}
+
+.woocommerce-account.logged-in .woocommerce {
+	display: grid;
+	grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+	gap: 4rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation,
+.woocommerce-account .woocommerce-MyAccount-content {
+	float: none;
+	width: 100%;
+	min-width: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation ul {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li {
+	margin: 0;
+	border-bottom: 1px solid var(--color-nova-line);
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a {
+	display: block;
+	padding: 1rem 0;
+	color: var(--color-nova-muted);
+	font-size: 0.875rem;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a:hover,
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a {
+	color: var(--color-nova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a {
+	font-weight: 600;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content {
+	line-height: 1.8;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content p {
+	margin-bottom: 1.25rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content a {
+	color: var(--color-nova-ink);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+/* Fix WooCommerce My Account grid */
+
+.woocommerce-account.logged-in .woocommerce::before,
+.woocommerce-account.logged-in .woocommerce::after {
+	display: none;
+	content: none;
+}
+
+/* NOVA My Account — forms and buttons */
+
+.woocommerce-account .woocommerce form .form-row {
+	margin-bottom: 1.5rem;
+}
+
+.woocommerce-account .woocommerce form .form-row label {
+	display: block;
+	margin-bottom: 0.5rem;
+	color: var(--color-nova-ink);
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.woocommerce-account .woocommerce form input.input-text,
+.woocommerce-account .woocommerce form select,
+.woocommerce-account .woocommerce form textarea {
+	width: 100%;
+	min-height: 3.25rem;
+	padding: 0.75rem 1rem;
+	border: 1px solid var(--color-nova-line);
+	border-radius: 0;
+	background: var(--color-nova-white);
+	color: var(--color-nova-ink);
+	font-family: inherit;
+	font-size: 0.875rem;
+}
+
+.woocommerce-account .woocommerce button.button,
+.woocommerce-account .woocommerce a.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 3.25rem;
+	padding: 0.875rem 1.5rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-size: 0.875rem;
+	font-weight: 500;
+	text-decoration: none;
+	transition: opacity 0.2s ease;
+}
+
+.woocommerce-account .woocommerce button.button:hover,
+.woocommerce-account .woocommerce a.button:hover {
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	opacity: 0.8;
+}
+
+.woocommerce-account .woocommerce form fieldset {
+	margin: 2rem 0;
+	padding: 1.5rem;
+	border: 1px solid var(--color-nova-line);
+}
+
+.woocommerce-account .woocommerce form legend {
+	padding: 0 0.5rem;
+	font-family: var(--font-serif);
+	font-size: 1.5rem;
+	color: var(--color-nova-ink);
+}
+
+/* NOVA My Account — orders */
+
+.woocommerce-account .woocommerce-orders-table {
+	width: 100%;
+	border: 0;
+	border-collapse: collapse;
+	border-radius: 0;
+}
+
+.woocommerce-account .woocommerce-orders-table thead {
+	border-bottom: 1px solid var(--color-nova-ink);
+}
+
+.woocommerce-account .woocommerce-orders-table th,
+.woocommerce-account .woocommerce-orders-table td {
+	padding: 1.25rem 1rem;
+	border-bottom: 1px solid var(--color-nova-line);
+	text-align: left;
+	vertical-align: middle;
+}
+
+.woocommerce-account .woocommerce-orders-table th {
+	color: var(--color-nova-muted);
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.woocommerce-account .woocommerce-orders-table td {
+	color: var(--color-nova-text);
+	font-size: 0.875rem;
+}
+
+.woocommerce-account .woocommerce-orders-table td a:not(.button) {
+	color: var(--color-nova-ink);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.woocommerce-account .woocommerce-orders-table .button {
+	min-height: auto;
+	padding: 0.625rem 1rem;
+	white-space: nowrap;
+}
+
+.woocommerce-account .woocommerce-Pagination {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+/* NOVA My Account — order details */
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details {
+	margin: 2.5rem 0 3rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-order-details__title,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-column__title {
+	margin: 0 0 1.5rem;
+	font-family: var(--font-serif);
+	font-size: clamp(1.5rem, 2.5vw, 2rem);
+	font-weight: 400;
+	line-height: 1.25;
+	color: var(--color-nova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table {
+	width: 100%;
+	margin: 0;
+	border: 0;
+	border-collapse: collapse;
+	border-radius: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table th,
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table td {
+	padding: 1rem;
+	border-bottom: 1px solid var(--color-nova-line);
+	text-align: left;
+	vertical-align: middle;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table thead {
+	border-bottom: 1px solid var(--color-nova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table tfoot th,
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table tfoot td {
+	font-weight: 500;
+	color: var(--color-nova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details {
+	margin-top: 3rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-columns--addresses {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 2rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-columns--addresses::before,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-columns--addresses::after {
+	display: none;
+	content: none;
+}
+
+.woocommerce-account
+	.woocommerce-MyAccount-content
+	.woocommerce-columns--addresses
+	.woocommerce-column {
+	float: none;
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-customer-details address {
+	padding: 1.5rem;
+	border: 1px solid var(--color-nova-line);
+	border-radius: 0;
+	background: var(--color-nova-white);
+	color: var(--color-nova-text);
+	line-height: 1.8;
+}
+
+/* NOVA My Account — addresses */
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Addresses {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 2rem;
+	margin-top: 2.5rem;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Addresses::before,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Addresses::after {
+	display: none;
+	content: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Addresses .woocommerce-Address {
+	float: none;
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+	padding: 1.75rem;
+	border: 1px solid var(--color-nova-line);
+	background: var(--color-nova-white);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1.25rem;
+	border-bottom: 1px solid var(--color-nova-line);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title::before,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title::after {
+	display: none;
+	content: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title h2,
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title h3 {
+	float: none;
+	margin: 0;
+	font-family: var(--font-serif);
+	font-size: 1.5rem;
+	font-weight: 400;
+	line-height: 1.3;
+	color: var(--color-nova-ink);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address-title .edit {
+	float: none;
+	font-size: 0.75rem;
+	font-weight: 500;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Address address {
+	margin: 0;
+	color: var(--color-nova-text);
+	font-size: 0.875rem;
+	line-height: 1.9;
+	overflow-wrap: anywhere;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
@@ -1965,6 +2307,12 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 		padding-left: 0;
 		border-left: 0;
 	}
+
+	.woocommerce-account.logged-in .woocommerce {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2rem;
+		padding: 3rem 1.25rem 5rem;
+	}
 }
 
 @media (max-width: 767px) {
@@ -2124,6 +2472,43 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	.woocommerce-order .woocommerce-order-overview,
 	.woocommerce-order .woocommerce-columns--addresses {
 		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.woocommerce-account .woocommerce-orders-table {
+		border: 0;
+	}
+
+	.woocommerce-account .woocommerce-orders-table td {
+		padding: 0.875rem 1rem;
+	}
+
+	.woocommerce-account .woocommerce-orders-table td::before {
+		color: var(--color-nova-muted);
+		font-size: 0.75rem;
+		font-weight: 500;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content .woocommerce-columns--addresses {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content table.shop_table th,
+	.woocommerce-account .woocommerce-MyAccount-content table.shop_table td {
+		padding: 0.875rem 0.5rem;
+		overflow-wrap: anywhere;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content .woocommerce-Addresses {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.25rem;
+	}
+
+	.woocommerce-account
+		.woocommerce-MyAccount-content
+		.woocommerce-Addresses
+		.woocommerce-Address {
+		padding: 1.25rem;
 	}
 }
 
