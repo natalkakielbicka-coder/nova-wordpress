@@ -4,11 +4,13 @@
     $productName = $product->get_name();
 @endphp
 
-<article class="group min-w-0">
+<article class="nova-product-card group flex h-full min-w-0 flex-col">
 	<a href="{{ $productUrl }}" class="block">
-		<div class="relative aspect-[4/5] overflow-hidden bg-nova-white">
+		<div
+			class="nova-product-card__image relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-nova-white p-6"
+		>
 			{!! $product->get_image('woocommerce_thumbnail', [
-                'class' => 'h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]',
+                'class' => 'transition duration-500 group-hover:scale-[1.03]',
                 'loading' => 'lazy',
             ]) !!}
 
@@ -22,7 +24,7 @@
 		</div>
 	</a>
 
-	<div class="mt-5">
+	<div class="mt-5 flex flex-1 flex-col">
 		<h2 class="font-serif text-xl leading-snug text-nova-ink">
 			<a href="{{ $productUrl }}" class="transition hover:opacity-60"> {{ $productName }} </a>
 		</h2>
@@ -31,12 +33,8 @@
 			{!! $product->get_price_html() !!}
 		</div>
 
-		<a
-			href="{{ $productUrl }}"
-			class="mt-5 inline-flex items-center gap-2 border-b border-nova-ink pb-1 text-sm text-nova-ink transition hover:opacity-60"
-		>
-			Zobacz produkt
-			<span aria-hidden="true">→</span>
-		</a>
+		<div class="nova-product-card__actions mt-auto pt-6">
+			@php (woocommerce_template_loop_add_to_cart())
+		</div>
 	</div>
 </article>

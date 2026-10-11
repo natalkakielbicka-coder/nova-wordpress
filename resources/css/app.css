@@ -1296,6 +1296,48 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	font-weight: 500;
 }
 
+/* NOVA product card buttons */
+
+.woocommerce ul.products li.product .nova-product-card__actions a.button,
+.woocommerce-page ul.products li.product .nova-product-card__actions a.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 3.25rem;
+	margin: 0;
+	padding: 0.875rem 1.5rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-family: inherit;
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.4;
+	text-align: center;
+	text-decoration: none;
+	box-shadow: none;
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+}
+
+.woocommerce ul.products li.product .nova-product-card__actions a.button:hover,
+.woocommerce-page ul.products li.product .nova-product-card__actions a.button:hover {
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	opacity: 0.8;
+}
+
+.woocommerce ul.products li.product .nova-product-card__actions a.button.loading {
+	opacity: 0.5;
+}
+
+.woocommerce ul.products li.product .nova-product-card__actions a.button:focus-visible {
+	outline: 2px solid var(--color-nova-ink);
+	outline-offset: 3px;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
