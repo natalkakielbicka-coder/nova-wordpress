@@ -1338,6 +1338,16 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	outline-offset: 3px;
 }
 
+/* NOVA product card — cart feedback */
+
+.woocommerce ul.products li.product .nova-product-card__actions .added_to_cart {
+	display: none;
+}
+
+.woocommerce ul.products li.product .nova-product-card__actions a.button.added::after {
+	display: none;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {

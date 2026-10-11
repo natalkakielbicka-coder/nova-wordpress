@@ -72,6 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
 			initWooCommerceGallery();
 		});
 	}
+
+	if (document.querySelector('.nova-product-card__actions')) {
+		import('./woocommerce-product-card').then(({ initProductCardButtons }) => {
+			initProductCardButtons();
+		});
+	}
 });
 
 initMobileMenu();
