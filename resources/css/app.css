@@ -1355,6 +1355,181 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	display: none;
 }
 
+/* NOVA WooCommerce Checkout Block */
+
+.wp-block-woocommerce-checkout {
+	width: 100%;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 3rem 0 6rem;
+	color: var(--color-nova-text);
+}
+
+.wp-block-woocommerce-checkout .wc-block-checkout__main {
+	min-width: 0;
+	padding-right: 3rem;
+}
+
+.wp-block-woocommerce-checkout .wc-block-checkout__sidebar {
+	min-width: 0;
+	padding-left: 2rem;
+	border-left: 1px solid var(--color-nova-line);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-title {
+	font-family: var(--font-serif);
+	font-size: 1.75rem;
+	font-weight: 400;
+	line-height: 1.25;
+	color: var(--color-nova-ink);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-checkout-step__heading {
+	margin-bottom: 1.5rem;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-checkout-step {
+	margin-bottom: 2.5rem;
+	padding-bottom: 2.5rem;
+	border-bottom: 1px solid var(--color-nova-line);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-text-input input,
+.wp-block-woocommerce-checkout .wc-block-components-combobox-control input,
+.wp-block-woocommerce-checkout .wc-block-components-form .wc-block-components-text-input input {
+	min-height: 3.25rem;
+	border: 1px solid var(--color-nova-line);
+	border-radius: 0;
+	background: var(--color-nova-white);
+	color: var(--color-nova-ink);
+	font-family: inherit;
+	font-size: 0.875rem;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-text-input input:focus,
+.wp-block-woocommerce-checkout .wc-block-components-combobox-control input:focus {
+	border-color: var(--color-nova-ink);
+	box-shadow: none;
+	outline: none;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-checkbox__input {
+	accent-color: var(--color-nova-ink);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-radio-control__input {
+	accent-color: var(--color-nova-ink);
+}
+
+/* NOVA Checkout — order summary */
+
+.wp-block-woocommerce-checkout .wc-block-components-order-summary {
+	color: var(--color-nova-text);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-order-summary-item {
+	padding: 1.25rem 0;
+	border-bottom: 1px solid var(--color-nova-line);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-order-summary-item__image img {
+	border-radius: 0;
+	object-fit: contain;
+	background: var(--color-nova-white);
+}
+
+.wp-block-woocommerce-checkout
+	.wc-block-components-order-summary-item__description
+	.wc-block-components-product-name {
+	font-family: var(--font-serif);
+	font-size: 1rem;
+	font-weight: 400;
+	color: var(--color-nova-ink);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-totals-wrapper {
+	border-color: var(--color-nova-line);
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-totals-item__label {
+	color: var(--color-nova-muted);
+	font-size: 0.875rem;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-totals-item__value {
+	color: var(--color-nova-ink);
+	font-weight: 500;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-totals-footer-item__value {
+	font-family: var(--font-serif);
+	font-size: 1.75rem;
+	font-weight: 400;
+	color: var(--color-nova-ink);
+}
+
+/* NOVA Checkout — coupon */
+
+.wp-block-woocommerce-checkout .wc-block-components-totals-coupon__form {
+	gap: 0.75rem;
+}
+
+.wp-block-woocommerce-checkout
+	.wc-block-components-totals-coupon__form
+	.wc-block-components-button {
+	min-height: 3.25rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-size: 0.875rem;
+}
+
+/* NOVA Checkout — place order button */
+
+.wp-block-woocommerce-checkout .wc-block-components-checkout-place-order-button {
+	min-height: 3.75rem;
+	padding: 1rem 2rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-family: inherit;
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: opacity 0.2s ease;
+}
+
+.wp-block-woocommerce-checkout
+	.wc-block-components-checkout-place-order-button:hover:not(:disabled) {
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	opacity: 0.85;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-checkout-place-order-button:focus-visible {
+	outline: 2px solid var(--color-nova-ink);
+	outline-offset: 3px;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-checkout-place-order-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* NOVA Checkout — payment methods */
+
+.wp-block-woocommerce-checkout .wc-block-components-radio-control-accordion-option {
+	border-color: var(--color-nova-line);
+	border-radius: 0;
+	background: transparent;
+}
+
+.wp-block-woocommerce-checkout
+	.wc-block-components-radio-control-accordion-option:has(input:checked) {
+	border-color: var(--color-nova-ink);
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
@@ -1516,6 +1691,19 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	}
 
 	.wc-block-cart .wc-block-components-sidebar {
+		padding-left: 0;
+		border-left: 0;
+	}
+
+	.wp-block-woocommerce-checkout {
+		padding: 2rem 0 4rem;
+	}
+
+	.wp-block-woocommerce-checkout .wc-block-checkout__main {
+		padding-right: 0;
+	}
+
+	.wp-block-woocommerce-checkout .wc-block-checkout__sidebar {
 		padding-left: 0;
 		border-left: 0;
 	}
