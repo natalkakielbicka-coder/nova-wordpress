@@ -962,6 +962,55 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	body.woocommerce-page ul.products {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
+
+	/* WooCommerce vertical product gallery */
+
+	.woocommerce div.product div.images {
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.woocommerce div.product div.images .woocommerce-product-gallery__wrapper {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.woocommerce div.product div.images .flex-viewport {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.woocommerce div.product div.images .flex-control-thumbs {
+		display: flex;
+		flex: 0 0 80px;
+		flex-direction: column;
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+	}
+
+	.woocommerce div.product div.images .flex-control-thumbs li {
+		float: none;
+		width: 100%;
+		margin: 0;
+	}
+
+	.woocommerce div.product div.images .flex-control-thumbs img {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+		opacity: 0.55;
+		cursor: pointer;
+		transition: opacity 0.2s ease;
+	}
+
+	.woocommerce div.product div.images .flex-control-thumbs img.flex-active,
+	.woocommerce div.product div.images .flex-control-thumbs img:hover {
+		opacity: 1;
+	}
 }
 
 @media (min-width: 1024px) {
