@@ -969,7 +969,7 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 .wc-block-cart {
 	width: 100%;
 	max-width: 1280px;
-	margin: 0 auto;
+	margin: 4rem auto 0;
 	padding: 3rem 1.5rem 6rem;
 	color: var(--color-nova-text);
 }
@@ -1130,7 +1130,7 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 .nova-empty-cart h2 {
 	margin: 0;
 	font-family: var(--font-serif);
-	font-size: clamp(2.5rem, 5vw, 4rem);
+	font-size: 1.75rem;
 	font-weight: 400;
 	line-height: 1.15;
 	color: var(--color-nova-ink);
@@ -1162,6 +1162,92 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 
 .nova-empty-cart .wp-block-button__link:hover {
 	opacity: 0.8;
+}
+
+.wc-block-cart .wp-block-woocommerce-empty-cart-block {
+	max-width: 720px;
+	margin: 0 auto;
+	padding: 5rem 1.25rem 7rem;
+	text-align: center;
+}
+
+.wc-block-cart .wp-block-woocommerce-empty-cart-block h2,
+.wc-block-cart .wp-block-woocommerce-empty-cart-block h3,
+.wc-block-cart .wp-block-woocommerce-empty-cart-block h4,
+.wc-block-cart .wp-block-woocommerce-empty-cart-block .wp-block-heading {
+	margin: 0 0 2rem;
+	font-family: var(--font-serif);
+	font-size: clamp(2.5rem, 5vw, 4rem);
+	font-weight: 400;
+	line-height: 1.15;
+	color: var(--color-nova-ink);
+}
+
+.wc-block-cart .wp-block-woocommerce-empty-cart-block .wp-block-buttons {
+	display: flex;
+	justify-content: center;
+	margin-top: 2rem;
+}
+
+.wc-block-cart .wp-block-woocommerce-empty-cart-block .wp-block-button__link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 3.5rem;
+	padding: 0.875rem 2rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-size: 0.875rem;
+	font-weight: 500;
+	text-decoration: none;
+	transition: opacity 0.2s ease;
+}
+
+.wc-block-cart .wp-block-woocommerce-empty-cart-block .wp-block-button__link:hover {
+	opacity: 0.8;
+}
+
+/* NOVA Mini-Cart — empty state */
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__empty-cart-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 350px;
+	padding: 3rem 2rem;
+	text-align: center;
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__empty-cart-wrapper h2,
+.wc-block-mini-cart__drawer .wc-block-mini-cart__empty-cart-wrapper p {
+	margin: 0 0 1.5rem;
+	font-family: var(--font-serif);
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	font-weight: 400;
+	line-height: 1.3;
+	color: var(--color-nova-ink);
+}
+
+.wc-block-mini-cart__empty-cart-wrapper p strong {
+	font-weight: normal;
+}
+
+.wc-block-mini-cart__drawer .wc-block-mini-cart__empty-cart-wrapper .wp-block-button__link,
+.wc-block-mini-cart__drawer .wc-block-mini-cart__empty-cart-wrapper .wc-block-components-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 3.25rem;
+	padding: 0.875rem 1.5rem;
+	border: 1px solid var(--color-nova-ink);
+	border-radius: 0;
+	background: var(--color-nova-ink);
+	color: var(--color-nova-white);
+	font-size: 0.875rem;
+	text-decoration: none;
 }
 
 /* NOVA page banner */
@@ -2155,6 +2241,59 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	accent-color: var(--color-nova-ink);
 }
 
+/* NOVA WooCommerce notices */
+
+.woocommerce .woocommerce-message,
+.woocommerce .woocommerce-info,
+.woocommerce .woocommerce-error {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1rem;
+	margin: 0 0 2rem;
+	padding: 1.25rem 1.5rem;
+	border: 1px solid var(--color-nova-line);
+	border-radius: 0;
+	background: var(--color-nova-white);
+	color: var(--color-nova-text);
+	font-size: 0.875rem;
+	line-height: 1.7;
+}
+
+.woocommerce .woocommerce-message::before,
+.woocommerce .woocommerce-info::before,
+.woocommerce .woocommerce-error::before {
+	display: none;
+}
+
+.woocommerce .woocommerce-error {
+	border-color: #b42318;
+}
+
+.woocommerce .woocommerce-error li {
+	margin: 0;
+	list-style: none;
+}
+
+.woocommerce .woocommerce-message .button,
+.woocommerce .woocommerce-info .button {
+	float: none;
+	margin-left: auto;
+	border: 0;
+	background: transparent;
+	color: var(--color-nova-ink);
+	font-size: 0.875rem;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.woocommerce .woocommerce-message .button:hover,
+.woocommerce .woocommerce-info .button:hover {
+	background: transparent;
+	color: var(--color-nova-ink);
+	opacity: 0.7;
+}
+
 @media (min-width: 768px) {
 	body.woocommerce ul.products,
 	body.woocommerce-page ul.products {
@@ -2586,6 +2725,14 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	.woocommerce-account .woocommerce form.register,
 	.woocommerce-account .woocommerce form.lost_reset_password {
 		padding: 1.5rem;
+	}
+
+	.wc-block-cart {
+		margin-top: 2.5rem;
+	}
+
+	.wc-block-cart .wp-block-woocommerce-empty-cart-block {
+		padding: 3rem 1.25rem 5rem;
 	}
 }
 
