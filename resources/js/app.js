@@ -281,11 +281,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	if (
 		isKnownAuthState &&
-		document.querySelector('.nova-favorite-toggle[data-product-id]')
+		(document.querySelector('.nova-favorite-toggle[data-product-id]') ||
+			document.querySelector('#nova-favorites-grid'))
 	) {
 		import('./woocommerce-favorites')
-			.then(({ initWooCommerceFavorites }) => {
+			.then(({ initWooCommerceFavorites, initFavoritesPage }) => {
 				initWooCommerceFavorites(favoritesConfig);
+
+				if (document.querySelector('#nova-favorites-grid')) {
+					initFavoritesPage(favoritesConfig);
+				}
 			})
 			.catch((error) => {
 				console.error('Failed to load WooCommerce favorites:', error);

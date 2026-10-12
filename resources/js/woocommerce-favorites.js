@@ -1,8 +1,11 @@
 const STORAGE_KEY = 'nova-favorite-product-ids';
 const BUTTON_SELECTOR = '.nova-favorite-toggle[data-product-id]';
+const FAVORITES_RENDER_BATCH_SIZE = 50;
 
 let activeCleanup;
-let loggedInInitialization;
+let favoritesInitialization;
+let favoritesBehaviorInitialization;
+let favoritesPageInitialization;
 
 const getProductIds = (data) => {
 	if (!data || typeof data !== 'object' || !Array.isArray(data.product_ids)) {
@@ -66,6 +69,46 @@ const readFavoritesResult = (storage) => {
 
 const readFavorites = (storage) => readFavoritesResult(storage).favoriteIds;
 
+const getInitialFavoriteIds = (config) => {
+	if (!favoritesInitialization) {
+		favoritesInitialization = Promise.resolve()
+			.then(() => {
+				if (config?.dataset.loggedIn === 'true') {
+					return getLoggedInInitialFavorites(config);
+				}
+
+				if (config?.dataset.loggedIn !== 'false') {
+					throw new Error('The NOVA favorites authentication state is unavailable.');
+				}
+
+				let storage;
+
+				try {
+					storage = window.localStorage;
+					return readFavorites(storage);
+				} catch (error) {
+					throw new Error('NOVA guest favorites could not be read from localStorage.', {
+						cause: error,
+					});
+				}
+			})
+			.catch((error) => {
+				favoritesInitialization = undefined;
+				throw error;
+			});
+	}
+
+	return favoritesInitialization;
+};
+
+const announceFavoritesChange = (favoriteIds) => {
+	document.dispatchEvent(
+		new CustomEvent('nova:favorites-updated', {
+			detail: { productIds: favoriteIds },
+		}),
+	);
+};
+
 const updateButton = (button, favoriteIds, pendingProductIds = null) => {
 	const productId = normalizeProductId(button.dataset.productId);
 
@@ -77,10 +120,7 @@ const updateButton = (button, favoriteIds, pendingProductIds = null) => {
 	const isFavorite = favoriteIds.includes(productId);
 
 	button.setAttribute('aria-pressed', String(isFavorite));
-	button.setAttribute(
-		'aria-label',
-		isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych',
-	);
+	button.setAttribute('aria-label', isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych');
 	button.dataset.state = isFavorite ? 'favorite' : 'not-favorite';
 	if (pendingProductIds) {
 		const isPending = pendingProductIds.has(productId);
@@ -248,6 +288,7 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 			document.querySelectorAll(BUTTON_SELECTOR).forEach((favoriteButton) => {
 				updateButton(favoriteButton, favoriteIds, pendingProductIds);
 			});
+			announceFavoritesChange(favoriteIds);
 			status.textContent = '';
 		} catch (error) {
 			console.error('Failed to save logged-in NOVA favorites:', error);
@@ -290,44 +331,17 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 	};
 };
 
-export const initWooCommerceFavorites = (config) => {
-	if (activeCleanup) {
-		return activeCleanup;
-	}
-
-	if (!document.body || !document.querySelector(BUTTON_SELECTOR)) {
-		return () => {};
-	}
-
-	if (config?.dataset.loggedIn === 'true') {
-		if (!loggedInInitialization) {
-			loggedInInitialization = getLoggedInInitialFavorites(config)
-				.then((favoriteIds) => {
-					activeCleanup = initLoggedInFavorites(config, favoriteIds);
-
-					return activeCleanup;
-				})
-				.catch((error) => {
-					console.error('Failed to load logged-in NOVA favorites:', error);
-					return () => {};
-				});
-		}
-
-		return loggedInInitialization;
-	}
-
-	if (config?.dataset.loggedIn !== 'false') {
-		return () => {};
-	}
-
+const initGuestFavorites = (initialFavoriteIds) => {
 	let storage;
-	let favoriteIds;
+	let favoriteIds = initialFavoriteIds;
 
 	try {
 		storage = window.localStorage;
-		favoriteIds = readFavorites(storage);
 	} catch (error) {
-		console.warn('NOVA favorites are unavailable because localStorage could not be read:', error);
+		console.warn(
+			'NOVA favorites are unavailable because localStorage could not be read:',
+			error,
+		);
 		return () => {};
 	}
 
@@ -371,6 +385,7 @@ export const initWooCommerceFavorites = (config) => {
 
 		favoriteIds = nextFavoriteIds;
 		updateButtonsForProduct(productId);
+		announceFavoritesChange(favoriteIds);
 	};
 
 	document.addEventListener('click', handleClick);
@@ -384,4 +399,201 @@ export const initWooCommerceFavorites = (config) => {
 	};
 
 	return activeCleanup;
+};
+
+const showFavoritesPageState = (
+	grid,
+	status,
+	message,
+	{ isLoading = false, canRetry = false } = {},
+) => {
+	status.replaceChildren();
+	status.textContent = message;
+	status.hidden = false;
+	status.setAttribute('aria-busy', String(isLoading));
+	grid.hidden = true;
+	grid.classList.add('hidden');
+
+	if (canRetry) {
+		const retryButton = document.createElement('button');
+		retryButton.type = 'button';
+		retryButton.dataset.favoritesRetry = 'true';
+		retryButton.className =
+			'mt-4 border border-nova-ink px-6 py-3 text-sm font-medium text-nova-ink transition hover:bg-nova-ink hover:text-nova-white';
+		retryButton.textContent = 'Spróbuj ponownie';
+		status.append(retryButton);
+	}
+};
+
+export const initFavoritesPage = (config) => {
+	const grid = document.querySelector('#nova-favorites-grid');
+
+	if (!grid || favoritesPageInitialization) {
+		return favoritesPageInitialization ?? Promise.resolve();
+	}
+
+	const status = document.createElement('p');
+	status.className = 'mb-8 text-base text-nova-muted';
+	status.setAttribute('role', 'status');
+	status.setAttribute('aria-live', 'polite');
+	status.setAttribute('aria-atomic', 'true');
+	grid.before(status);
+	showFavoritesPageState(grid, status, 'Ładowanie ulubionych produktów…', {
+		isLoading: true,
+	});
+
+	let latestFavoriteIds = null;
+	const reconcileRemovedProducts = (favoriteIds) => {
+		latestFavoriteIds = favoriteIds;
+		grid.querySelectorAll(':scope > .nova-product-card').forEach((card) => {
+			const productId = normalizeProductId(
+				card.querySelector(BUTTON_SELECTOR)?.dataset.productId,
+			);
+
+			if (productId !== null && !favoriteIds.includes(productId)) {
+				card.remove();
+			}
+		});
+
+		if (grid.children.length === 0 && !grid.hidden && !status.hasAttribute('data-error')) {
+			showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.');
+		}
+	};
+
+	const handleFavoritesUpdated = (event) => {
+		const productIds = event.detail?.productIds;
+
+		if (Array.isArray(productIds)) {
+			reconcileRemovedProducts(productIds);
+		}
+	};
+
+	const renderFavorites = async () => {
+		showFavoritesPageState(grid, status, 'Ładowanie ulubionych produktów…', {
+			isLoading: true,
+		});
+		status.removeAttribute('data-error');
+
+		try {
+			const favoriteIds = await getInitialFavoriteIds(config);
+			await initWooCommerceFavorites(config);
+
+			if (favoriteIds.length === 0) {
+				grid.replaceChildren();
+				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.');
+				return;
+			}
+
+			const favoritesUrl = new URL(config.dataset.restUrl, window.location.href);
+			favoritesUrl.pathname = `${favoritesUrl.pathname.replace(/\/+$/, '')}/render`;
+			const htmlChunks = [];
+			const renderedIds = [];
+
+			for (let index = 0; index < favoriteIds.length; index += FAVORITES_RENDER_BATCH_SIZE) {
+				const response = await fetch(favoritesUrl.toString(), {
+					method: 'POST',
+					credentials: 'same-origin',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						product_ids: favoriteIds.slice(index, index + FAVORITES_RENDER_BATCH_SIZE),
+					}),
+				});
+
+				if (!response.ok) {
+					throw new Error(
+						`Rendering NOVA favorite products failed with HTTP ${response.status}.`,
+					);
+				}
+
+				const result = await response.json();
+				const batchIds = getProductIds(result);
+
+				if (typeof result.html !== 'string') {
+					throw new Error(
+						'The NOVA favorites render response has an invalid html field.',
+					);
+				}
+
+				htmlChunks.push(result.html);
+				renderedIds.push(...batchIds);
+			}
+
+			grid.innerHTML = htmlChunks.join('');
+			reconcileRemovedProducts(latestFavoriteIds ?? renderedIds);
+
+			if (grid.children.length === 0) {
+				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.');
+				return;
+			}
+
+			status.hidden = true;
+			status.textContent = '';
+			status.removeAttribute('aria-busy');
+			grid.hidden = false;
+			grid.classList.remove('hidden');
+		} catch (error) {
+			console.error('Failed to render NOVA favorite products:', error);
+			status.dataset.error = 'true';
+			showFavoritesPageState(grid, status, 'Nie udało się wczytać ulubionych produktów.', {
+				canRetry: true,
+			});
+			status.dataset.error = 'true';
+		}
+	};
+
+	const handleRetry = (event) => {
+		if (event.target instanceof Element && event.target.closest('[data-favorites-retry]')) {
+			renderFavorites();
+		}
+	};
+
+	document.addEventListener('nova:favorites-updated', handleFavoritesUpdated);
+	status.addEventListener('click', handleRetry);
+	favoritesPageInitialization = renderFavorites();
+
+	return favoritesPageInitialization;
+};
+
+export const initWooCommerceFavorites = (config) => {
+	if (activeCleanup) {
+		return activeCleanup;
+	}
+	if (favoritesBehaviorInitialization) {
+		return favoritesBehaviorInitialization;
+	}
+
+	if (
+		!document.body ||
+		(!document.querySelector(BUTTON_SELECTOR) &&
+			!document.querySelector('#nova-favorites-grid'))
+	) {
+		return () => {};
+	}
+
+	favoritesBehaviorInitialization = getInitialFavoriteIds(config)
+		.then((favoriteIds) => {
+			if (activeCleanup) {
+				return activeCleanup;
+			}
+
+			activeCleanup =
+				config?.dataset.loggedIn === 'true'
+					? initLoggedInFavorites(config, favoriteIds)
+					: initGuestFavorites(favoriteIds);
+
+			return activeCleanup;
+		})
+		.catch((error) => {
+			favoritesBehaviorInitialization = undefined;
+			throw error;
+		});
+
+	favoritesBehaviorInitialization.catch((error) => {
+		console.error('Failed to initialize NOVA favorites:', error);
+	});
+
+	return favoritesBehaviorInitialization;
 };
