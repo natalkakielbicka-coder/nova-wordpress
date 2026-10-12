@@ -282,7 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (
 		isKnownAuthState &&
 		(document.querySelector('.nova-favorite-toggle[data-product-id]') ||
-			document.querySelector('#nova-favorites-grid'))
+			document.querySelector('#nova-favorites-grid') ||
+			document.querySelector('#nova-favorites-count'))
 	) {
 		import('./woocommerce-favorites')
 			.then(({ initWooCommerceFavorites, initFavoritesPage }) => {

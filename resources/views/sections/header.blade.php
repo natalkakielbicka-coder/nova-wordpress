@@ -23,6 +23,17 @@
 			@endif
 
 			<div class="relative z-20 ml-auto flex shrink-0 items-center gap-1 lg:ml-0">
+				@php
+						$favoritesPage = get_pages([
+							'number' => 1,
+							'meta_key' => '_wp_page_template',
+							'meta_value' => 'template-favorites.blade.php',
+						]);
+						$favoritesUrl = ! empty($favoritesPage)
+							? get_permalink($favoritesPage[0]->ID)
+							: home_url('/ulubione/');
+					@endphp
+
 				<button
 					type="button"
 					id="nova-theme-toggle"
@@ -65,6 +76,36 @@
 						<path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
 					</svg>
 				</button>
+
+				<a
+					href="{{ esc_url($favoritesUrl ?: home_url('/ulubione/')) }}"
+					class="flex size-11 shrink-0 items-center justify-center text-nova-ink transition hover:opacity-60"
+					aria-label="Ulubione produkty"
+				>
+					<span class="relative flex size-[22px] items-center justify-center">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="22"
+							height="22"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							aria-hidden="true"
+						>
+							<path
+								d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"
+							/>
+						</svg>
+						<span
+							id="nova-favorites-count"
+							class="absolute -right-1 -top-1 hidden min-w-3 items-center justify-center rounded-full bg-nova-ink px-1 text-[10px] leading-4 text-nova-white"
+							aria-hidden="true"
+						></span>
+					</span>
+				</a>
 
 				<button
 					type="button"

@@ -69,12 +69,15 @@ const readFavoritesResult = (storage) => {
 
 const readFavorites = (storage) => readFavoritesResult(storage).favoriteIds;
 
-const getInitialFavoriteIds = (config) => {
+const getInitialFavorites = (config) => {
 	if (!favoritesInitialization) {
 		favoritesInitialization = Promise.resolve()
 			.then(() => {
 				if (config?.dataset.loggedIn === 'true') {
-					return getLoggedInInitialFavorites(config);
+					return getLoggedInInitialFavorites(config).then((favoriteIds) => ({
+						favoriteIds,
+						isValid: true,
+					}));
 				}
 
 				if (config?.dataset.loggedIn !== 'false') {
@@ -85,7 +88,7 @@ const getInitialFavoriteIds = (config) => {
 
 				try {
 					storage = window.localStorage;
-					return readFavorites(storage);
+					return readFavoritesResult(storage);
 				} catch (error) {
 					throw new Error('NOVA guest favorites could not be read from localStorage.', {
 						cause: error,
@@ -101,7 +104,30 @@ const getInitialFavoriteIds = (config) => {
 	return favoritesInitialization;
 };
 
+const updateFavoritesCount = (favoriteIds) => {
+	const count = document.querySelector('#nova-favorites-count');
+
+	if (!count) {
+		return;
+	}
+
+	const uniqueIds = [...new Set(favoriteIds.map(normalizeProductId).filter((id) => id !== null))];
+	const favoritesLink = count.closest('a');
+
+	if (uniqueIds.length === 0) {
+		count.textContent = '';
+		count.classList.add('hidden');
+		favoritesLink?.setAttribute('aria-label', 'Ulubione produkty');
+		return;
+	}
+
+	count.textContent = String(uniqueIds.length);
+	count.classList.remove('hidden');
+	favoritesLink?.setAttribute('aria-label', `Ulubione produkty: ${uniqueIds.length}`);
+};
+
 const announceFavoritesChange = (favoriteIds) => {
+	updateFavoritesCount(favoriteIds);
 	document.dispatchEvent(
 		new CustomEvent('nova:favorites-updated', {
 			detail: { productIds: favoriteIds },
@@ -475,7 +501,7 @@ export const initFavoritesPage = (config) => {
 		status.removeAttribute('data-error');
 
 		try {
-			const favoriteIds = await getInitialFavoriteIds(config);
+			const { favoriteIds } = await getInitialFavorites(config);
 			await initWooCommerceFavorites(config);
 
 			if (favoriteIds.length === 0) {
@@ -568,13 +594,18 @@ export const initWooCommerceFavorites = (config) => {
 	if (
 		!document.body ||
 		(!document.querySelector(BUTTON_SELECTOR) &&
-			!document.querySelector('#nova-favorites-grid'))
+			!document.querySelector('#nova-favorites-grid') &&
+			!document.querySelector('#nova-favorites-count'))
 	) {
 		return () => {};
 	}
 
-	favoritesBehaviorInitialization = getInitialFavoriteIds(config)
-		.then((favoriteIds) => {
+	favoritesBehaviorInitialization = getInitialFavorites(config)
+		.then(({ favoriteIds, isValid }) => {
+			if (isValid) {
+				updateFavoritesCount(favoriteIds);
+			}
+
 			if (activeCleanup) {
 				return activeCleanup;
 			}
