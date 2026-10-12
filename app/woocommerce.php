@@ -148,6 +148,111 @@ add_action('rest_api_init', function () {
     ]);
 });
 
+add_action('rest_api_init', function () {
+    if (! class_exists('WooCommerce') || ! function_exists('wc_get_product')) {
+        return;
+    }
+
+    register_rest_route('nova/v1', '/favorites/render', [
+        'methods' => 'POST',
+        'callback' => static function (WP_REST_Request $request) {
+            $payload = $request->get_json_params();
+            $productIds = is_array($payload) ? ($payload['product_ids'] ?? null) : null;
+            $maxProducts = 50;
+
+            if (! is_array($payload) || ! is_array($productIds) || ! array_is_list($productIds)) {
+                return new WP_Error(
+                    'nova_favorites_render_invalid_request',
+                    __('A list of product IDs is required.', 'nova-wordpress'),
+                    ['status' => 400]
+                );
+            }
+
+            if (count($productIds) > $maxProducts) {
+                return new WP_Error(
+                    'nova_favorites_render_too_many_products',
+                    __('Too many product IDs were provided.', 'nova-wordpress'),
+                    ['status' => 400]
+                );
+            }
+
+            $validatedIds = [];
+            $seenIds = [];
+
+            foreach ($productIds as $productId) {
+                if (! is_int($productId) || $productId < 1 || isset($seenIds[$productId])) {
+                    return new WP_Error(
+                        'nova_favorites_render_invalid_product_ids',
+                        __('Product IDs must be unique positive integers.', 'nova-wordpress'),
+                        ['status' => 400]
+                    );
+                }
+
+                $seenIds[$productId] = true;
+                $validatedIds[] = $productId;
+            }
+
+            $html = '';
+            $renderedIds = [];
+            $seenRenderedIds = [];
+
+            foreach ($validatedIds as $requestedId) {
+                $product = wc_get_product($requestedId);
+
+                if (! $product instanceof \WC_Product || $product->get_status() !== 'publish') {
+                    continue;
+                }
+
+                if ($product->is_type('variation')) {
+                    $parentId = (int) $product->get_parent_id();
+                    $product = $parentId > 0 ? wc_get_product($parentId) : false;
+                }
+
+                if (
+                    ! $product instanceof \WC_Product
+                    || $product->get_status() !== 'publish'
+                    || ! $product->is_visible()
+                    || ! in_array($product->get_catalog_visibility(), ['visible', 'catalog'], true)
+                    || get_post_field('post_password', $product->get_id()) !== ''
+                ) {
+                    continue;
+                }
+
+                $productId = (int) $product->get_id();
+
+                if (isset($seenRenderedIds[$productId])) {
+                    continue;
+                }
+
+                $hadGlobalProduct = array_key_exists('product', $GLOBALS);
+                $previousGlobalProduct = $GLOBALS['product'] ?? null;
+
+                try {
+                    $GLOBALS['product'] = $product;
+                    $html .= view('components.product-card', [
+                        'product' => $product,
+                    ])->render();
+                } finally {
+                    if ($hadGlobalProduct) {
+                        $GLOBALS['product'] = $previousGlobalProduct;
+                    } else {
+                        unset($GLOBALS['product']);
+                    }
+                }
+
+                $seenRenderedIds[$productId] = true;
+                $renderedIds[] = $productId;
+            }
+
+            return new WP_REST_Response([
+                'html' => $html,
+                'product_ids' => $renderedIds,
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+});
+
 
 /**
  * Custom NOVA product cards.
