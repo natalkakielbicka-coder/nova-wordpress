@@ -32,11 +32,11 @@ const normalizeProductId = (value) => {
 	return Number.isSafeInteger(productId) && productId > 0 ? productId : null;
 };
 
-const readFavorites = (storage) => {
+const readFavoritesResult = (storage) => {
 	const storedValue = storage.getItem(STORAGE_KEY);
 
 	if (storedValue === null) {
-		return [];
+		return { favoriteIds: [], isValid: true };
 	}
 
 	try {
@@ -44,15 +44,27 @@ const readFavorites = (storage) => {
 
 		if (!Array.isArray(parsedValue)) {
 			console.warn('Ignoring invalid NOVA favorites data: expected an array.');
-			return [];
+			return { favoriteIds: [], isValid: false };
 		}
 
-		return [...new Set(parsedValue.map(normalizeProductId).filter((id) => id !== null))];
+		const normalizedIds = parsedValue.map(normalizeProductId);
+
+		if (normalizedIds.some((id) => id === null)) {
+			console.warn('Ignoring invalid NOVA favorites data: invalid product ID.');
+			return {
+				favoriteIds: [...new Set(normalizedIds.filter((id) => id !== null))],
+				isValid: false,
+			};
+		}
+
+		return { favoriteIds: [...new Set(normalizedIds)], isValid: true };
 	} catch (error) {
 		console.warn('Ignoring invalid NOVA favorites data:', error);
-		return [];
+		return { favoriteIds: [], isValid: false };
 	}
 };
+
+const readFavorites = (storage) => readFavoritesResult(storage).favoriteIds;
 
 const updateButton = (button, favoriteIds, pendingProductIds = null) => {
 	const productId = normalizeProductId(button.dataset.productId);
@@ -134,6 +146,58 @@ const loadLoggedInFavorites = async (config) => {
 	}
 
 	return getProductIds(await response.json());
+};
+
+const getLoggedInInitialFavorites = async (config) => {
+	let storage;
+
+	try {
+		storage = window.localStorage;
+	} catch (error) {
+		console.warn('NOVA guest favorites could not be accessed:', error);
+		return loadLoggedInFavorites(config);
+	}
+
+	let guestFavorites;
+
+	try {
+		guestFavorites = readFavoritesResult(storage);
+	} catch (error) {
+		console.warn('NOVA guest favorites could not be read:', error);
+		return loadLoggedInFavorites(config);
+	}
+
+	if (!guestFavorites.isValid || guestFavorites.favoriteIds.length === 0) {
+		return loadLoggedInFavorites(config);
+	}
+
+	const mergeUrl = new URL(config.dataset.restUrl, window.location.href);
+	mergeUrl.pathname = `${mergeUrl.pathname.replace(/\/+$/, '')}/merge`;
+
+	const response = await fetch(mergeUrl.toString(), {
+		method: 'POST',
+		credentials: 'same-origin',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+			'X-WP-Nonce': config.dataset.nonce,
+		},
+		body: JSON.stringify({ product_ids: guestFavorites.favoriteIds }),
+	});
+
+	if (!response.ok) {
+		throw new Error(`Merging NOVA favorites failed with HTTP ${response.status}.`);
+	}
+
+	const favoriteIds = getProductIds(await response.json());
+
+	try {
+		storage.removeItem(STORAGE_KEY);
+	} catch (error) {
+		console.warn('Merged NOVA guest favorites could not be removed from localStorage:', error);
+	}
+
+	return favoriteIds;
 };
 
 const createStatusRegion = () => {
@@ -237,7 +301,7 @@ export const initWooCommerceFavorites = (config) => {
 
 	if (config?.dataset.loggedIn === 'true') {
 		if (!loggedInInitialization) {
-			loggedInInitialization = loadLoggedInFavorites(config)
+			loggedInInitialization = getLoggedInInitialFavorites(config)
 				.then((favoriteIds) => {
 					activeCleanup = initLoggedInFavorites(config, favoriteIds);
 
