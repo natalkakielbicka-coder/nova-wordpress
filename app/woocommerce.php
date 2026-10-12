@@ -274,6 +274,27 @@ add_action('wp', function () {
     add_action('woocommerce_single_product_summary', function () {
         echo '<p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">Collection / NOVA</p>';
     }, 4);
+
+    add_action('woocommerce_single_product_summary', function () {
+        global $product;
+
+        if (! $product instanceof \WC_Product) {
+            return;
+        }
+
+        $favoriteProductId = $product->is_type('variation')
+            ? (int) $product->get_parent_id()
+            : (int) $product->get_id();
+
+        if ($favoriteProductId < 1) {
+            return;
+        }
+
+        echo view('components.product-favorite-button', [
+            'productId' => $favoriteProductId,
+            'placementClass' => 'mb-4',
+        ])->render();
+    }, 6);
 });
 
 /**

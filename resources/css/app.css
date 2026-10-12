@@ -1397,6 +1397,26 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 
 /* NOVA product card buttons */
 
+.nova-favorite-toggle {
+	color: var(--color-nova-muted);
+	transition: color 180ms ease;
+}
+
+.nova-favorite-toggle svg {
+	fill: none;
+	transition:
+		fill 180ms ease,
+		stroke 180ms ease;
+}
+
+.nova-favorite-toggle[aria-pressed='true'] {
+	color: var(--color-nova-ink);
+}
+
+.nova-favorite-toggle[aria-pressed='true'] svg {
+	fill: var(--color-nova-ink);
+}
+
 .woocommerce ul.products li.product .nova-product-card__actions a.button,
 .woocommerce-page ul.products li.product .nova-product-card__actions a.button {
 	display: inline-flex;
@@ -2744,7 +2764,9 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 
 @media (prefers-reduced-motion: reduce) {
 	.nova-process-step::before,
-	.nova-process-step h3 {
+	.nova-process-step h3,
+	.nova-favorite-toggle,
+	.nova-favorite-toggle svg {
 		transition: none;
 	}
 

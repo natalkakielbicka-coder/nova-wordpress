@@ -273,6 +273,19 @@ document.addEventListener('DOMContentLoaded', () => {
 			initProductCardButtons();
 		});
 	}
+
+	if (
+		!document.body.classList.contains('logged-in') &&
+		document.querySelector('.nova-favorite-toggle[data-product-id]')
+	) {
+		import('./woocommerce-favorites')
+			.then(({ initWooCommerceFavorites }) => {
+				initWooCommerceFavorites();
+			})
+			.catch((error) => {
+				console.error('Failed to load WooCommerce favorites:', error);
+			});
+	}
 });
 
 initMobileMenu();
