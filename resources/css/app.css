@@ -1399,14 +1399,34 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 
 .nova-favorite-toggle {
 	color: var(--color-nova-muted);
-	transition: color 180ms ease;
+	cursor: pointer;
+}
+
+.nova-favorite-toggle[data-ready='true'] {
+	transition: color 200ms ease;
+}
+
+.nova-favorite-toggle:not(:disabled):hover {
+	color: var(--color-nova-text);
+}
+
+.nova-favorite-toggle:not(:disabled):hover svg {
+	transform: scale(1.1);
+}
+
+.nova-favorite-toggle:disabled {
+	cursor: wait;
 }
 
 .nova-favorite-toggle svg {
 	fill: none;
+}
+
+.nova-favorite-toggle[data-ready='true'] svg {
 	transition:
-		fill 180ms ease,
-		stroke 180ms ease;
+		fill 200ms ease,
+		stroke 200ms ease,
+		transform 200ms ease;
 }
 
 .nova-favorite-toggle[aria-pressed='true'] {
@@ -2768,6 +2788,10 @@ body.woocommerce nav.woocommerce-pagination ul.page-numbers li span.dots {
 	.nova-favorite-toggle,
 	.nova-favorite-toggle svg {
 		transition: none;
+	}
+
+	.nova-favorite-toggle:not(:disabled):hover svg {
+		transform: none;
 	}
 
 	html.theme-transition,

@@ -5,11 +5,12 @@
 
 <button
 	type="button"
-	hidden
-	class="nova-favorite-toggle {{ $placementClass }} inline-flex size-11 items-center justify-center rounded-full bg-nova-white text-nova-muted shadow-sm transition-colors hover:text-nova-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+	disabled
+	class="nova-favorite-toggle {{ $placementClass }} inline-flex size-11 items-center justify-center rounded-full bg-nova-white text-nova-muted shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
 	data-product-id="{{ $productId }}"
 	data-state="unknown"
-	aria-label="{{ __('Ulubiony produkt', 'nova-wordpress') }}"
+	aria-label="{{ __('Sprawdzanie ulubionych', 'nova-wordpress') }}"
+	aria-busy="true"
 >
 	<svg
 		aria-hidden="true"

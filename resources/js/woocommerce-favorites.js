@@ -148,18 +148,24 @@ const updateButton = (button, favoriteIds, pendingProductIds = null) => {
 	button.setAttribute('aria-pressed', String(isFavorite));
 	button.setAttribute('aria-label', isFavorite ? 'Usuń z ulubionych' : 'Dodaj do ulubionych');
 	button.dataset.state = isFavorite ? 'favorite' : 'not-favorite';
-	if (pendingProductIds) {
-		const isPending = pendingProductIds.has(productId);
-		button.disabled = isPending;
+	const isPending = pendingProductIds?.has(productId) ?? false;
+	button.disabled = isPending;
 
-		if (isPending) {
-			button.setAttribute('aria-busy', 'true');
-		} else {
-			button.removeAttribute('aria-busy');
-		}
+	if (isPending) {
+		button.setAttribute('aria-busy', 'true');
+	} else {
+		button.removeAttribute('aria-busy');
 	}
 
 	button.hidden = false;
+
+	if (button.dataset.ready !== 'true') {
+		window.requestAnimationFrame(() => {
+			if (button.isConnected) {
+				button.dataset.ready = 'true';
+			}
+		});
+	}
 };
 
 const observeNewButtons = (favoriteIds, pendingProductIds = null) => {
