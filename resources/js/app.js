@@ -7,13 +7,35 @@ import { initReadingProgress } from './components/reading-progress';
 
 let pageInitializationStarted = false;
 let animationInitializationCancelled = false;
+let gsapAnimationsCancelled = false;
 let activeAnimationInitialization;
+
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+const restoreMotionVisibility = () => {
+	document.documentElement.classList.remove('nova-motion-ready');
+	window.novaProjectAnimationsReady = false;
+};
 
 export const disposeAnimationInitializations = () => {
 	animationInitializationCancelled = true;
 	activeAnimationInitialization?.cleanup();
-	document.documentElement.classList.remove('nova-motion-ready');
+	restoreMotionVisibility();
 };
+
+reducedMotionQuery.addEventListener('change', (event) => {
+	if (!event.matches) {
+		return;
+	}
+
+	gsapAnimationsCancelled = true;
+
+	if (activeAnimationInitialization) {
+		activeAnimationInitialization.cleanupAnimations();
+	} else {
+		restoreMotionVisibility();
+	}
+});
 
 document.addEventListener('DOMContentLoaded', () => {
 	if (pageInitializationStarted) {
@@ -56,12 +78,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 	}
 
-	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const prefersReducedMotion = reducedMotionQuery.matches;
+	if (prefersReducedMotion) {
+		restoreMotionVisibility();
+	}
 
 	const hasAnimatedElements = document.querySelector(
 		'.nova-hero, .nova-project-card, .nova-pin-section',
 	);
-	const shouldInitializeAnimations = hasAnimatedElements && !prefersReducedMotion;
+	const shouldInitializeAnimations =
+		hasAnimatedElements && !prefersReducedMotion && !gsapAnimationsCancelled;
 	const shouldInitializeProjectsLayout = document.querySelector('.wp-block-nova-projects');
 
 	let session;
@@ -73,9 +99,33 @@ document.addEventListener('DOMContentLoaded', () => {
 		session = {
 			cancelled: false,
 			cleanups: [],
+			animationsCancelled: false,
 			animationsDisposer: null,
 			projectsLayoutDisposer: null,
+			cleanupAnimations: null,
 			cleanup: null,
+		};
+
+		session.cleanupAnimations = () => {
+			if (session.animationsCancelled) {
+				restoreMotionVisibility();
+				return;
+			}
+
+			session.animationsCancelled = true;
+			const disposer = session.animationsDisposer;
+			session.animationsDisposer = null;
+			session.cleanups = session.cleanups.filter(({ type }) => type !== 'gsap');
+
+			if (disposer) {
+				try {
+					disposer();
+				} catch (error) {
+					console.error('Failed to clean up GSAP animations:', error);
+				}
+			}
+
+			restoreMotionVisibility();
 		};
 
 		session.cleanup = () => {
@@ -84,10 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 			session.cancelled = true;
+			session.cleanupAnimations();
 
 			for (let index = session.cleanups.length - 1; index >= 0; index--) {
 				try {
-					session.cleanups[index]();
+					session.cleanups[index].dispose();
 				} catch (error) {
 					console.error('Failed to clean up animation initialization:', error);
 				}
@@ -107,18 +158,18 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (shouldInitializeAnimations && session) {
 		import('./animations')
 			.then(({ initAnimations }) => {
-				if (session.cancelled) {
+				if (session.cancelled || session.animationsCancelled || gsapAnimationsCancelled) {
 					return;
 				}
 
 				const disposer = initAnimations();
 
 				if (typeof disposer === 'function') {
-					if (session.cancelled) {
+					if (session.cancelled || session.animationsCancelled || gsapAnimationsCancelled) {
 						disposer();
 					} else {
 						session.animationsDisposer = disposer;
-						session.cleanups.push(disposer);
+						session.cleanups.push({ type: 'gsap', dispose: disposer });
 					}
 				}
 			})
@@ -142,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						disposer();
 					} else {
 						session.projectsLayoutDisposer = disposer;
-						session.cleanups.push(disposer);
+						session.cleanups.push({ type: 'projects-layout', dispose: disposer });
 					}
 				}
 			})
