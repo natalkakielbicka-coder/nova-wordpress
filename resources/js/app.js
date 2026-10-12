@@ -8,6 +8,7 @@ import { initReadingProgress } from './components/reading-progress';
 let pageInitializationStarted = false;
 let animationInitializationCancelled = false;
 let gsapAnimationsCancelled = false;
+let gsapAnimationGeneration = 0;
 let activeAnimationInitialization;
 
 const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -17,18 +18,99 @@ const restoreMotionVisibility = () => {
 	window.novaProjectAnimationsReady = false;
 };
 
+const initializeGSAPAnimations = (session, { skipEntranceAnimations = false } = {}) => {
+	if (
+		session.cancelled ||
+		session.animationsCancelled ||
+		session.animationsLoading ||
+		session.animationsDisposer ||
+		animationInitializationCancelled ||
+		gsapAnimationsCancelled ||
+		reducedMotionQuery.matches ||
+		!session.hasAnimatedElements
+	) {
+		return;
+	}
+
+	const generation = ++gsapAnimationGeneration;
+	session.animationsLoading = true;
+
+	import('./animations')
+		.then(({ initAnimations }) => {
+			if (
+				session.cancelled ||
+				session.animationsCancelled ||
+				animationInitializationCancelled ||
+				gsapAnimationsCancelled ||
+				reducedMotionQuery.matches ||
+				generation !== gsapAnimationGeneration
+			) {
+				return;
+			}
+
+			const disposer = initAnimations({ skipEntranceAnimations });
+
+			if (typeof disposer === 'function') {
+				if (
+					session.cancelled ||
+					session.animationsCancelled ||
+					animationInitializationCancelled ||
+					gsapAnimationsCancelled ||
+					reducedMotionQuery.matches ||
+					generation !== gsapAnimationGeneration
+				) {
+					disposer();
+				} else {
+					session.animationsDisposer = disposer;
+					session.cleanups.push({ type: 'gsap', dispose: disposer });
+				}
+			}
+		})
+		.catch((error) => {
+			if (generation === gsapAnimationGeneration) {
+				restoreMotionVisibility();
+			}
+
+			console.error('Failed to load animations:', error);
+		})
+		.finally(() => {
+			if (generation === gsapAnimationGeneration) {
+				session.animationsLoading = false;
+			}
+		});
+};
+
 export const disposeAnimationInitializations = () => {
 	animationInitializationCancelled = true;
+	gsapAnimationGeneration++;
 	activeAnimationInitialization?.cleanup();
 	restoreMotionVisibility();
 };
 
 reducedMotionQuery.addEventListener('change', (event) => {
 	if (!event.matches) {
+		if (animationInitializationCancelled) {
+			return;
+		}
+
+		gsapAnimationsCancelled = false;
+
+		if (
+			pageInitializationStarted &&
+			activeAnimationInitialization?.hasAnimatedElements &&
+			activeAnimationInitialization.animationsCancelled
+		) {
+			activeAnimationInitialization.animationsCancelled = false;
+			initializeGSAPAnimations(activeAnimationInitialization, {
+				skipEntranceAnimations: true,
+			});
+		}
+
 		return;
 	}
 
 	gsapAnimationsCancelled = true;
+	gsapAnimationGeneration++;
 
 	if (activeAnimationInitialization) {
 		activeAnimationInitialization.cleanupAnimations();
@@ -93,13 +175,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	let session;
 
 	if (
-		(shouldInitializeAnimations || shouldInitializeProjectsLayout) &&
+		(hasAnimatedElements || shouldInitializeProjectsLayout) &&
 		!animationInitializationCancelled
 	) {
 		session = {
 			cancelled: false,
 			cleanups: [],
-			animationsCancelled: false,
+			hasAnimatedElements: Boolean(hasAnimatedElements),
+			animationsCancelled: !shouldInitializeAnimations,
+			animationsLoading: false,
 			animationsDisposer: null,
 			projectsLayoutDisposer: null,
 			cleanupAnimations: null,
@@ -107,12 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 
 		session.cleanupAnimations = () => {
-			if (session.animationsCancelled) {
-				restoreMotionVisibility();
-				return;
-			}
-
 			session.animationsCancelled = true;
+			session.animationsLoading = false;
 			const disposer = session.animationsDisposer;
 			session.animationsDisposer = null;
 			session.cleanups = session.cleanups.filter(({ type }) => type !== 'gsap');
@@ -156,27 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	if (shouldInitializeAnimations && session) {
-		import('./animations')
-			.then(({ initAnimations }) => {
-				if (session.cancelled || session.animationsCancelled || gsapAnimationsCancelled) {
-					return;
-				}
-
-				const disposer = initAnimations();
-
-				if (typeof disposer === 'function') {
-					if (session.cancelled || session.animationsCancelled || gsapAnimationsCancelled) {
-						disposer();
-					} else {
-						session.animationsDisposer = disposer;
-						session.cleanups.push({ type: 'gsap', dispose: disposer });
-					}
-				}
-			})
-			.catch((error) => {
-				document.documentElement.classList.remove('nova-motion-ready');
-				console.error('Failed to load animations:', error);
-			});
+		initializeGSAPAnimations(session);
 	}
 
 	if (shouldInitializeProjectsLayout && session) {

@@ -1,6 +1,6 @@
 let activeSession;
 
-export const initAnimations = () => {
+export const initAnimations = ({ skipEntranceAnimations = false } = {}) => {
 	activeSession?.cleanup();
 
 	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -44,7 +44,7 @@ export const initAnimations = () => {
 
 	const modules = [];
 
-	if (document.querySelector('.nova-hero')) {
+	if (!skipEntranceAnimations && document.querySelector('.nova-hero')) {
 		modules.push({
 			load: () => import('./animations/hero'),
 			initialize: 'initHeroAnimation',
@@ -52,7 +52,7 @@ export const initAnimations = () => {
 		});
 	}
 
-	if (document.querySelector('.nova-project-card')) {
+	if (!skipEntranceAnimations && document.querySelector('.nova-project-card')) {
 		modules.push({
 			load: () => import('./animations/projects'),
 			initialize: 'initProjectsAnimation',
