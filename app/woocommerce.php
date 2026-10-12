@@ -2,6 +2,11 @@
 
 namespace App;
 
+use App\Repositories\FavoriteProductsRepository;
+use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
+
 add_action('after_setup_theme', function () {
     if (! class_exists('WooCommerce')) {
         return;
@@ -31,6 +36,117 @@ add_action('after_setup_theme', function () {
         echo '</section>';
     }, 10);
 }, 20);
+
+add_action('rest_api_init', function () {
+    if (! class_exists('WooCommerce') || ! function_exists('wc_get_product')) {
+        return;
+    }
+
+    $permissionCallback = static function () {
+        if (! is_user_logged_in()) {
+            return new WP_Error(
+                'nova_favorites_auth_required',
+                __('Authentication is required to manage favorites.', 'nova-wordpress'),
+                ['status' => 401]
+            );
+        }
+
+        if (! current_user_can('read')) {
+            return new WP_Error(
+                'nova_favorites_forbidden',
+                __('You are not allowed to manage favorites.', 'nova-wordpress'),
+                ['status' => 403]
+            );
+        }
+
+        return true;
+    };
+
+    $repository = static fn (): FavoriteProductsRepository => app(FavoriteProductsRepository::class);
+
+    $mutationResponse = static function (array|WP_Error $result) {
+        if (is_wp_error($result)) {
+            return $result;
+        }
+
+        return new WP_REST_Response([
+            'product_ids' => $result,
+        ]);
+    };
+
+    register_rest_route('nova/v1', '/favorites', [
+        [
+            'methods' => 'GET',
+            'callback' => static function () use ($repository) {
+                return new WP_REST_Response([
+                    'product_ids' => $repository()->getFavorites(get_current_user_id()),
+                ]);
+            },
+            'permission_callback' => $permissionCallback,
+        ],
+        [
+            'methods' => 'POST',
+            'callback' => static function (WP_REST_Request $request) use ($repository, $mutationResponse) {
+                return $mutationResponse(
+                    $repository()->addFavorite(
+                        get_current_user_id(),
+                        $request->get_param('product_id')
+                    )
+                );
+            },
+            'args' => [
+                'product_id' => [
+                    'required' => true,
+                    'type' => 'integer',
+                    'minimum' => 1,
+                ],
+            ],
+            'permission_callback' => $permissionCallback,
+        ],
+        [
+            'methods' => 'DELETE',
+            'callback' => static function (WP_REST_Request $request) use ($repository, $mutationResponse) {
+                return $mutationResponse(
+                    $repository()->removeFavorite(
+                        get_current_user_id(),
+                        $request->get_param('product_id')
+                    )
+                );
+            },
+            'args' => [
+                'product_id' => [
+                    'required' => true,
+                    'type' => 'integer',
+                    'minimum' => 1,
+                ],
+            ],
+            'permission_callback' => $permissionCallback,
+        ],
+    ]);
+
+    register_rest_route('nova/v1', '/favorites/merge', [
+        'methods' => 'POST',
+        'callback' => static function (WP_REST_Request $request) use ($repository, $mutationResponse) {
+            return $mutationResponse(
+                $repository()->mergeFavorites(
+                    get_current_user_id(),
+                    $request->get_param('product_ids')
+                )
+            );
+        },
+        'args' => [
+            'product_ids' => [
+                'required' => true,
+                'type' => 'array',
+                'items' => [
+                    'type' => 'integer',
+                    'minimum' => 1,
+                ],
+            ],
+        ],
+        'permission_callback' => $permissionCallback,
+    ]);
+});
 
 
 /**

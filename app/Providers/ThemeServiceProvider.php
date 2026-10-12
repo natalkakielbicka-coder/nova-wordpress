@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\FavoriteProductsRepository;
 use App\Repositories\ProjectRepository;
 use Roots\Acorn\Sage\SageServiceProvider;
 
@@ -19,6 +20,11 @@ class ThemeServiceProvider extends SageServiceProvider
         $this->app->bind(
             ProjectRepository::class,
             fn () => new ProjectRepository()
+        );
+
+        $this->app->bind(
+            FavoriteProductsRepository::class,
+            fn () => new FavoriteProductsRepository()
         );
     }
 
