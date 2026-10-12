@@ -181,6 +181,9 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 			}
 
 			favoriteIds = getProductIds(await response.json());
+			document.querySelectorAll(BUTTON_SELECTOR).forEach((favoriteButton) => {
+				updateButton(favoriteButton, favoriteIds, pendingProductIds);
+			});
 			status.textContent = '';
 		} catch (error) {
 			console.error('Failed to save logged-in NOVA favorites:', error);
