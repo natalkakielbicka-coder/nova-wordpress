@@ -1,5 +1,5 @@
 <!doctype html>
-<html @php (language_attributes())>
+<html @php language_attributes(); @endphp>
 <head>
 	<script>
 		(() => {
@@ -55,14 +55,28 @@
 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	@php (do_action('get_header'))
-	@php (wp_head())
+	@php do_action('get_header'); @endphp
+	@php wp_head(); @endphp
 
 	@vite (['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body @php (body_class())>
-	@php (wp_body_open())
+<body @php body_class(); @endphp>
+	@php wp_body_open(); @endphp
+
+	@php
+        $isLoggedIn = is_user_logged_in();
+    @endphp
+
+	<div
+		id="nova-favorites-config"
+		hidden
+		data-rest-url="{{ esc_url(rest_url('nova/v1/favorites')) }}"
+		data-logged-in="{{ $isLoggedIn ? 'true' : 'false' }}"
+		@if ($isLoggedIn)
+			data-nonce="{{ esc_attr(wp_create_nonce('wp_rest')) }}"
+		@endif
+	></div>
 
 	<div id="app">
 		<a class="sr-only focus:not-sr-only" href="#main"> {{ __('Skip to content', 'sage') }} </a>
@@ -86,7 +100,7 @@
 		@include ('sections.footer')
 	</div>
 
-	@php (do_action('get_footer'))
-	@php (wp_footer())
+	@php do_action('get_footer'); @endphp
+	@php wp_footer(); @endphp
 </body>
 </html>
