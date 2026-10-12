@@ -7,13 +7,13 @@ export const initPinnedSection = () => {
 	const section = document.querySelector('.nova-pin-section');
 
 	if (!section) {
-		return;
+		return () => {};
 	}
 
 	const steps = gsap.utils.toArray(section.querySelectorAll('.nova-process-step'));
 
 	if (steps.length !== 3) {
-		return;
+		return () => {};
 	}
 
 	const mm = gsap.matchMedia();
@@ -110,4 +110,15 @@ export const initPinnedSection = () => {
 			});
 		};
 	});
+
+	let isReverted = false;
+
+	return () => {
+		if (isReverted) {
+			return;
+		}
+
+		isReverted = true;
+		mm.revert();
+	};
 };
