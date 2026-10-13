@@ -477,14 +477,19 @@ const showFavoritesPageState = (
 	grid,
 	status,
 	message,
-	{ isLoading = false, canRetry = false } = {},
+	{ isLoading = false, canRetry = false, isEmpty = false } = {},
 ) => {
+	const shopLink = document.querySelector('#nova-favorites-shop-link');
+
 	status.replaceChildren();
 	status.textContent = message;
 	status.hidden = false;
 	status.setAttribute('aria-busy', String(isLoading));
 	grid.hidden = true;
 	grid.classList.add('hidden');
+	if (shopLink) {
+		shopLink.hidden = !isEmpty || !shopLink.getAttribute('href');
+	}
 
 	if (canRetry) {
 		const retryButton = document.createElement('button');
@@ -528,7 +533,9 @@ export const initFavoritesPage = (config) => {
 		});
 
 		if (grid.children.length === 0 && !grid.hidden && !status.hasAttribute('data-error')) {
-			showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.');
+			showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
+				isEmpty: true,
+			});
 		}
 	};
 
@@ -552,7 +559,9 @@ export const initFavoritesPage = (config) => {
 
 			if (favoriteIds.length === 0) {
 				grid.replaceChildren();
-				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.');
+				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
+					isEmpty: true,
+				});
 				return;
 			}
 
@@ -597,7 +606,9 @@ export const initFavoritesPage = (config) => {
 			reconcileRemovedProducts(latestFavoriteIds ?? renderedIds);
 
 			if (grid.children.length === 0) {
-				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.');
+				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
+					isEmpty: true,
+				});
 				return;
 			}
 
