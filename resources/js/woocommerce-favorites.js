@@ -6,6 +6,28 @@ let activeCleanup;
 let favoritesInitialization;
 let favoritesBehaviorInitialization;
 let favoritesPageInitialization;
+let favoritesToast;
+let favoritesToastTimeout;
+
+const showFavoriteAddedToast = () => {
+	if (!favoritesToast) {
+		favoritesToast = document.createElement('div');
+		favoritesToast.className =
+			'fixed inset-x-4 bottom-4 z-[100] mx-auto max-w-sm rounded bg-nova-ink px-5 py-4 text-center text-sm font-medium text-nova-white shadow-lg md:inset-x-auto md:right-6 md:bottom-6';
+		favoritesToast.setAttribute('role', 'status');
+		favoritesToast.setAttribute('aria-live', 'polite');
+		favoritesToast.setAttribute('aria-atomic', 'true');
+		favoritesToast.hidden = true;
+		document.body.append(favoritesToast);
+	}
+
+	window.clearTimeout(favoritesToastTimeout);
+	favoritesToast.textContent = 'Produkt dodany do ulubionych';
+	favoritesToast.hidden = false;
+	favoritesToastTimeout = window.setTimeout(() => {
+		favoritesToast.hidden = true;
+	}, 3000);
+};
 
 const getProductIds = (data) => {
 	if (!data || typeof data !== 'object' || !Array.isArray(data.product_ids)) {
@@ -321,6 +343,9 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 				updateButton(favoriteButton, favoriteIds, pendingProductIds);
 			});
 			announceFavoritesChange(favoriteIds);
+			if (!isFavorite && favoriteIds.includes(productId)) {
+				showFavoriteAddedToast();
+			}
 			status.textContent = '';
 		} catch (error) {
 			console.error('Failed to save logged-in NOVA favorites:', error);
@@ -418,6 +443,9 @@ const initGuestFavorites = (initialFavoriteIds) => {
 		favoriteIds = nextFavoriteIds;
 		updateButtonsForProduct(productId);
 		announceFavoritesChange(favoriteIds);
+		if (!isFavorite) {
+			showFavoriteAddedToast();
+		}
 	};
 
 	document.addEventListener('click', handleClick);
