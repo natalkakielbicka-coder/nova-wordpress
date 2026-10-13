@@ -14,7 +14,7 @@
 				class="nova-product-card__image relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-nova-white p-6"
 			>
 				{!! $product->get_image('woocommerce_thumbnail', [
-                    'class' => 'transition duration-500 group-hover:scale-[1.03]',
+                    'class' => 'transition duration-500 ease-out group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:transform-none',
                     'loading' => 'lazy',
                 ]) !!}
 
@@ -37,8 +37,13 @@
 	</div>
 
 	<div class="mt-5 flex flex-1 flex-col">
-		<h2 class="font-serif text-xl leading-snug text-nova-ink">
-			<a href="{{ $productUrl }}" class="transition hover:opacity-60"> {{ $productName }} </a>
+		<h2 class="font-serif text-xl leading-snug">
+			<a
+				href="{{ $productUrl }}"
+				class="text-nova-text transition-colors duration-300 group-hover:text-nova-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-nova-ink motion-reduce:transition-none"
+			>
+				{{ $productName }}
+			</a>
 		</h2>
 
 		<div class="mt-3 text-base font-medium text-nova-ink">
