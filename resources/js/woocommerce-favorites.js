@@ -251,6 +251,16 @@ const loadLoggedInFavorites = async (config) => {
 	return getProductIds(await response.json());
 };
 
+const loadGuestFavorites = () => {
+	try {
+		return readFavoritesResult(window.localStorage).favoriteIds;
+	} catch (error) {
+		throw new Error('NOVA guest favorites could not be read from localStorage.', {
+			cause: error,
+		});
+	}
+};
+
 const getLoggedInInitialFavorites = async (config) => {
 	let storage;
 
@@ -326,6 +336,19 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 			if (normalizeProductId(button.dataset.productId) === productId) {
 				updateButton(button, favoriteIds, pendingProductIds);
 			}
+		});
+	};
+
+	const handleFavoritesUpdated = (event) => {
+		const productIds = event.detail?.productIds;
+
+		if (!Array.isArray(productIds)) {
+			return;
+		}
+
+		favoriteIds = getProductIds({ product_ids: productIds });
+		document.querySelectorAll(BUTTON_SELECTOR).forEach((button) => {
+			updateButton(button, favoriteIds, pendingProductIds);
 		});
 	};
 
@@ -445,6 +468,7 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 
 	const stopObserving = observeNewButtons(favoriteIds, pendingProductIds);
 	document.addEventListener('click', handleClick);
+	document.addEventListener('nova:favorites-updated', handleFavoritesUpdated);
 	clearFavoritesHandler = () => {
 		if (isClearing) {
 			return mutationQueue;
@@ -485,6 +509,7 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 
 	return () => {
 		document.removeEventListener('click', handleClick);
+		document.removeEventListener('nova:favorites-updated', handleFavoritesUpdated);
 		stopObserving();
 		status.remove();
 		clearFavoritesHandler = undefined;
@@ -510,6 +535,19 @@ const initGuestFavorites = (initialFavoriteIds) => {
 			if (normalizeProductId(button.dataset.productId) === productId) {
 				updateButton(button, favoriteIds);
 			}
+		});
+	};
+
+	const handleFavoritesUpdated = (event) => {
+		const productIds = event.detail?.productIds;
+
+		if (!Array.isArray(productIds)) {
+			return;
+		}
+
+		favoriteIds = getProductIds({ product_ids: productIds });
+		document.querySelectorAll(BUTTON_SELECTOR).forEach((button) => {
+			updateButton(button, favoriteIds);
 		});
 	};
 
@@ -554,6 +592,7 @@ const initGuestFavorites = (initialFavoriteIds) => {
 	};
 
 	document.addEventListener('click', handleClick);
+	document.addEventListener('nova:favorites-updated', handleFavoritesUpdated);
 
 	const stopObserving = observeNewButtons(favoriteIds);
 
@@ -576,6 +615,7 @@ const initGuestFavorites = (initialFavoriteIds) => {
 
 	activeCleanup = () => {
 		document.removeEventListener('click', handleClick);
+		document.removeEventListener('nova:favorites-updated', handleFavoritesUpdated);
 		stopObserving();
 		activeCleanup = undefined;
 		clearFavoritesHandler = undefined;
@@ -650,6 +690,9 @@ export const initFavoritesPage = (config) => {
 	});
 
 	let latestFavoriteIds = null;
+	let renderPromise;
+	let hasRenderedInitialFavorites = false;
+	let favoritesChangeVersion = 0;
 	const updateDisplayedProductCount = (count) => {
 		const productCount = document.querySelector('#nova-favorites-product-count');
 		const clearButton = document.querySelector('#nova-favorites-clear');
@@ -695,19 +738,97 @@ export const initFavoritesPage = (config) => {
 		const productIds = event.detail?.productIds;
 
 		if (Array.isArray(productIds)) {
+			favoritesChangeVersion += 1;
 			reconcileRemovedProducts(productIds);
 		}
 	};
 
-	const renderFavorites = async () => {
+	const performRenderFavorites = async () => {
 		showFavoritesPageState(grid, status, 'Ładowanie ulubionych produktów…', {
 			isLoading: true,
 		});
 		status.removeAttribute('data-error');
 
 		try {
-			const { favoriteIds } = await getInitialFavorites(config);
+			const changeVersionAtLoadStart = favoritesChangeVersion;
+			const initialFavorites = await getInitialFavorites(config);
 			await initWooCommerceFavorites(config);
+			let favoriteIds = initialFavorites.favoriteIds;
+
+			if (hasRenderedInitialFavorites) {
+				favoriteIds =
+					config?.dataset.loggedIn === 'true'
+						? await loadLoggedInFavorites(config)
+						: loadGuestFavorites();
+			}
+
+			hasRenderedInitialFavorites = true;
+			if (favoritesChangeVersion === changeVersionAtLoadStart) {
+				latestFavoriteIds = favoriteIds;
+				announceFavoritesChange(favoriteIds);
+			} else {
+				favoriteIds = latestFavoriteIds ?? favoriteIds;
+			}
+
+			const favoritesUrl = new URL(config.dataset.restUrl, window.location.href);
+			favoritesUrl.pathname = `${favoritesUrl.pathname.replace(/\/+$/, '')}/render`;
+			let htmlChunks;
+			let renderedIds;
+
+			while (favoriteIds.length > 0) {
+				const renderVersion = favoritesChangeVersion;
+				htmlChunks = [];
+				renderedIds = [];
+
+				for (
+					let index = 0;
+					index < favoriteIds.length;
+					index += FAVORITES_RENDER_BATCH_SIZE
+				) {
+					if (favoritesChangeVersion !== renderVersion) {
+						break;
+					}
+
+					const response = await fetch(favoritesUrl.toString(), {
+						method: 'POST',
+						credentials: 'same-origin',
+						headers: {
+							Accept: 'application/json',
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							product_ids: favoriteIds.slice(
+								index,
+								index + FAVORITES_RENDER_BATCH_SIZE,
+							),
+						}),
+					});
+
+					if (!response.ok) {
+						throw new Error(
+							`Rendering NOVA favorite products failed with HTTP ${response.status}.`,
+						);
+					}
+
+					const result = await response.json();
+					const batchIds = getProductIds(result);
+
+					if (typeof result.html !== 'string') {
+						throw new Error(
+							'The NOVA favorites render response has an invalid html field.',
+						);
+					}
+
+					htmlChunks.push(result.html);
+					renderedIds.push(...batchIds);
+				}
+
+				if (favoritesChangeVersion === renderVersion) {
+					break;
+				}
+
+				favoriteIds = latestFavoriteIds ?? favoriteIds;
+			}
 
 			if (favoriteIds.length === 0) {
 				grid.replaceChildren();
@@ -716,43 +837,6 @@ export const initFavoritesPage = (config) => {
 					isEmpty: true,
 				});
 				return;
-			}
-
-			const favoritesUrl = new URL(config.dataset.restUrl, window.location.href);
-			favoritesUrl.pathname = `${favoritesUrl.pathname.replace(/\/+$/, '')}/render`;
-			const htmlChunks = [];
-			const renderedIds = [];
-
-			for (let index = 0; index < favoriteIds.length; index += FAVORITES_RENDER_BATCH_SIZE) {
-				const response = await fetch(favoritesUrl.toString(), {
-					method: 'POST',
-					credentials: 'same-origin',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						product_ids: favoriteIds.slice(index, index + FAVORITES_RENDER_BATCH_SIZE),
-					}),
-				});
-
-				if (!response.ok) {
-					throw new Error(
-						`Rendering NOVA favorite products failed with HTTP ${response.status}.`,
-					);
-				}
-
-				const result = await response.json();
-				const batchIds = getProductIds(result);
-
-				if (typeof result.html !== 'string') {
-					throw new Error(
-						'The NOVA favorites render response has an invalid html field.',
-					);
-				}
-
-				htmlChunks.push(result.html);
-				renderedIds.push(...batchIds);
 			}
 
 			grid.innerHTML = htmlChunks.join('');
@@ -783,9 +867,28 @@ export const initFavoritesPage = (config) => {
 		}
 	};
 
+	const renderFavorites = () => {
+		if (renderPromise) {
+			return renderPromise;
+		}
+
+		renderPromise = performRenderFavorites().finally(() => {
+			renderPromise = undefined;
+		});
+
+		return renderPromise;
+	};
+
 	const handleRetry = (event) => {
 		if (event.target instanceof Element && event.target.closest('[data-favorites-retry]')) {
-			renderFavorites();
+			const retryButton = event.target.closest('[data-favorites-retry]');
+
+			if (retryButton instanceof HTMLButtonElement) {
+				retryButton.disabled = true;
+				retryButton.setAttribute('aria-busy', 'true');
+			}
+
+			void renderFavorites();
 		}
 	};
 
