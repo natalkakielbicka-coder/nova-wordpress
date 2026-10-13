@@ -774,9 +774,15 @@ export const initFavoritesPage = (config) => {
 	};
 
 	const clearButton = document.querySelector('#nova-favorites-clear');
+	const clearDialog = document.querySelector('#nova-favorites-clear-dialog');
+	const clearDialogCancel = document.querySelector('#nova-favorites-clear-cancel');
+	const clearDialogConfirm = document.querySelector('#nova-favorites-clear-confirm');
+	const clearDialogError = document.querySelector('#nova-favorites-clear-error');
+	let clearDialogBusy = false;
+	let clearDialogReturnFocus;
 	const handleClearFavorites = async () => {
 		if (!clearButton || clearButton.disabled || !clearFavoritesHandler) {
-			return;
+			return false;
 		}
 
 		const originalLabel = 'Wyczyść ulubione';
@@ -784,16 +790,25 @@ export const initFavoritesPage = (config) => {
 		clearButton.setAttribute('aria-busy', 'true');
 		clearButton.textContent = 'Czyszczenie…';
 		status.removeAttribute('data-error');
+		if (clearDialogError) {
+			clearDialogError.textContent = '';
+			clearDialogError.hidden = true;
+		}
 
 		try {
 			const result = await clearFavoritesHandler();
 
 			if (!result.success) {
-				status.textContent = `Nie udało się usunąć ${result.failedIds.length} produktów. Spróbuj ponownie.`;
+				const message = `Nie udało się usunąć ${result.failedIds.length} produktów. Możesz ponowić próbę.`;
+				status.textContent = message;
 				status.hidden = false;
 				status.removeAttribute('aria-busy');
 				status.dataset.error = 'true';
-				return;
+				if (clearDialogError) {
+					clearDialogError.textContent = message;
+					clearDialogError.hidden = false;
+				}
+				return false;
 			}
 
 			grid.replaceChildren();
@@ -801,12 +816,19 @@ export const initFavoritesPage = (config) => {
 			showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
 				isEmpty: true,
 			});
+			return true;
 		} catch (error) {
 			console.error('Failed to clear NOVA favorites:', error);
-			status.textContent = 'Nie udało się wyczyścić ulubionych. Spróbuj ponownie.';
+			const message = 'Nie udało się wyczyścić ulubionych. Możesz ponowić próbę.';
+			status.textContent = message;
 			status.hidden = false;
 			status.removeAttribute('aria-busy');
 			status.dataset.error = 'true';
+			if (clearDialogError) {
+				clearDialogError.textContent = message;
+				clearDialogError.hidden = false;
+			}
+			return false;
 		} finally {
 			clearButton.textContent = originalLabel;
 			clearButton.disabled = false;
@@ -814,9 +836,91 @@ export const initFavoritesPage = (config) => {
 		}
 	};
 
+	const handleOpenClearDialog = () => {
+		if (
+			!clearDialog ||
+			typeof clearDialog.showModal !== 'function' ||
+			!clearFavoritesHandler ||
+			clearButton?.disabled
+		) {
+			return;
+		}
+
+		clearDialogReturnFocus = document.activeElement;
+		clearDialogError?.setAttribute('hidden', '');
+		if (clearDialogError) {
+			clearDialogError.textContent = '';
+		}
+		clearDialog.showModal();
+		clearDialogCancel?.focus();
+	};
+
+	const handleConfirmClear = async () => {
+		if (!clearDialog?.open || clearDialogBusy || !clearDialogConfirm) {
+			return;
+		}
+
+		clearDialogBusy = true;
+		clearDialogConfirm.disabled = true;
+		clearDialogConfirm.setAttribute('aria-busy', 'true');
+		clearDialogConfirm.textContent = 'Usuwanie…';
+		if (clearDialogCancel) {
+			clearDialogCancel.disabled = true;
+		}
+
+		try {
+			const succeeded = await handleClearFavorites();
+
+			if (succeeded && clearDialog.open) {
+				clearDialog.close('success');
+			}
+		} finally {
+			clearDialogBusy = false;
+			clearDialogConfirm.disabled = false;
+			clearDialogConfirm.removeAttribute('aria-busy');
+			clearDialogConfirm.textContent = 'Usuń wszystkie';
+			if (clearDialogCancel) {
+				clearDialogCancel.disabled = false;
+			}
+		}
+	};
+
+	const handleClearDialogCancel = (event) => {
+		if (clearDialogBusy) {
+			event.preventDefault();
+		}
+	};
+
+	const handleClearDialogClose = () => {
+		const isAvailableFocusTarget = (element) =>
+			element instanceof HTMLElement &&
+			element.isConnected &&
+			!element.hidden &&
+			!element.matches(':disabled') &&
+			!element.closest('[inert]') &&
+			element.getClientRects().length > 0 &&
+			window.getComputedStyle(element).visibility !== 'hidden';
+		const shopLink = document.querySelector('#nova-favorites-shop-link');
+		const favoritesPage = document.querySelector('#nova-favorites-page');
+		const focusCandidates =
+			clearDialog?.returnValue === 'success'
+				? [shopLink, favoritesPage]
+				: [clearButton, clearDialogReturnFocus, shopLink, favoritesPage];
+		const focusTarget = focusCandidates.find(isAvailableFocusTarget);
+
+		if (focusTarget) {
+			focusTarget.focus();
+		}
+		clearDialogReturnFocus = undefined;
+	};
+
 	document.addEventListener('nova:favorites-updated', handleFavoritesUpdated);
 	status.addEventListener('click', handleRetry);
-	clearButton?.addEventListener('click', handleClearFavorites);
+	clearButton?.addEventListener('click', handleOpenClearDialog);
+	clearDialogCancel?.addEventListener('click', () => clearDialog?.close('cancel'));
+	clearDialogConfirm?.addEventListener('click', handleConfirmClear);
+	clearDialog?.addEventListener('cancel', handleClearDialogCancel);
+	clearDialog?.addEventListener('close', handleClearDialogClose);
 	favoritesPageInitialization = renderFavorites();
 
 	return favoritesPageInitialization;
