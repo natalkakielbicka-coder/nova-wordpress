@@ -480,6 +480,7 @@ const showFavoritesPageState = (
 	{ isLoading = false, canRetry = false, isEmpty = false } = {},
 ) => {
 	const shopLink = document.querySelector('#nova-favorites-shop-link');
+	const productCount = document.querySelector('#nova-favorites-product-count');
 
 	status.replaceChildren();
 	status.textContent = message;
@@ -489,6 +490,10 @@ const showFavoritesPageState = (
 	grid.classList.add('hidden');
 	if (shopLink) {
 		shopLink.hidden = !isEmpty || !shopLink.getAttribute('href');
+	}
+	if (productCount) {
+		productCount.hidden = true;
+		productCount.textContent = '';
 	}
 
 	if (canRetry) {
@@ -520,6 +525,17 @@ export const initFavoritesPage = (config) => {
 	});
 
 	let latestFavoriteIds = null;
+	const updateDisplayedProductCount = (count) => {
+		const productCount = document.querySelector('#nova-favorites-product-count');
+
+		if (!productCount) {
+			return;
+		}
+
+		productCount.textContent = `Zapisane produkty: ${count}`;
+		productCount.hidden = count === 0;
+	};
+
 	const reconcileRemovedProducts = (favoriteIds) => {
 		latestFavoriteIds = favoriteIds;
 		grid.querySelectorAll(':scope > .nova-product-card').forEach((card) => {
@@ -533,9 +549,12 @@ export const initFavoritesPage = (config) => {
 		});
 
 		if (grid.children.length === 0 && !grid.hidden && !status.hasAttribute('data-error')) {
+			updateDisplayedProductCount(0);
 			showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
 				isEmpty: true,
 			});
+		} else if (!grid.hidden) {
+			updateDisplayedProductCount(grid.children.length);
 		}
 	};
 
@@ -559,6 +578,7 @@ export const initFavoritesPage = (config) => {
 
 			if (favoriteIds.length === 0) {
 				grid.replaceChildren();
+				updateDisplayedProductCount(0);
 				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
 					isEmpty: true,
 				});
@@ -606,6 +626,7 @@ export const initFavoritesPage = (config) => {
 			reconcileRemovedProducts(latestFavoriteIds ?? renderedIds);
 
 			if (grid.children.length === 0) {
+				updateDisplayedProductCount(0);
 				showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
 					isEmpty: true,
 				});
@@ -617,6 +638,7 @@ export const initFavoritesPage = (config) => {
 			status.removeAttribute('aria-busy');
 			grid.hidden = false;
 			grid.classList.remove('hidden');
+			updateDisplayedProductCount(grid.children.length);
 		} catch (error) {
 			console.error('Failed to render NOVA favorite products:', error);
 			status.dataset.error = 'true';

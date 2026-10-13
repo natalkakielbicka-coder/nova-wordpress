@@ -28,6 +28,15 @@
 					Przejdź do sklepu
 				</a>
 
+				<p
+					id="nova-favorites-product-count"
+					class="mb-8 text-sm text-nova-muted"
+					hidden
+					role="status"
+					aria-live="polite"
+					aria-atomic="true"
+				></p>
+
 				<div
 					id="nova-favorites-grid"
 					class="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-4"
