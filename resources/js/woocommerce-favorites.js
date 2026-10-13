@@ -598,8 +598,18 @@ const showFavoritesPageState = (
 	status.textContent = message;
 	status.hidden = false;
 	status.setAttribute('aria-busy', String(isLoading));
-	grid.hidden = true;
-	grid.classList.add('hidden');
+	if (isLoading) {
+		const skeleton = document.querySelector('#nova-favorites-skeleton');
+		grid.replaceChildren(
+			...(skeleton instanceof HTMLTemplateElement ? [skeleton.content.cloneNode(true)] : []),
+		);
+		grid.hidden = !(skeleton instanceof HTMLTemplateElement);
+		grid.classList.toggle('hidden', grid.hidden);
+	} else {
+		grid.replaceChildren();
+		grid.hidden = true;
+		grid.classList.add('hidden');
+	}
 	if (shopLink) {
 		shopLink.hidden = !isEmpty || !shopLink.getAttribute('href');
 	}
@@ -656,6 +666,11 @@ export const initFavoritesPage = (config) => {
 
 	const reconcileRemovedProducts = (favoriteIds) => {
 		latestFavoriteIds = favoriteIds;
+
+		if (status.getAttribute('aria-busy') === 'true') {
+			return;
+		}
+
 		grid.querySelectorAll(':scope > .nova-product-card').forEach((card) => {
 			const productId = normalizeProductId(
 				card.querySelector(BUTTON_SELECTOR)?.dataset.productId,
@@ -741,6 +756,7 @@ export const initFavoritesPage = (config) => {
 			}
 
 			grid.innerHTML = htmlChunks.join('');
+			status.removeAttribute('aria-busy');
 			reconcileRemovedProducts(latestFavoriteIds ?? renderedIds);
 
 			if (grid.children.length === 0) {

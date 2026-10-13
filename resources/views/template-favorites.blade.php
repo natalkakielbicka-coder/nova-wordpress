@@ -96,6 +96,13 @@
 					</div>
 				</dialog>
 
+				<template id="nova-favorites-skeleton">
+					<x-product-card-skeleton />
+					<x-product-card-skeleton />
+					<x-product-card-skeleton />
+					<x-product-card-skeleton />
+				</template>
+
 				<div
 					id="nova-favorites-grid"
 					class="grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-4"
