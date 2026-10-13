@@ -9,7 +9,7 @@ let favoritesPageInitialization;
 let favoritesToast;
 let favoritesToastTimeout;
 
-const showFavoriteAddedToast = () => {
+const showFavoritesToast = (message) => {
 	if (!favoritesToast) {
 		favoritesToast = document.createElement('div');
 		favoritesToast.className =
@@ -22,11 +22,19 @@ const showFavoriteAddedToast = () => {
 	}
 
 	window.clearTimeout(favoritesToastTimeout);
-	favoritesToast.textContent = 'Produkt dodany do ulubionych';
+	favoritesToast.textContent = message;
 	favoritesToast.hidden = false;
 	favoritesToastTimeout = window.setTimeout(() => {
 		favoritesToast.hidden = true;
 	}, 3000);
+};
+
+const showFavoriteAddedToast = () => {
+	showFavoritesToast('Produkt dodany do ulubionych');
+};
+
+const showFavoriteRemovedToast = () => {
+	showFavoritesToast('Produkt usunięty z ulubionych');
 };
 
 const getProductIds = (data) => {
@@ -345,6 +353,8 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 			announceFavoritesChange(favoriteIds);
 			if (!isFavorite && favoriteIds.includes(productId)) {
 				showFavoriteAddedToast();
+			} else if (isFavorite && !favoriteIds.includes(productId)) {
+				showFavoriteRemovedToast();
 			}
 			status.textContent = '';
 		} catch (error) {
@@ -445,6 +455,8 @@ const initGuestFavorites = (initialFavoriteIds) => {
 		announceFavoritesChange(favoriteIds);
 		if (!isFavorite) {
 			showFavoriteAddedToast();
+		} else {
+			showFavoriteRemovedToast();
 		}
 	};
 
