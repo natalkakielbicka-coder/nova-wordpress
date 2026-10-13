@@ -6,6 +6,7 @@ let activeCleanup;
 let favoritesInitialization;
 let favoritesBehaviorInitialization;
 let favoritesPageInitialization;
+let clearFavoritesHandler;
 let favoritesToast;
 let favoritesToastTimeout;
 
@@ -317,6 +318,7 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 	const pendingProductIds = new Set();
 	let favoriteIds = initialFavoriteIds;
 	let mutationQueue = Promise.resolve();
+	let isClearing = false;
 	const status = createStatusRegion();
 
 	const updateButtonsForProduct = (productId) => {
@@ -327,7 +329,7 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 		});
 	};
 
-	const saveFavorite = async (productId) => {
+	const saveFavorite = async (productId, { showToast = true } = {}) => {
 		const isFavorite = favoriteIds.includes(productId);
 
 		try {
@@ -351,15 +353,64 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 				updateButton(favoriteButton, favoriteIds, pendingProductIds);
 			});
 			announceFavoritesChange(favoriteIds);
-			if (!isFavorite && favoriteIds.includes(productId)) {
+			if (showToast && !isFavorite && favoriteIds.includes(productId)) {
 				showFavoriteAddedToast();
-			} else if (isFavorite && !favoriteIds.includes(productId)) {
+			} else if (showToast && isFavorite && !favoriteIds.includes(productId)) {
 				showFavoriteRemovedToast();
 			}
-			status.textContent = '';
+			const mutationConfirmed = favoriteIds.includes(productId) === !isFavorite;
+			status.textContent = mutationConfirmed
+				? ''
+				: 'Nie udało się zapisać ulubionych. Spróbuj ponownie.';
+			return mutationConfirmed;
 		} catch (error) {
 			console.error('Failed to save logged-in NOVA favorites:', error);
 			status.textContent = 'Nie udało się zapisać ulubionych. Spróbuj ponownie.';
+			return false;
+		} finally {
+			pendingProductIds.delete(productId);
+			updateButtonsForProduct(productId);
+		}
+	};
+
+	const deleteFavorite = async (productId) => {
+		if (!favoriteIds.includes(productId)) {
+			pendingProductIds.delete(productId);
+			updateButtonsForProduct(productId);
+			return true;
+		}
+
+		try {
+			const response = await fetch(config.dataset.restUrl, {
+				method: 'DELETE',
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': config.dataset.nonce,
+				},
+				body: JSON.stringify({ product_id: productId }),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Removing NOVA favorite failed with HTTP ${response.status}.`);
+			}
+
+			favoriteIds = getProductIds(await response.json());
+			document.querySelectorAll(BUTTON_SELECTOR).forEach((favoriteButton) => {
+				updateButton(favoriteButton, favoriteIds, pendingProductIds);
+			});
+			announceFavoritesChange(favoriteIds);
+
+			const mutationConfirmed = !favoriteIds.includes(productId);
+			status.textContent = mutationConfirmed
+				? ''
+				: 'Nie udało się zapisać ulubionych. Spróbuj ponownie.';
+			return mutationConfirmed;
+		} catch (error) {
+			console.error('Failed to remove logged-in NOVA favorite:', error);
+			status.textContent = 'Nie udało się zapisać ulubionych. Spróbuj ponownie.';
+			return false;
 		} finally {
 			pendingProductIds.delete(productId);
 			updateButtonsForProduct(productId);
@@ -367,6 +418,10 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 	};
 
 	const handleClick = (event) => {
+		if (isClearing) {
+			return;
+		}
+
 		if (!(event.target instanceof Element)) {
 			return;
 		}
@@ -390,11 +445,49 @@ const initLoggedInFavorites = (config, initialFavoriteIds) => {
 
 	const stopObserving = observeNewButtons(favoriteIds, pendingProductIds);
 	document.addEventListener('click', handleClick);
+	clearFavoritesHandler = () => {
+		if (isClearing) {
+			return mutationQueue;
+		}
+
+		isClearing = true;
+		const clearOperation = mutationQueue.then(async () => {
+			const productIds = [...favoriteIds];
+			productIds.forEach((productId) => pendingProductIds.add(productId));
+			productIds.forEach(updateButtonsForProduct);
+
+			const failedIds = [];
+
+			for (const productId of productIds) {
+				const removed = await deleteFavorite(productId);
+
+				if (!removed && favoriteIds.includes(productId)) {
+					failedIds.push(productId);
+				}
+			}
+
+			return { success: failedIds.length === 0, failedIds };
+		});
+
+		mutationQueue = clearOperation.then(
+			(result) => {
+				isClearing = false;
+				return undefined;
+			},
+			() => {
+				isClearing = false;
+				return undefined;
+			},
+		);
+
+		return clearOperation;
+	};
 
 	return () => {
 		document.removeEventListener('click', handleClick);
 		stopObserving();
 		status.remove();
+		clearFavoritesHandler = undefined;
 	};
 };
 
@@ -464,10 +557,28 @@ const initGuestFavorites = (initialFavoriteIds) => {
 
 	const stopObserving = observeNewButtons(favoriteIds);
 
+	clearFavoritesHandler = () => {
+		try {
+			storage.removeItem(STORAGE_KEY);
+		} catch (error) {
+			console.warn('Could not clear NOVA favorites from localStorage:', error);
+			return { success: false, failedIds: [...favoriteIds] };
+		}
+
+		favoriteIds = [];
+		document
+			.querySelectorAll(BUTTON_SELECTOR)
+			.forEach((button) => updateButton(button, favoriteIds));
+		announceFavoritesChange(favoriteIds);
+
+		return { success: true, failedIds: [] };
+	};
+
 	activeCleanup = () => {
 		document.removeEventListener('click', handleClick);
 		stopObserving();
 		activeCleanup = undefined;
+		clearFavoritesHandler = undefined;
 	};
 
 	return activeCleanup;
@@ -481,6 +592,7 @@ const showFavoritesPageState = (
 ) => {
 	const shopLink = document.querySelector('#nova-favorites-shop-link');
 	const productCount = document.querySelector('#nova-favorites-product-count');
+	const clearButton = document.querySelector('#nova-favorites-clear');
 
 	status.replaceChildren();
 	status.textContent = message;
@@ -494,6 +606,9 @@ const showFavoritesPageState = (
 	if (productCount) {
 		productCount.hidden = true;
 		productCount.textContent = '';
+	}
+	if (clearButton) {
+		clearButton.hidden = true;
 	}
 
 	if (canRetry) {
@@ -527,13 +642,16 @@ export const initFavoritesPage = (config) => {
 	let latestFavoriteIds = null;
 	const updateDisplayedProductCount = (count) => {
 		const productCount = document.querySelector('#nova-favorites-product-count');
+		const clearButton = document.querySelector('#nova-favorites-clear');
 
-		if (!productCount) {
-			return;
+		if (productCount) {
+			productCount.textContent = `Zapisane produkty: ${count}`;
+			productCount.hidden = count === 0;
 		}
 
-		productCount.textContent = `Zapisane produkty: ${count}`;
-		productCount.hidden = count === 0;
+		if (clearButton) {
+			clearButton.hidden = count === 0;
+		}
 	};
 
 	const reconcileRemovedProducts = (favoriteIds) => {
@@ -655,8 +773,50 @@ export const initFavoritesPage = (config) => {
 		}
 	};
 
+	const clearButton = document.querySelector('#nova-favorites-clear');
+	const handleClearFavorites = async () => {
+		if (!clearButton || clearButton.disabled || !clearFavoritesHandler) {
+			return;
+		}
+
+		const originalLabel = 'Wyczyść ulubione';
+		clearButton.disabled = true;
+		clearButton.setAttribute('aria-busy', 'true');
+		clearButton.textContent = 'Czyszczenie…';
+		status.removeAttribute('data-error');
+
+		try {
+			const result = await clearFavoritesHandler();
+
+			if (!result.success) {
+				status.textContent = `Nie udało się usunąć ${result.failedIds.length} produktów. Spróbuj ponownie.`;
+				status.hidden = false;
+				status.removeAttribute('aria-busy');
+				status.dataset.error = 'true';
+				return;
+			}
+
+			grid.replaceChildren();
+			updateDisplayedProductCount(0);
+			showFavoritesPageState(grid, status, 'Nie masz jeszcze ulubionych produktów.', {
+				isEmpty: true,
+			});
+		} catch (error) {
+			console.error('Failed to clear NOVA favorites:', error);
+			status.textContent = 'Nie udało się wyczyścić ulubionych. Spróbuj ponownie.';
+			status.hidden = false;
+			status.removeAttribute('aria-busy');
+			status.dataset.error = 'true';
+		} finally {
+			clearButton.textContent = originalLabel;
+			clearButton.disabled = false;
+			clearButton.removeAttribute('aria-busy');
+		}
+	};
+
 	document.addEventListener('nova:favorites-updated', handleFavoritesUpdated);
 	status.addEventListener('click', handleRetry);
+	clearButton?.addEventListener('click', handleClearFavorites);
 	favoritesPageInitialization = renderFavorites();
 
 	return favoritesPageInitialization;
