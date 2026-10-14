@@ -4,5 +4,19 @@
 	"name": "nova/timeline",
 	"title": "NOVA Timeline",
 	"category": "nova",
+	"attributes": {
+		"eyebrow": {
+			"type": "string",
+			"default": ""
+		},
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"description": {
+			"type": "string",
+			"default": ""
+		}
+	},
 	"render": "file:./render.php"
 }
