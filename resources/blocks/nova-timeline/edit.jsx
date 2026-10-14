@@ -101,63 +101,91 @@ export default function Edit({ attributes, setAttributes }) {
 			</header>
 
 			{timelineItems.length > 0 ? (
-				<ol className="mx-auto max-w-3xl space-y-8 border-l border-nova-line pl-8">
-					{timelineItems.map((item, index) => (
-						<li key={getItemId(item)} className="relative">
-							<span
-								aria-hidden="true"
-								className="absolute -left-[2.35rem] top-1.5 size-3 rounded-full bg-nova-ink"
-							/>
-							<RichText
-								tagName="p"
-								className="text-sm font-medium text-nova-muted"
-								value={item.date}
-								onChange={(value) => updateItem(index, 'date', value)}
-								placeholder="Rok lub data..."
-								allowedFormats={[]}
-							/>
-							<RichText
-								tagName="h3"
-								className="mt-1 font-serif text-xl text-nova-ink"
-								value={item.title}
-								onChange={(value) => updateItem(index, 'title', value)}
-								placeholder="Tytuł etapu..."
-								allowedFormats={[]}
-							/>
-							<RichText
-								tagName="p"
-								className="mt-2 text-base leading-7 text-nova-text"
-								value={item.description}
-								onChange={(value) => updateItem(index, 'description', value)}
-								placeholder="Opis etapu..."
-								allowedFormats={[]}
-							/>
-							<div className="mt-4 flex flex-wrap gap-2">
-								<Button
-									variant="secondary"
-									disabled={index === 0}
-									onClick={() => moveItem(index, -1)}
+				<div className="relative mx-auto w-full max-w-5xl">
+					<span
+						aria-hidden="true"
+						className="absolute inset-y-0 left-1.5 border-l border-nova-line md:left-1/2"
+					/>
+
+					<ol className="space-y-8">
+						{timelineItems.map((item, index) => {
+							const isLeft = index % 2 === 0;
+
+							return (
+								<li
+									key={getItemId(item)}
+									className="relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0"
 								>
-									Przesuń w górę
-								</Button>
-								<Button
-									variant="secondary"
-									disabled={index === timelineItems.length - 1}
-									onClick={() => moveItem(index, 1)}
-								>
-									Przesuń w dół
-								</Button>
-								<Button
-									variant="secondary"
-									isDestructive
-									onClick={() => removeItem(index)}
-								>
-									Usuń etap
-								</Button>
-							</div>
-						</li>
-					))}
-				</ol>
+									<span
+										aria-hidden="true"
+										className="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink md:left-1/2"
+									/>
+									<div
+										className={`min-w-0 ${
+											isLeft
+												? 'md:col-start-1 md:pr-8 md:text-right'
+												: 'md:col-start-2 md:pl-8 md:text-left'
+										}`}
+									>
+										<RichText
+											tagName="p"
+											className="text-sm font-medium text-nova-muted"
+											value={item.date}
+											onChange={(value) => updateItem(index, 'date', value)}
+											placeholder="Rok lub data..."
+											allowedFormats={[]}
+										/>
+										<RichText
+											tagName="h3"
+											className="mt-1 font-serif text-xl text-nova-ink"
+											value={item.title}
+											onChange={(value) => updateItem(index, 'title', value)}
+											placeholder="Tytuł etapu..."
+											allowedFormats={[]}
+										/>
+										<RichText
+											tagName="p"
+											className="mt-2 text-base leading-7 text-nova-text"
+											value={item.description}
+											onChange={(value) =>
+												updateItem(index, 'description', value)
+											}
+											placeholder="Opis etapu..."
+											allowedFormats={[]}
+										/>
+										<div
+											className={`mt-4 flex flex-wrap gap-2 ${
+												isLeft ? 'md:justify-end' : 'md:justify-start'
+											}`}
+										>
+											<Button
+												variant="secondary"
+												disabled={index === 0}
+												onClick={() => moveItem(index, -1)}
+											>
+												Przesuń w górę
+											</Button>
+											<Button
+												variant="secondary"
+												disabled={index === timelineItems.length - 1}
+												onClick={() => moveItem(index, 1)}
+											>
+												Przesuń w dół
+											</Button>
+											<Button
+												variant="secondary"
+												isDestructive
+												onClick={() => removeItem(index)}
+											>
+												Usuń etap
+											</Button>
+										</div>
+									</div>
+								</li>
+							);
+						})}
+					</ol>
+				</div>
 			) : (
 				<p className="mx-auto max-w-3xl text-center text-nova-muted">Brak etapów</p>
 			)}

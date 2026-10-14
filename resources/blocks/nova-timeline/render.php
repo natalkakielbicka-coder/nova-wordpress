@@ -33,33 +33,43 @@ $items = $attributes['items'] ?? [];
     <?php endif; ?>
 
     <?php if ($items) : ?>
-        <ol class="mx-auto max-w-3xl space-y-8 border-l border-nova-line pl-8">
-            <?php foreach ($items as $item) : ?>
-                <li class="relative">
-                    <span
-                        aria-hidden="true"
-                        class="absolute -left-[2.35rem] top-1.5 size-3 rounded-full bg-nova-ink"
-                    ></span>
+        <div class="relative mx-auto w-full max-w-5xl">
+            <span
+                aria-hidden="true"
+                class="absolute inset-y-0 left-1.5 border-l border-nova-line md:left-1/2"
+            ></span>
 
-                    <?php if (!empty($item['date'])) : ?>
-                        <p class="text-sm font-medium text-nova-muted">
-                            <?php echo esc_html($item['date']); ?>
-                        </p>
-                    <?php endif; ?>
+            <ol class="space-y-8">
+                <?php foreach ($items as $index => $item) : ?>
+                    <?php $is_left = $index % 2 === 0; ?>
+                    <li class="relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0">
+                        <span
+                            aria-hidden="true"
+                            class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink md:left-1/2"
+                        ></span>
 
-                    <?php if (!empty($item['title'])) : ?>
-                        <h3 class="mt-1 font-serif text-xl text-nova-ink">
-                            <?php echo esc_html($item['title']); ?>
-                        </h3>
-                    <?php endif; ?>
+                        <div class="<?php echo $is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left'; ?>">
+                            <?php if (!empty($item['date'])) : ?>
+                                <p class="text-sm font-medium text-nova-muted">
+                                    <?php echo esc_html($item['date']); ?>
+                                </p>
+                            <?php endif; ?>
 
-                    <?php if (!empty($item['description'])) : ?>
-                        <p class="mt-2 text-base leading-7 text-nova-text">
-                            <?php echo esc_html($item['description']); ?>
-                        </p>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ol>
+                            <?php if (!empty($item['title'])) : ?>
+                                <h3 class="mt-1 font-serif text-xl text-nova-ink">
+                                    <?php echo esc_html($item['title']); ?>
+                                </h3>
+                            <?php endif; ?>
+
+                            <?php if (!empty($item['description'])) : ?>
+                                <p class="mt-2 text-base leading-7 text-nova-text">
+                                    <?php echo esc_html($item['description']); ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
     <?php endif; ?>
 </section>
