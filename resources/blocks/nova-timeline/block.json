@@ -16,6 +16,16 @@
 		"description": {
 			"type": "string",
 			"default": ""
+		},
+		"items": {
+			"type": "array",
+			"default": [
+				{
+					"date": "",
+					"title": "",
+					"description": ""
+				}
+			]
 		}
 	},
 	"render": "file:./render.php"
