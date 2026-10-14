@@ -48,7 +48,7 @@ $items = $attributes['items'] ?? [];
                             class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink md:left-1/2"
                         ></span>
 
-                        <div class="<?php echo $is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left'; ?>">
+                        <div class="min-w-0 <?php echo $is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left'; ?>">
                             <?php if (!empty($item['date'])) : ?>
                                 <p class="text-sm font-medium text-nova-muted">
                                     <?php echo esc_html($item['date']); ?>
