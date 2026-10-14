@@ -1,4 +1,5 @@
 import { RichText, useBlockProps } from '@wordpress/block-editor';
+import { Button } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
 	const { eyebrow = '', heading = '', description = '', items = [] } = attributes;
@@ -9,6 +10,19 @@ export default function Edit({ attributes, setAttributes }) {
 			items: timelineItems.map((item, itemIndex) =>
 				itemIndex === index ? { ...item, [field]: value } : item,
 			),
+		});
+	};
+
+	const addItem = () => {
+		setAttributes({
+			items: [
+				...items,
+				{
+					date: '',
+					title: '',
+					description: '',
+				},
+			],
 		});
 	};
 
@@ -75,6 +89,11 @@ export default function Edit({ attributes, setAttributes }) {
 					</li>
 				))}
 			</ol>
+			<div className="mx-auto mt-8 max-w-3xl">
+				<Button variant="secondary" onClick={addItem}>
+					Dodaj etap
+				</Button>
+			</div>
 		</section>
 	);
 }
