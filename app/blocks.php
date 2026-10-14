@@ -18,6 +18,7 @@ add_action('init', function () {
         'nova-hero',
         'nova-content',
         'nova-accordion',
+        'nova-timeline',
         'nova-project-meta',
         'nova-project-meta-item',
     ];
@@ -65,6 +66,7 @@ add_filter('allowed_block_types_all', function ($allowed_block_types, $block_edi
 		'nova/hero',
 		'nova/content',
 		'nova/accordion',
+		'nova/timeline',
 		'nova/project-meta',
 		'nova/project-meta-item',
 	];
