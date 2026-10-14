@@ -19,6 +19,23 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 			const line = timeline.querySelector('[data-nova-timeline-line]');
 
 			if (line) {
+				const markers = timeline.querySelectorAll('[data-nova-timeline-marker]');
+				const updateMarkers = (progress) => {
+					const lineTop = line.getBoundingClientRect().top;
+					const lineTip = lineTop + line.offsetHeight * progress;
+
+					markers.forEach((marker) => {
+						const markerRect = marker.getBoundingClientRect();
+						const markerCenter = markerRect.top + markerRect.height / 2;
+
+						marker.dataset.active = markerCenter <= lineTip ? 'true' : 'false';
+					});
+				};
+
+				markers.forEach((marker) => {
+					marker.dataset.active = 'false';
+				});
+
 				gsap.fromTo(
 					line,
 					{ scaleY: 0 },
@@ -30,6 +47,8 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 							start: 'top 85%',
 							end: 'bottom 15%',
 							scrub: true,
+							onUpdate: (self) => updateMarkers(self.progress),
+							onRefresh: (self) => updateMarkers(self.progress),
 						},
 					},
 				);
@@ -64,5 +83,10 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 
 		isCleanedUp = true;
 		ctx.revert();
+		timelines.forEach((timeline) => {
+			timeline.querySelectorAll('[data-nova-timeline-marker]').forEach((marker) => {
+				marker.dataset.active = 'false';
+			});
+		});
 	};
 };

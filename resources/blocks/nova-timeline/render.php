@@ -54,7 +54,9 @@ $items = $attributes['items'] ?? [];
                     <li class="<?php echo $is_alternating ? 'relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0' : 'relative min-w-0 pl-8'; ?>">
                         <span
                             aria-hidden="true"
-                            class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink <?php echo $is_alternating ? 'md:left-1/2' : ''; ?>"
+                            class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full border border-nova-muted bg-transparent transition-[transform,background-color,border-color] duration-300 data-[active=true]:scale-125 data-[active=true]:border-nova-ink data-[active=true]:bg-nova-ink motion-reduce:scale-125 motion-reduce:border-nova-ink motion-reduce:bg-nova-ink motion-reduce:transition-none <?php echo $is_alternating ? 'md:left-1/2' : ''; ?>"
+                            data-nova-timeline-marker
+                            data-active="false"
                         ></span>
 
                         <div class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>" data-nova-timeline-item>
