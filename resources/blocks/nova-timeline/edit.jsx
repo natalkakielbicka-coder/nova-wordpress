@@ -3,7 +3,7 @@ import { Button } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
 	const { eyebrow = '', heading = '', description = '', items = [] } = attributes;
-	const timelineItems = items.length ? items : [{ date: '', title: '', description: '' }];
+	const timelineItems = Array.isArray(items) ? items : [];
 
 	const updateItem = (index, field, value) => {
 		setAttributes({
@@ -16,13 +16,19 @@ export default function Edit({ attributes, setAttributes }) {
 	const addItem = () => {
 		setAttributes({
 			items: [
-				...items,
+				...timelineItems,
 				{
 					date: '',
 					title: '',
 					description: '',
 				},
 			],
+		});
+	};
+
+	const removeItem = (index) => {
+		setAttributes({
+			items: timelineItems.filter((_, itemIndex) => itemIndex !== index),
 		});
 	};
 
@@ -55,40 +61,51 @@ export default function Edit({ attributes, setAttributes }) {
 				/>
 			</header>
 
-			<ol className="mx-auto max-w-3xl space-y-8 border-l border-nova-line pl-8">
-				{timelineItems.map((item, index) => (
-					<li key={index} className="relative">
-						<span
-							aria-hidden="true"
-							className="absolute -left-[2.35rem] top-1.5 size-3 rounded-full bg-nova-ink"
-						/>
-						<RichText
-							tagName="p"
-							className="text-sm font-medium text-nova-muted"
-							value={item.date}
-							onChange={(value) => updateItem(index, 'date', value)}
-							placeholder="Rok lub data..."
-							allowedFormats={[]}
-						/>
-						<RichText
-							tagName="h3"
-							className="mt-1 font-serif text-xl text-nova-ink"
-							value={item.title}
-							onChange={(value) => updateItem(index, 'title', value)}
-							placeholder="Tytuł etapu..."
-							allowedFormats={[]}
-						/>
-						<RichText
-							tagName="p"
-							className="mt-2 text-base leading-7 text-nova-text"
-							value={item.description}
-							onChange={(value) => updateItem(index, 'description', value)}
-							placeholder="Opis etapu..."
-							allowedFormats={[]}
-						/>
-					</li>
-				))}
-			</ol>
+			{timelineItems.length > 0 ? (
+				<ol className="mx-auto max-w-3xl space-y-8 border-l border-nova-line pl-8">
+					{timelineItems.map((item, index) => (
+						<li key={index} className="relative">
+							<span
+								aria-hidden="true"
+								className="absolute -left-[2.35rem] top-1.5 size-3 rounded-full bg-nova-ink"
+							/>
+							<RichText
+								tagName="p"
+								className="text-sm font-medium text-nova-muted"
+								value={item.date}
+								onChange={(value) => updateItem(index, 'date', value)}
+								placeholder="Rok lub data..."
+								allowedFormats={[]}
+							/>
+							<RichText
+								tagName="h3"
+								className="mt-1 font-serif text-xl text-nova-ink"
+								value={item.title}
+								onChange={(value) => updateItem(index, 'title', value)}
+								placeholder="Tytuł etapu..."
+								allowedFormats={[]}
+							/>
+							<RichText
+								tagName="p"
+								className="mt-2 text-base leading-7 text-nova-text"
+								value={item.description}
+								onChange={(value) => updateItem(index, 'description', value)}
+								placeholder="Opis etapu..."
+								allowedFormats={[]}
+							/>
+							<Button
+								variant="secondary"
+								isDestructive
+								onClick={() => removeItem(index)}
+							>
+								Usuń etap
+							</Button>
+						</li>
+					))}
+				</ol>
+			) : (
+				<p className="mx-auto max-w-3xl text-center text-nova-muted">Brak etapów</p>
+			)}
 			<div className="mx-auto mt-8 max-w-3xl">
 				<Button variant="secondary" onClick={addItem}>
 					Dodaj etap
