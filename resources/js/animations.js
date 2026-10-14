@@ -68,7 +68,7 @@ export const initAnimations = ({ skipEntranceAnimations = false } = {}) => {
 		});
 	}
 
-	if (!skipEntranceAnimations && document.querySelector('[data-nova-timeline]')) {
+	if (document.querySelector('[data-nova-timeline]')) {
 		modules.push({
 			load: () => import('./animations/timeline'),
 			initialize: 'initTimelineAnimation',
@@ -85,7 +85,7 @@ export const initAnimations = ({ skipEntranceAnimations = false } = {}) => {
 					return;
 				}
 
-				const dispose = module[initialize]();
+				const dispose = module[initialize]({ skipEntranceAnimations });
 
 				if (typeof dispose === 'function') {
 					if (session.cancelled) {

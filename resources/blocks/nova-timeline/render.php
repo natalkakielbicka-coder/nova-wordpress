@@ -42,6 +42,11 @@ $items = $attributes['items'] ?? [];
                 aria-hidden="true"
                 class="absolute inset-y-0 border-l border-nova-line <?php echo $is_alternating ? 'left-1.5 md:left-1/2' : 'left-1.5'; ?>"
             ></span>
+            <span
+                aria-hidden="true"
+                class="absolute inset-y-0 origin-top border-l border-nova-ink <?php echo $is_alternating ? 'left-1.5 md:left-1/2' : 'left-1.5'; ?>"
+                data-nova-timeline-line
+            ></span>
 
             <ol class="space-y-8">
                 <?php foreach ($items as $index => $item) : ?>
