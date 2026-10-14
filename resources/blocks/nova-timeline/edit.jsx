@@ -1,14 +1,34 @@
+import { useRef } from '@wordpress/element';
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { Button } from '@wordpress/components';
+
+const createItemId = () =>
+	globalThis.crypto?.randomUUID?.() ??
+	`timeline-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 export default function Edit({ attributes, setAttributes }) {
 	const { eyebrow = '', heading = '', description = '', items = [] } = attributes;
 	const timelineItems = Array.isArray(items) ? items : [];
+	const temporaryIds = useRef(new WeakMap());
+
+	const getItemId = (item) => {
+		if (item.id) {
+			return item.id;
+		}
+
+		if (!temporaryIds.current.has(item)) {
+			temporaryIds.current.set(item, createItemId());
+		}
+
+		return temporaryIds.current.get(item);
+	};
 
 	const updateItem = (index, field, value) => {
 		setAttributes({
 			items: timelineItems.map((item, itemIndex) =>
-				itemIndex === index ? { ...item, [field]: value } : item,
+				itemIndex === index
+					? { ...item, id: item.id || getItemId(item), [field]: value }
+					: item,
 			),
 		});
 	};
@@ -18,12 +38,31 @@ export default function Edit({ attributes, setAttributes }) {
 			items: [
 				...timelineItems,
 				{
+					id: createItemId(),
 					date: '',
 					title: '',
 					description: '',
 				},
 			],
 		});
+	};
+
+	const moveItem = (index, direction) => {
+		const newIndex = index + direction;
+
+		if (newIndex < 0 || newIndex >= timelineItems.length) {
+			return;
+		}
+
+		const updatedItems = timelineItems.map((item) =>
+			item.id ? item : { ...item, id: getItemId(item) },
+		);
+		[updatedItems[index], updatedItems[newIndex]] = [
+			updatedItems[newIndex],
+			updatedItems[index],
+		];
+
+		setAttributes({ items: updatedItems });
 	};
 
 	const removeItem = (index) => {
@@ -64,7 +103,7 @@ export default function Edit({ attributes, setAttributes }) {
 			{timelineItems.length > 0 ? (
 				<ol className="mx-auto max-w-3xl space-y-8 border-l border-nova-line pl-8">
 					{timelineItems.map((item, index) => (
-						<li key={index} className="relative">
+						<li key={getItemId(item)} className="relative">
 							<span
 								aria-hidden="true"
 								className="absolute -left-[2.35rem] top-1.5 size-3 rounded-full bg-nova-ink"
@@ -93,13 +132,29 @@ export default function Edit({ attributes, setAttributes }) {
 								placeholder="Opis etapu..."
 								allowedFormats={[]}
 							/>
-							<Button
-								variant="secondary"
-								isDestructive
-								onClick={() => removeItem(index)}
-							>
-								Usuń etap
-							</Button>
+							<div className="mt-4 flex flex-wrap gap-2">
+								<Button
+									variant="secondary"
+									disabled={index === 0}
+									onClick={() => moveItem(index, -1)}
+								>
+									Przesuń w górę
+								</Button>
+								<Button
+									variant="secondary"
+									disabled={index === timelineItems.length - 1}
+									onClick={() => moveItem(index, 1)}
+								>
+									Przesuń w dół
+								</Button>
+								<Button
+									variant="secondary"
+									isDestructive
+									onClick={() => removeItem(index)}
+								>
+									Usuń etap
+								</Button>
+							</div>
 						</li>
 					))}
 				</ol>
