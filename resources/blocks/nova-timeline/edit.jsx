@@ -1,15 +1,22 @@
 import { useRef } from '@wordpress/element';
-import { RichText, useBlockProps } from '@wordpress/block-editor';
-import { Button } from '@wordpress/components';
+import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
+import { Button, PanelBody, SelectControl } from '@wordpress/components';
 
 const createItemId = () =>
 	globalThis.crypto?.randomUUID?.() ??
 	`timeline-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 export default function Edit({ attributes, setAttributes }) {
-	const { eyebrow = '', heading = '', description = '', items = [] } = attributes;
+	const {
+		eyebrow = '',
+		heading = '',
+		description = '',
+		layout = 'alternating',
+		items = [],
+	} = attributes;
 	const timelineItems = Array.isArray(items) ? items : [];
 	const temporaryIds = useRef(new WeakMap());
+	const isAlternating = layout === 'alternating';
 
 	const getItemId = (item) => {
 		if (item.id) {
@@ -72,8 +79,23 @@ export default function Edit({ attributes, setAttributes }) {
 	};
 
 	return (
-		<section {...useBlockProps({ className: 'px-4 py-12 sm:px-6 md:py-20' })}>
-			<header className="mx-auto mb-8 max-w-3xl text-center md:mb-12">
+		<>
+			<InspectorControls>
+				<PanelBody title="Ustawienia Timeline" initialOpen>
+					<SelectControl
+						label="Układ"
+						value={layout}
+						options={[
+							{ label: 'Vertical', value: 'vertical' },
+							{ label: 'Alternating', value: 'alternating' },
+						]}
+						onChange={(value) => setAttributes({ layout: value })}
+					/>
+				</PanelBody>
+			</InspectorControls>
+
+			<section {...useBlockProps({ className: 'px-4 py-12 sm:px-6 md:py-20' })}>
+				<header className="mx-auto mb-8 max-w-3xl text-center md:mb-12">
 				<RichText
 					tagName="p"
 					className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
@@ -98,13 +120,15 @@ export default function Edit({ attributes, setAttributes }) {
 					placeholder="Krótki opis sekcji..."
 					allowedFormats={[]}
 				/>
-			</header>
+				</header>
 
-			{timelineItems.length > 0 ? (
-				<div className="relative mx-auto w-full max-w-5xl">
+				{timelineItems.length > 0 ? (
+					<div className="relative mx-auto w-full max-w-5xl">
 					<span
 						aria-hidden="true"
-						className="absolute inset-y-0 left-1.5 border-l border-nova-line md:left-1/2"
+						className={`absolute inset-y-0 border-l border-nova-line ${
+							isAlternating ? 'left-1.5 md:left-1/2' : 'left-1.5'
+						}`}
 					/>
 
 					<ol className="space-y-8">
@@ -114,18 +138,28 @@ export default function Edit({ attributes, setAttributes }) {
 							return (
 								<li
 									key={getItemId(item)}
-									className="relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0"
+									className={
+										isAlternating
+											? 'relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0'
+											: 'relative min-w-0 pl-8'
+									}
 								>
 									<span
 										aria-hidden="true"
-										className="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink md:left-1/2"
+										className={`absolute top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink ${
+											isAlternating ? 'left-1.5 md:left-1/2' : 'left-1.5'
+										}`}
 									/>
 									<div
-										className={`min-w-0 ${
-											isLeft
-												? 'md:col-start-1 md:pr-8 md:text-right'
-												: 'md:col-start-2 md:pl-8 md:text-left'
-										}`}
+										className={
+											isAlternating
+												? `min-w-0 ${
+														isLeft
+															? 'md:col-start-1 md:pr-8 md:text-right'
+															: 'md:col-start-2 md:pl-8 md:text-left'
+													}`
+												: 'min-w-0'
+										}
 									>
 										<RichText
 											tagName="p"
@@ -185,15 +219,16 @@ export default function Edit({ attributes, setAttributes }) {
 							);
 						})}
 					</ol>
+					</div>
+				) : (
+					<p className="mx-auto max-w-3xl text-center text-nova-muted">Brak etapów</p>
+				)}
+				<div className="mx-auto mt-8 max-w-3xl">
+					<Button variant="secondary" onClick={addItem}>
+						Dodaj etap
+					</Button>
 				</div>
-			) : (
-				<p className="mx-auto max-w-3xl text-center text-nova-muted">Brak etapów</p>
-			)}
-			<div className="mx-auto mt-8 max-w-3xl">
-				<Button variant="secondary" onClick={addItem}>
-					Dodaj etap
-				</Button>
-			</div>
-		</section>
+			</section>
+		</>
 	);
 }

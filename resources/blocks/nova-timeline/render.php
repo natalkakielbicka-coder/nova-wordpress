@@ -6,6 +6,10 @@ $wrapper_attributes = get_block_wrapper_attributes([
 $eyebrow = $attributes['eyebrow'] ?? '';
 $heading = $attributes['heading'] ?? '';
 $description = $attributes['description'] ?? '';
+$layout = in_array($attributes['layout'] ?? 'alternating', ['vertical', 'alternating'], true)
+    ? $attributes['layout']
+    : 'alternating';
+$is_alternating = $layout === 'alternating';
 $items = $attributes['items'] ?? [];
 ?>
 
@@ -36,19 +40,19 @@ $items = $attributes['items'] ?? [];
         <div class="relative mx-auto w-full max-w-5xl">
             <span
                 aria-hidden="true"
-                class="absolute inset-y-0 left-1.5 border-l border-nova-line md:left-1/2"
+                class="absolute inset-y-0 border-l border-nova-line <?php echo $is_alternating ? 'left-1.5 md:left-1/2' : 'left-1.5'; ?>"
             ></span>
 
             <ol class="space-y-8">
                 <?php foreach ($items as $index => $item) : ?>
                     <?php $is_left = $index % 2 === 0; ?>
-                    <li class="relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0">
+                    <li class="<?php echo $is_alternating ? 'relative grid min-w-0 grid-cols-1 pl-8 md:grid-cols-2 md:gap-x-12 md:pl-0' : 'relative min-w-0 pl-8'; ?>">
                         <span
                             aria-hidden="true"
-                            class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink md:left-1/2"
+                            class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink <?php echo $is_alternating ? 'md:left-1/2' : ''; ?>"
                         ></span>
 
-                        <div class="min-w-0 <?php echo $is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left'; ?>">
+                        <div class="min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>">
                             <?php if (!empty($item['date'])) : ?>
                                 <p class="text-sm font-medium text-nova-muted">
                                     <?php echo esc_html($item['date']); ?>

@@ -17,6 +17,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"layout": {
+			"type": "string",
+			"default": "alternating"
+		},
 		"items": {
 			"type": "array",
 			"default": [
