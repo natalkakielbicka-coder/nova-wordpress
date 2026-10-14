@@ -1,6 +1,6 @@
 <?php
 $wrapper_attributes = get_block_wrapper_attributes([
-    'class' => 'px-4 py-12 sm:px-6 md:py-20',
+    'class' => 'nova-timeline px-4 py-12 sm:px-6 md:py-20',
 ]);
 
 $eyebrow = $attributes['eyebrow'] ?? '';
@@ -13,7 +13,7 @@ $is_alternating = $layout === 'alternating';
 $items = $attributes['items'] ?? [];
 ?>
 
-<section <?php echo $wrapper_attributes; ?>>
+<section <?php echo $wrapper_attributes; ?> data-nova-timeline>
     <?php if ($eyebrow || $heading || $description) : ?>
         <header class="mx-auto mb-8 max-w-3xl text-center md:mb-12">
             <?php if ($eyebrow) : ?>
@@ -52,7 +52,7 @@ $items = $attributes['items'] ?? [];
                             class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full bg-nova-ink <?php echo $is_alternating ? 'md:left-1/2' : ''; ?>"
                         ></span>
 
-                        <div class="min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>">
+                        <div class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>" data-nova-timeline-item>
                             <?php if (!empty($item['date'])) : ?>
                                 <p class="text-sm font-medium text-nova-muted">
                                     <?php echo esc_html($item['date']); ?>

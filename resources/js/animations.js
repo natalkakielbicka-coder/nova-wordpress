@@ -68,6 +68,14 @@ export const initAnimations = ({ skipEntranceAnimations = false } = {}) => {
 		});
 	}
 
+	if (!skipEntranceAnimations && document.querySelector('[data-nova-timeline]')) {
+		modules.push({
+			load: () => import('./animations/timeline'),
+			initialize: 'initTimelineAnimation',
+			name: 'timeline',
+		});
+	}
+
 	modules.forEach(({ load, initialize, name }) => {
 		(async () => {
 			try {

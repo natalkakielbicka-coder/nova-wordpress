@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	const hasAnimatedElements = document.querySelector(
-		'.nova-hero, .nova-project-card, .nova-pin-section',
+		'.nova-hero, .nova-project-card, .nova-pin-section, [data-nova-timeline]',
 	);
 	const shouldInitializeAnimations =
 		hasAnimatedElements && !prefersReducedMotion && !gsapAnimationsCancelled;
