@@ -18,6 +18,7 @@ export default function Edit({ attributes, setAttributes }) {
 		heading = '',
 		description = '',
 		headingAlignment = 'center',
+		showHeading = true,
 		layout = 'alternating',
 		animate = true,
 		inactiveOpacity = 0.35,
@@ -112,6 +113,11 @@ export default function Edit({ attributes, setAttributes }) {
 						onChange={(value) => setAttributes({ headingAlignment: value })}
 					/>
 					<ToggleControl
+						label="Pokaż nagłówek sekcji"
+						checked={showHeading}
+						onChange={(value) => setAttributes({ showHeading: value })}
+					/>
+					<ToggleControl
 						label="Animacje Timeline"
 						help="Animuj etapy i linię podczas przewijania strony."
 						checked={animate}
@@ -131,11 +137,12 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<section {...useBlockProps({ className: 'px-4 py-12 sm:px-6 md:py-20' })}>
-				<header
-					className={`mx-auto mb-8 max-w-3xl md:mb-12 ${
-						safeHeadingAlignment === 'left' ? 'text-left' : 'text-center'
-					}`}
-				>
+				{showHeading && (
+					<header
+						className={`mx-auto mb-8 max-w-3xl md:mb-12 ${
+							safeHeadingAlignment === 'left' ? 'text-left' : 'text-center'
+						}`}
+					>
 				<RichText
 					tagName="p"
 					className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
@@ -161,6 +168,7 @@ export default function Edit({ attributes, setAttributes }) {
 					allowedFormats={[]}
 				/>
 				</header>
+				)}
 
 				{timelineItems.length > 0 ? (
 					<div className="relative mx-auto w-full max-w-5xl">

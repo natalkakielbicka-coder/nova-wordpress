@@ -21,6 +21,10 @@
 			"type": "string",
 			"default": "center"
 		},
+		"showHeading": {
+			"type": "boolean",
+			"default": true
+		},
 		"layout": {
 			"type": "string",
 			"default": "alternating"
