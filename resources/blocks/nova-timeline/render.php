@@ -7,6 +7,10 @@ $eyebrow = $attributes['eyebrow'] ?? '';
 $heading = $attributes['heading'] ?? '';
 $description = $attributes['description'] ?? '';
 $animate = $attributes['animate'] ?? true;
+$inactive_opacity = isset($attributes['inactiveOpacity']) && is_numeric($attributes['inactiveOpacity'])
+    ? (float) $attributes['inactiveOpacity']
+    : 0.35;
+$inactive_opacity = min(0.8, max(0.2, $inactive_opacity));
 $layout = in_array($attributes['layout'] ?? 'alternating', ['vertical', 'alternating'], true)
     ? $attributes['layout']
     : 'alternating';
@@ -14,7 +18,7 @@ $is_alternating = $layout === 'alternating';
 $items = $attributes['items'] ?? [];
 ?>
 
-<section <?php echo $wrapper_attributes; ?> data-nova-timeline data-timeline-animate="<?php echo $animate ? 'true' : 'false'; ?>">
+<section <?php echo $wrapper_attributes; ?> data-nova-timeline data-timeline-animate="<?php echo $animate ? 'true' : 'false'; ?>" data-timeline-inactive-opacity="<?php echo esc_attr((string) $inactive_opacity); ?>">
     <?php if ($eyebrow || $heading || $description) : ?>
         <header class="mx-auto mb-8 max-w-3xl text-center md:mb-12">
             <?php if ($eyebrow) : ?>
@@ -61,7 +65,7 @@ $items = $attributes['items'] ?? [];
                         ></span>
 
                         <div class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>" data-nova-timeline-item>
-                            <div class="transition-opacity duration-300 data-[active=false]:opacity-[0.35] data-[active=true]:opacity-100 motion-reduce:opacity-100 motion-reduce:transition-none" data-nova-timeline-content data-active="<?php echo $animate ? 'false' : 'true'; ?>">
+                            <div class="transition-opacity duration-300 motion-reduce:transition-none" data-nova-timeline-content data-active="<?php echo $animate ? 'false' : 'true'; ?>">
                                 <?php if (!empty($item['date'])) : ?>
                                     <p class="text-sm font-medium text-nova-muted">
                                         <?php echo esc_html($item['date']); ?>

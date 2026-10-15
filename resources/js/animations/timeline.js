@@ -15,6 +15,12 @@ const getTimelineLineScrollRange = (timeline) => {
 	return { start, end };
 };
 
+const getTimelineInactiveOpacity = (timeline) => {
+	const value = Number(timeline.dataset.timelineInactiveOpacity);
+
+	return Number.isFinite(value) ? Math.min(0.8, Math.max(0.2, value)) : 0.35;
+};
+
 export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) => {
 	const timelines = gsap.utils.toArray('[data-nova-timeline]');
 
@@ -29,6 +35,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 		timelines.forEach((timeline) => {
 			const shouldAnimate =
 				timeline.dataset.timelineAnimate !== 'false' && !reducedMotionQuery.matches;
+			const inactiveOpacity = getTimelineInactiveOpacity(timeline);
 			const line = timeline.querySelector('[data-nova-timeline-line]');
 			const markers = timeline.querySelectorAll('[data-nova-timeline-marker]');
 			const stages = Array.from(markers, (marker) => ({
@@ -46,6 +53,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 					marker.dataset.active = 'true';
 					if (content) {
 						content.dataset.active = 'true';
+						content.style.opacity = '1';
 					}
 				});
 
@@ -61,6 +69,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 							marker.dataset.active = 'true';
 							if (content) {
 								content.dataset.active = 'true';
+								content.style.opacity = '1';
 							}
 						});
 						return;
@@ -77,6 +86,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 						marker.dataset.active = isActive ? 'true' : 'false';
 						if (content) {
 							content.dataset.active = isActive ? 'true' : 'false';
+							content.style.opacity = isActive ? '1' : String(inactiveOpacity);
 						}
 					});
 				};
@@ -161,6 +171,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 				const content = marker.closest('li')?.querySelector('[data-nova-timeline-content]');
 				if (content) {
 					content.dataset.active = isStatic ? 'true' : 'false';
+					content.style.opacity = isStatic ? '1' : String(getTimelineInactiveOpacity(timeline));
 				}
 			});
 		});

@@ -1,6 +1,12 @@
 import { useRef } from '@wordpress/element';
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
-import { Button, PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
+import {
+	Button,
+	PanelBody,
+	RangeControl,
+	SelectControl,
+	ToggleControl,
+} from '@wordpress/components';
 
 const createItemId = () =>
 	globalThis.crypto?.randomUUID?.() ??
@@ -13,8 +19,10 @@ export default function Edit({ attributes, setAttributes }) {
 		description = '',
 		layout = 'alternating',
 		animate = true,
+		inactiveOpacity = 0.35,
 		items = [],
 	} = attributes;
+	const safeInactiveOpacity = Math.min(0.8, Math.max(0.2, Number(inactiveOpacity) || 0.35));
 	const timelineItems = Array.isArray(items) ? items : [];
 	const temporaryIds = useRef(new WeakMap());
 	const isAlternating = layout === 'alternating';
@@ -98,6 +106,16 @@ export default function Edit({ attributes, setAttributes }) {
 						checked={animate}
 						onChange={(value) => setAttributes({ animate: value })}
 					/>
+					{animate && (
+						<RangeControl
+							label="Przezroczystość nieaktywnych etapów"
+							value={safeInactiveOpacity}
+							min={0.2}
+							max={0.8}
+							step={0.05}
+							onChange={(value) => setAttributes({ inactiveOpacity: value })}
+						/>
+					)}
 				</PanelBody>
 			</InspectorControls>
 

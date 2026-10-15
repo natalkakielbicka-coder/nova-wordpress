@@ -25,6 +25,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"inactiveOpacity": {
+			"type": "number",
+			"default": 0.35
+		},
 		"items": {
 			"type": "array",
 			"default": [
