@@ -115,6 +115,14 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 
 			if (!skipEntranceAnimations) {
 				items.forEach((item) => {
+					if (
+						item.dataset.novaTimelineEntered === 'true' ||
+						item.getBoundingClientRect().top <= window.innerHeight
+					) {
+						item.dataset.novaTimelineEntered = 'true';
+						return;
+					}
+
 					gsap.from(item, {
 						opacity: 0,
 						y: 30,
@@ -124,6 +132,9 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 							trigger: item,
 							start: 'top 85%',
 							once: true,
+							onEnter: () => {
+								item.dataset.novaTimelineEntered = 'true';
+							},
 						},
 					});
 				});
