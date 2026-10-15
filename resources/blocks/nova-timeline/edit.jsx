@@ -17,12 +17,14 @@ export default function Edit({ attributes, setAttributes }) {
 		eyebrow = '',
 		heading = '',
 		description = '',
+		headingAlignment = 'center',
 		layout = 'alternating',
 		animate = true,
 		inactiveOpacity = 0.35,
 		items = [],
 	} = attributes;
 	const safeInactiveOpacity = Math.min(0.8, Math.max(0.2, Number(inactiveOpacity) || 0.35));
+	const safeHeadingAlignment = headingAlignment === 'left' ? 'left' : 'center';
 	const timelineItems = Array.isArray(items) ? items : [];
 	const temporaryIds = useRef(new WeakMap());
 	const isAlternating = layout === 'alternating';
@@ -100,6 +102,15 @@ export default function Edit({ attributes, setAttributes }) {
 						]}
 						onChange={(value) => setAttributes({ layout: value })}
 					/>
+					<SelectControl
+						label="Wyrównanie nagłówka"
+						value={safeHeadingAlignment}
+						options={[
+							{ label: 'Do lewej', value: 'left' },
+							{ label: 'Na środku', value: 'center' },
+						]}
+						onChange={(value) => setAttributes({ headingAlignment: value })}
+					/>
 					<ToggleControl
 						label="Animacje Timeline"
 						help="Animuj etapy i linię podczas przewijania strony."
@@ -120,7 +131,11 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<section {...useBlockProps({ className: 'px-4 py-12 sm:px-6 md:py-20' })}>
-				<header className="mx-auto mb-8 max-w-3xl text-center md:mb-12">
+				<header
+					className={`mx-auto mb-8 max-w-3xl md:mb-12 ${
+						safeHeadingAlignment === 'left' ? 'text-left' : 'text-center'
+					}`}
+				>
 				<RichText
 					tagName="p"
 					className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
@@ -139,7 +154,7 @@ export default function Edit({ attributes, setAttributes }) {
 				/>
 				<RichText
 					tagName="p"
-					className="mx-auto mt-6 max-w-xl text-base leading-7 text-nova-text"
+					className={`${safeHeadingAlignment === 'center' ? 'mx-auto' : ''} mt-6 max-w-xl text-base leading-7 text-nova-text`}
 					value={description}
 					onChange={(value) => setAttributes({ description: value })}
 					placeholder="Krótki opis sekcji..."

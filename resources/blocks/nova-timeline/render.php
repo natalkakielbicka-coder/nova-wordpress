@@ -6,6 +6,7 @@ $wrapper_attributes = get_block_wrapper_attributes([
 $eyebrow = $attributes['eyebrow'] ?? '';
 $heading = $attributes['heading'] ?? '';
 $description = $attributes['description'] ?? '';
+$heading_alignment = ($attributes['headingAlignment'] ?? 'center') === 'left' ? 'left' : 'center';
 $animate = $attributes['animate'] ?? true;
 $inactive_opacity = isset($attributes['inactiveOpacity']) && is_numeric($attributes['inactiveOpacity'])
     ? (float) $attributes['inactiveOpacity']
@@ -20,7 +21,7 @@ $items = $attributes['items'] ?? [];
 
 <section <?php echo $wrapper_attributes; ?> data-nova-timeline data-timeline-animate="<?php echo $animate ? 'true' : 'false'; ?>" data-timeline-inactive-opacity="<?php echo esc_attr((string) $inactive_opacity); ?>">
     <?php if ($eyebrow || $heading || $description) : ?>
-        <header class="mx-auto mb-8 max-w-3xl text-center md:mb-12">
+        <header class="mx-auto mb-8 max-w-3xl <?php echo $heading_alignment === 'left' ? 'text-left' : 'text-center'; ?> md:mb-12">
             <?php if ($eyebrow) : ?>
                 <p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
                     <?php echo esc_html($eyebrow); ?>
@@ -34,7 +35,7 @@ $items = $attributes['items'] ?? [];
             <?php endif; ?>
 
             <?php if ($description) : ?>
-                <p class="mx-auto mt-6 max-w-xl text-base leading-7 text-nova-text">
+                <p class="<?php echo $heading_alignment === 'center' ? 'mx-auto ' : ''; ?>mt-6 max-w-xl text-base leading-7 text-nova-text">
                     <?php echo esc_html($description); ?>
                 </p>
             <?php endif; ?>

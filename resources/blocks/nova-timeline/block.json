@@ -17,6 +17,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"headingAlignment": {
+			"type": "string",
+			"default": "center"
+		},
 		"layout": {
 			"type": "string",
 			"default": "alternating"
