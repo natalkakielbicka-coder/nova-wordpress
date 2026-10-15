@@ -211,7 +211,7 @@ export default function Edit({ attributes, setAttributes }) {
 									>
 										<RichText
 											tagName="p"
-											className="text-sm font-medium text-nova-muted"
+											className="wrap-break-word text-sm font-medium text-nova-muted"
 											value={item.date}
 											onChange={(value) => updateItem(index, 'date', value)}
 											placeholder="Rok lub data..."
@@ -219,7 +219,7 @@ export default function Edit({ attributes, setAttributes }) {
 										/>
 										<RichText
 											tagName="h3"
-											className="mt-1 font-serif text-xl text-nova-ink"
+											className="mt-1 wrap-break-word font-serif text-xl text-nova-ink"
 											value={item.title}
 											onChange={(value) => updateItem(index, 'title', value)}
 											placeholder="Tytuł etapu..."
@@ -227,7 +227,7 @@ export default function Edit({ attributes, setAttributes }) {
 										/>
 										<RichText
 											tagName="p"
-											className="mt-2 text-base leading-7 text-nova-text"
+											className="mt-2 wrap-break-word text-base leading-7 text-nova-text"
 											value={item.description}
 											onChange={(value) =>
 												updateItem(index, 'description', value)

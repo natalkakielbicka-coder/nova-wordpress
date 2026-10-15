@@ -124,19 +124,19 @@ $heading_id = $has_visible_heading
                                 data-active="<?php echo $animate ? 'false' : 'true'; ?>"
                             >
                                 <?php if (trim($item['date']) !== '') : ?>
-                                    <p class="text-sm font-medium text-nova-muted">
+                                    <p class="wrap-break-word text-sm font-medium text-nova-muted">
                                         <?php echo esc_html($item['date']); ?>
                                     </p>
                                 <?php endif; ?>
 
                                 <?php if (trim($item['title']) !== '') : ?>
-                                    <h3 class="mt-1 font-serif text-xl text-nova-ink">
+                                    <h3 class="mt-1 wrap-break-word font-serif text-xl text-nova-ink">
                                         <?php echo esc_html($item['title']); ?>
                                     </h3>
                                 <?php endif; ?>
 
                                 <?php if (trim($item['description']) !== '') : ?>
-                                    <p class="mt-2 text-base leading-7 text-nova-text">
+                                    <p class="mt-2 wrap-break-word text-base leading-7 text-nova-text">
                                         <?php echo esc_html($item['description']); ?>
                                     </p>
                                 <?php endif; ?>
