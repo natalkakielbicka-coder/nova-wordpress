@@ -163,16 +163,17 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 		}
 		ctx.revert();
 		timelines.forEach((timeline) => {
-			const isStatic =
-				timeline.dataset.timelineAnimate === 'false' || reducedMotionQuery.matches;
+			const line = timeline.querySelector('[data-nova-timeline-line]');
+			if (line) {
+				gsap.set(line, { scaleY: 1 });
+			}
 
 			timeline.querySelectorAll('[data-nova-timeline-marker]').forEach((marker) => {
-				marker.dataset.active = isStatic ? 'true' : 'false';
-				const content = marker.closest('li')?.querySelector('[data-nova-timeline-content]');
-				if (content) {
-					content.dataset.active = isStatic ? 'true' : 'false';
-					content.style.opacity = isStatic ? '1' : String(getTimelineInactiveOpacity(timeline));
-				}
+				marker.dataset.active = 'true';
+			});
+			timeline.querySelectorAll('[data-nova-timeline-content]').forEach((content) => {
+				content.dataset.active = 'true';
+				content.style.opacity = '1';
 			});
 		});
 	};
