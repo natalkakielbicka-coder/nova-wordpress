@@ -18,9 +18,27 @@ $layout = in_array($attributes['layout'] ?? 'alternating', ['vertical', 'alterna
     : 'alternating';
 $is_alternating = $layout === 'alternating';
 $items = $attributes['items'] ?? [];
+
+// Accessibility: associate the section with its visible heading.
+$has_visible_heading = $show_heading
+    && trim(wp_strip_all_tags($heading)) !== '';
+
+$heading_id = $has_visible_heading
+    ? wp_unique_id('nova-timeline-heading-')
+    : null;
 ?>
 
-<section <?php echo $wrapper_attributes; ?> data-nova-timeline data-timeline-animate="<?php echo $animate ? 'true' : 'false'; ?>" data-timeline-inactive-opacity="<?php echo esc_attr((string) $inactive_opacity); ?>">
+<section
+    <?php echo $wrapper_attributes; ?>
+    data-nova-timeline
+    data-timeline-animate="<?php echo $animate ? 'true' : 'false'; ?>"
+    data-timeline-inactive-opacity="<?php echo esc_attr((string) $inactive_opacity); ?>"
+    <?php if ($has_visible_heading) : ?>
+        aria-labelledby="<?php echo esc_attr($heading_id); ?>"
+    <?php else : ?>
+        aria-label="<?php echo esc_attr__('Oś czasu', 'nova-wordpress'); ?>"
+    <?php endif; ?>
+>
     <?php if ($show_heading && ($eyebrow || $heading || $description)) : ?>
         <header class="mx-auto mb-8 max-w-3xl <?php echo $heading_alignment === 'left' ? 'text-left' : 'text-center'; ?> md:mb-12">
             <?php if ($eyebrow) : ?>
@@ -30,7 +48,10 @@ $items = $attributes['items'] ?? [];
             <?php endif; ?>
 
             <?php if ($heading) : ?>
-                <h2 class="font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">
+                <h2
+                    id="<?php echo esc_attr($heading_id); ?>"
+                    class="font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
+                >
                     <?php echo esc_html($heading); ?>
                 </h2>
             <?php endif; ?>
@@ -66,8 +87,15 @@ $items = $attributes['items'] ?? [];
                             data-active="<?php echo $animate ? 'false' : 'true'; ?>"
                         ></span>
 
-                        <div class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>" data-nova-timeline-item>
-                            <div class="transition-opacity duration-300 motion-reduce:transition-none" data-nova-timeline-content data-active="<?php echo $animate ? 'false' : 'true'; ?>">
+                        <div
+                            class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>"
+                            data-nova-timeline-item
+                        >
+                            <div
+                                class="transition-opacity duration-300 motion-reduce:transition-none"
+                                data-nova-timeline-content
+                                data-active="<?php echo $animate ? 'false' : 'true'; ?>"
+                            >
                                 <?php if (!empty($item['date'])) : ?>
                                     <p class="text-sm font-medium text-nova-muted">
                                         <?php echo esc_html($item['date']); ?>
