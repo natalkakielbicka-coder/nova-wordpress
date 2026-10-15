@@ -21,6 +21,10 @@
 			"type": "string",
 			"default": "alternating"
 		},
+		"animate": {
+			"type": "boolean",
+			"default": true
+		},
 		"items": {
 			"type": "array",
 			"default": [

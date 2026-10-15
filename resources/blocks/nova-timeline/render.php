@@ -6,6 +6,7 @@ $wrapper_attributes = get_block_wrapper_attributes([
 $eyebrow = $attributes['eyebrow'] ?? '';
 $heading = $attributes['heading'] ?? '';
 $description = $attributes['description'] ?? '';
+$animate = $attributes['animate'] ?? true;
 $layout = in_array($attributes['layout'] ?? 'alternating', ['vertical', 'alternating'], true)
     ? $attributes['layout']
     : 'alternating';
@@ -13,7 +14,7 @@ $is_alternating = $layout === 'alternating';
 $items = $attributes['items'] ?? [];
 ?>
 
-<section <?php echo $wrapper_attributes; ?> data-nova-timeline>
+<section <?php echo $wrapper_attributes; ?> data-nova-timeline data-timeline-animate="<?php echo $animate ? 'true' : 'false'; ?>">
     <?php if ($eyebrow || $heading || $description) : ?>
         <header class="mx-auto mb-8 max-w-3xl text-center md:mb-12">
             <?php if ($eyebrow) : ?>
@@ -56,7 +57,7 @@ $items = $attributes['items'] ?? [];
                             aria-hidden="true"
                             class="absolute left-1.5 top-1.5 size-3 -translate-x-1/2 rounded-full border border-nova-muted bg-transparent transition-[transform,background-color,border-color] duration-300 data-[active=true]:scale-125 data-[active=true]:border-nova-ink data-[active=true]:bg-nova-ink motion-reduce:scale-125 motion-reduce:border-nova-ink motion-reduce:bg-nova-ink motion-reduce:transition-none <?php echo $is_alternating ? 'md:left-1/2' : ''; ?>"
                             data-nova-timeline-marker
-                            data-active="false"
+                            data-active="<?php echo $animate ? 'false' : 'true'; ?>"
                         ></span>
 
                         <div class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>" data-nova-timeline-item>

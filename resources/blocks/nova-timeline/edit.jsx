@@ -1,6 +1,6 @@
 import { useRef } from '@wordpress/element';
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
-import { Button, PanelBody, SelectControl } from '@wordpress/components';
+import { Button, PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 
 const createItemId = () =>
 	globalThis.crypto?.randomUUID?.() ??
@@ -12,6 +12,7 @@ export default function Edit({ attributes, setAttributes }) {
 		heading = '',
 		description = '',
 		layout = 'alternating',
+		animate = true,
 		items = [],
 	} = attributes;
 	const timelineItems = Array.isArray(items) ? items : [];
@@ -90,6 +91,12 @@ export default function Edit({ attributes, setAttributes }) {
 							{ label: 'Alternating', value: 'alternating' },
 						]}
 						onChange={(value) => setAttributes({ layout: value })}
+					/>
+					<ToggleControl
+						label="Animacje Timeline"
+						help="Animuj etapy i linię podczas przewijania strony."
+						checked={animate}
+						onChange={(value) => setAttributes({ animate: value })}
 					/>
 				</PanelBody>
 			</InspectorControls>
