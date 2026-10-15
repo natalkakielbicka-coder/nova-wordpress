@@ -17,7 +17,34 @@ $layout = in_array($attributes['layout'] ?? 'alternating', ['vertical', 'alterna
     ? $attributes['layout']
     : 'alternating';
 $is_alternating = $layout === 'alternating';
-$items = $attributes['items'] ?? [];
+$items = is_array($attributes['items'] ?? null) ? $attributes['items'] : [];
+$filtered_items = [];
+
+foreach ($items as $item) {
+    if (!is_array($item)) {
+        continue;
+    }
+
+    $normalized_item = [];
+    $has_content = false;
+
+    foreach (['date', 'title', 'description'] as $field) {
+        $value = $item[$field] ?? '';
+        $normalized_item[$field] = is_string($value) || is_numeric($value)
+            ? (string) $value
+            : '';
+
+        if (trim($normalized_item[$field]) !== '') {
+            $has_content = true;
+        }
+    }
+
+    if ($has_content) {
+        $filtered_items[] = $normalized_item;
+    }
+}
+
+$items = $filtered_items;
 
 // Accessibility: associate the section with its visible heading.
 $has_visible_heading = $show_heading
@@ -96,19 +123,19 @@ $heading_id = $has_visible_heading
                                 data-nova-timeline-content
                                 data-active="<?php echo $animate ? 'false' : 'true'; ?>"
                             >
-                                <?php if (!empty($item['date'])) : ?>
+                                <?php if (trim($item['date']) !== '') : ?>
                                     <p class="text-sm font-medium text-nova-muted">
                                         <?php echo esc_html($item['date']); ?>
                                     </p>
                                 <?php endif; ?>
 
-                                <?php if (!empty($item['title'])) : ?>
+                                <?php if (trim($item['title']) !== '') : ?>
                                     <h3 class="mt-1 font-serif text-xl text-nova-ink">
                                         <?php echo esc_html($item['title']); ?>
                                     </h3>
                                 <?php endif; ?>
 
-                                <?php if (!empty($item['description'])) : ?>
+                                <?php if (trim($item['description']) !== '') : ?>
                                     <p class="mt-2 text-base leading-7 text-nova-text">
                                         <?php echo esc_html($item['description']); ?>
                                     </p>
