@@ -3,6 +3,18 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const getTimelineLineScrollRange = (timeline) => {
+	const maxScroll = ScrollTrigger.maxScroll(window);
+	const viewportHeight = window.innerHeight;
+	const bounds = timeline.getBoundingClientRect();
+	const naturalStart = bounds.top + window.scrollY - viewportHeight * 0.85;
+	const naturalEnd = bounds.bottom + window.scrollY - viewportHeight * 0.15;
+	const start = Math.min(naturalStart, maxScroll - 1);
+	const end = Math.max(start + 1, Math.min(naturalEnd, maxScroll));
+
+	return { start, end };
+};
+
 export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) => {
 	const timelines = gsap.utils.toArray('[data-nova-timeline]');
 
@@ -11,6 +23,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 	}
 
 	const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+	let hasAnimatedLines = false;
 
 	const ctx = gsap.context(() => {
 		timelines.forEach((timeline) => {
@@ -33,7 +46,16 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 			}
 
 			if (line) {
+				hasAnimatedLines = true;
+
 				const updateMarkers = (progress) => {
+					if (progress >= 1) {
+						markers.forEach((marker) => {
+							marker.dataset.active = 'true';
+						});
+						return;
+					}
+
 					const lineTop = line.getBoundingClientRect().top;
 					const lineTip = lineTop + line.offsetHeight * progress;
 
@@ -57,8 +79,8 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 						ease: 'none',
 						scrollTrigger: {
 							trigger: timeline,
-							start: 'top 85%',
-							end: 'bottom 15%',
+							start: () => getTimelineLineScrollRange(timeline).start,
+							end: () => getTimelineLineScrollRange(timeline).end,
 							scrub: true,
 							onUpdate: (self) => updateMarkers(self.progress),
 							onRefresh: (self) => updateMarkers(self.progress),
@@ -85,6 +107,24 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 		});
 	});
 
+	let resizeObserver;
+	let refreshFrame;
+
+	if (hasAnimatedLines && typeof ResizeObserver !== 'undefined') {
+		resizeObserver = new ResizeObserver(() => {
+			if (refreshFrame !== undefined) {
+				cancelAnimationFrame(refreshFrame);
+			}
+
+			refreshFrame = requestAnimationFrame(() => {
+				refreshFrame = undefined;
+				ScrollTrigger.refresh();
+			});
+		});
+		resizeObserver.observe(document.documentElement);
+		resizeObserver.observe(document.body);
+	}
+
 	let isCleanedUp = false;
 
 	return () => {
@@ -93,6 +133,10 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 		}
 
 		isCleanedUp = true;
+		resizeObserver?.disconnect();
+		if (refreshFrame !== undefined) {
+			cancelAnimationFrame(refreshFrame);
+		}
 		ctx.revert();
 		timelines.forEach((timeline) => {
 			const isStatic =
