@@ -61,23 +61,25 @@ $items = $attributes['items'] ?? [];
                         ></span>
 
                         <div class="nova-timeline__item-content min-w-0 <?php echo $is_alternating ? ($is_left ? 'md:col-start-1 md:pr-8 md:text-right' : 'md:col-start-2 md:pl-8 md:text-left') : ''; ?>" data-nova-timeline-item>
-                            <?php if (!empty($item['date'])) : ?>
-                                <p class="text-sm font-medium text-nova-muted">
-                                    <?php echo esc_html($item['date']); ?>
-                                </p>
-                            <?php endif; ?>
+                            <div class="transition-opacity duration-300 data-[active=false]:opacity-[0.35] data-[active=true]:opacity-100 motion-reduce:opacity-100 motion-reduce:transition-none" data-nova-timeline-content data-active="<?php echo $animate ? 'false' : 'true'; ?>">
+                                <?php if (!empty($item['date'])) : ?>
+                                    <p class="text-sm font-medium text-nova-muted">
+                                        <?php echo esc_html($item['date']); ?>
+                                    </p>
+                                <?php endif; ?>
 
-                            <?php if (!empty($item['title'])) : ?>
-                                <h3 class="mt-1 font-serif text-xl text-nova-ink">
-                                    <?php echo esc_html($item['title']); ?>
-                                </h3>
-                            <?php endif; ?>
+                                <?php if (!empty($item['title'])) : ?>
+                                    <h3 class="mt-1 font-serif text-xl text-nova-ink">
+                                        <?php echo esc_html($item['title']); ?>
+                                    </h3>
+                                <?php endif; ?>
 
-                            <?php if (!empty($item['description'])) : ?>
-                                <p class="mt-2 text-base leading-7 text-nova-text">
-                                    <?php echo esc_html($item['description']); ?>
-                                </p>
-                            <?php endif; ?>
+                                <?php if (!empty($item['description'])) : ?>
+                                    <p class="mt-2 text-base leading-7 text-nova-text">
+                                        <?php echo esc_html($item['description']); ?>
+                                    </p>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </li>
                 <?php endforeach; ?>

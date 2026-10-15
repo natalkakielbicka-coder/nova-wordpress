@@ -31,6 +31,10 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 				timeline.dataset.timelineAnimate !== 'false' && !reducedMotionQuery.matches;
 			const line = timeline.querySelector('[data-nova-timeline-line]');
 			const markers = timeline.querySelectorAll('[data-nova-timeline-marker]');
+			const stages = Array.from(markers, (marker) => ({
+				marker,
+				content: marker.closest('li')?.querySelector('[data-nova-timeline-content]'),
+			}));
 			const items = timeline.querySelectorAll('[data-nova-timeline-item]');
 
 			if (!shouldAnimate) {
@@ -38,8 +42,11 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 					gsap.set(line, { scaleY: 1 });
 				}
 
-				markers.forEach((marker) => {
+				stages.forEach(({ marker, content }) => {
 					marker.dataset.active = 'true';
+					if (content) {
+						content.dataset.active = 'true';
+					}
 				});
 
 				return;
@@ -50,8 +57,11 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 
 				const updateMarkers = (progress) => {
 					if (progress >= 1) {
-						markers.forEach((marker) => {
+						stages.forEach(({ marker, content }) => {
 							marker.dataset.active = 'true';
+							if (content) {
+								content.dataset.active = 'true';
+							}
 						});
 						return;
 					}
@@ -59,11 +69,15 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 					const lineTop = line.getBoundingClientRect().top;
 					const lineTip = lineTop + line.offsetHeight * progress;
 
-					markers.forEach((marker) => {
-						const markerRect = marker.getBoundingClientRect();
-						const markerCenter = markerRect.top + markerRect.height / 2;
+					stages.forEach(({ marker, content }) => {
+						const markerBounds = marker.getBoundingClientRect();
+						const markerCenter = markerBounds.top + markerBounds.height / 2;
+						const isActive = markerCenter <= lineTip;
 
-						marker.dataset.active = markerCenter <= lineTip ? 'true' : 'false';
+						marker.dataset.active = isActive ? 'true' : 'false';
+						if (content) {
+							content.dataset.active = isActive ? 'true' : 'false';
+						}
 					});
 				};
 
@@ -144,6 +158,10 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 
 			timeline.querySelectorAll('[data-nova-timeline-marker]').forEach((marker) => {
 				marker.dataset.active = isStatic ? 'true' : 'false';
+				const content = marker.closest('li')?.querySelector('[data-nova-timeline-content]');
+				if (content) {
+					content.dataset.active = isStatic ? 'true' : 'false';
+				}
 			});
 		});
 	};
