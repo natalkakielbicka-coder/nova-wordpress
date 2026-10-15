@@ -40,7 +40,9 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 			const markers = timeline.querySelectorAll('[data-nova-timeline-marker]');
 			const stages = Array.from(markers, (marker) => ({
 				marker,
+				item: marker.closest('li'),
 				content: marker.closest('li')?.querySelector('[data-nova-timeline-content]'),
+				position: null,
 			}));
 			const items = timeline.querySelectorAll('[data-nova-timeline-item]');
 
@@ -63,6 +65,19 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 			if (line) {
 				hasAnimatedLines = true;
 
+				const cacheMarkerPositions = () => {
+					const lineTop = line.getBoundingClientRect().top;
+
+					stages.forEach((stage) => {
+						stage.position = stage.item
+							? stage.item.getBoundingClientRect().top +
+								stage.marker.offsetTop +
+								stage.marker.offsetHeight / 2 -
+								lineTop
+							: null;
+					});
+				};
+
 				const updateMarkers = (progress) => {
 					if (progress >= 1) {
 						stages.forEach(({ marker, content }) => {
@@ -75,13 +90,10 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 						return;
 					}
 
-					const lineTop = line.getBoundingClientRect().top;
-					const lineTip = lineTop + line.offsetHeight * progress;
+					const lineTip = line.offsetHeight * progress;
 
-					stages.forEach(({ marker, content }) => {
-						const markerBounds = marker.getBoundingClientRect();
-						const markerCenter = markerBounds.top + markerBounds.height / 2;
-						const isActive = markerCenter <= lineTip;
+					stages.forEach(({ marker, content, position }) => {
+						const isActive = position !== null && position <= lineTip;
 
 						marker.dataset.active = isActive ? 'true' : 'false';
 						if (content) {
@@ -94,6 +106,8 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 				markers.forEach((marker) => {
 					marker.dataset.active = 'false';
 				});
+				cacheMarkerPositions();
+				updateMarkers(0);
 
 				gsap.fromTo(
 					line,
@@ -107,7 +121,10 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 							end: () => getTimelineLineScrollRange(timeline).end,
 							scrub: true,
 							onUpdate: (self) => updateMarkers(self.progress),
-							onRefresh: (self) => updateMarkers(self.progress),
+							onRefresh: (self) => {
+								cacheMarkerPositions();
+								updateMarkers(self.progress);
+							},
 						},
 					},
 				);
