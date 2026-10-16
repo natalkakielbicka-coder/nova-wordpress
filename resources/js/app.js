@@ -160,6 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 	}
 
+	if (document.querySelector('[data-nova-tabs]')) {
+		import('./components/nova-tabs')
+			.then(({ initNovaTabs }) => {
+				initNovaTabs();
+			})
+			.catch((error) => {
+				console.error('Failed to initialize NOVA Tabs:', error);
+			});
+	}
+
 	const prefersReducedMotion = reducedMotionQuery.matches;
 	if (prefersReducedMotion) {
 		restoreMotionVisibility();

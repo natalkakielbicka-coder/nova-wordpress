@@ -32,7 +32,7 @@ if (isset($block->inner_blocks)) {
 
 <div <?php echo $wrapper_attributes; ?>>
     <?php if ($tabs) : ?>
-        <nav>
+        <nav aria-label="<?php echo esc_attr__('Nawigacja zakładek', 'nova-wordpress'); ?>" hidden>
             <?php foreach ($tabs as $tab) : ?>
                 <?php $trigger_id = $tab['id'] . '-trigger'; ?>
                 <button
