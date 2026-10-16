@@ -32,26 +32,28 @@ if (isset($block->inner_blocks)) {
 ?>
 
 <div <?php echo $wrapper_attributes; ?>>
-    <?php if ($tabs) : ?>
-        <nav
-            class="mb-6 flex max-w-full gap-6 overflow-x-auto overscroll-x-contain whitespace-nowrap border-b border-nova-line"
-            aria-label="<?php echo esc_attr__('Nawigacja zakładek', 'nova-wordpress'); ?>"
-            hidden
-        >
-            <?php foreach ($tabs as $tab) : ?>
-                <?php $trigger_id = $tab['id'] . '-trigger'; ?>
-                <button
-                    type="button"
-                    id="<?php echo esc_attr($trigger_id); ?>"
-                    data-nova-tab-trigger
-                    aria-controls="<?php echo esc_attr($tab['id']); ?>"
-                    class="relative inline-flex shrink-0 items-center border-b-2 border-transparent px-1 py-3 text-sm font-medium text-nova-muted hover:bg-nova-background hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink aria-selected:border-nova-ink aria-selected:text-nova-ink"
-                >
-                    <?php echo esc_html($tab['title']); ?>
-                </button>
-            <?php endforeach; ?>
-        </nav>
-    <?php endif; ?>
+    <div class="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8">
+        <?php if ($tabs) : ?>
+            <nav
+                class="mb-6 flex max-w-full gap-6 overflow-x-auto overscroll-x-contain whitespace-nowrap border-b border-nova-line"
+                aria-label="<?php echo esc_attr__('Nawigacja zakładek', 'nova-wordpress'); ?>"
+                hidden
+            >
+                <?php foreach ($tabs as $tab) : ?>
+                    <?php $trigger_id = $tab['id'] . '-trigger'; ?>
+                    <button
+                        type="button"
+                        id="<?php echo esc_attr($trigger_id); ?>"
+                        data-nova-tab-trigger
+                        aria-controls="<?php echo esc_attr($tab['id']); ?>"
+                        class="relative inline-flex shrink-0 items-center border-b-2 border-transparent px-1 py-3 text-sm font-medium text-nova-muted hover:bg-nova-background hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink aria-selected:border-nova-ink aria-selected:text-nova-ink"
+                    >
+                        <?php echo esc_html($tab['title']); ?>
+                    </button>
+                <?php endforeach; ?>
+            </nav>
+        <?php endif; ?>
 
-    <?php echo $content; ?>
+        <?php echo $content; ?>
+    </div>
 </div>
