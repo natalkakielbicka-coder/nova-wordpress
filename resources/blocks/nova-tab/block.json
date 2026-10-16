@@ -5,6 +5,12 @@
 	"title": "NOVA Tab",
 	"category": "nova",
 	"parent": ["nova/tabs"],
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "Nowa zakładka"
+		}
+	},
 	"supports": {
 		"html": false
 	},

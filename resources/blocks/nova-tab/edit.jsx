@@ -1,5 +1,15 @@
-import { useBlockProps } from '@wordpress/block-editor';
+import { RichText, useBlockProps } from '@wordpress/block-editor';
 
-export default function Edit() {
-	return <div {...useBlockProps()}>NOVA Tab — pojedyncza zakładka</div>;
+export default function Edit({ attributes, setAttributes }) {
+	return (
+		<div {...useBlockProps()}>
+			<RichText
+				tagName="h3"
+				value={attributes.title}
+				onChange={(value) => setAttributes({ title: value })}
+				placeholder="Tytuł zakładki..."
+				allowedFormats={[]}
+			/>
+		</div>
+	);
 }
