@@ -43,6 +43,7 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 				item: marker.closest('li'),
 				content: marker.closest('li')?.querySelector('[data-nova-timeline-content]'),
 				position: null,
+				active: null,
 			}));
 			const items = timeline.querySelectorAll('[data-nova-timeline-item]');
 
@@ -79,33 +80,26 @@ export const initTimelineAnimation = ({ skipEntranceAnimations = false } = {}) =
 				};
 
 				const updateMarkers = (progress) => {
-					if (progress >= 1) {
-						stages.forEach(({ marker, content }) => {
-							marker.dataset.active = 'true';
-							if (content) {
-								content.dataset.active = 'true';
-								content.style.opacity = '1';
-							}
-						});
-						return;
-					}
+					const isComplete = progress >= 1;
+					const lineTip = isComplete ? 0 : line.offsetHeight * progress;
 
-					const lineTip = line.offsetHeight * progress;
+					stages.forEach((stage) => {
+						const isActive =
+							isComplete || (stage.position !== null && stage.position <= lineTip);
 
-					stages.forEach(({ marker, content, position }) => {
-						const isActive = position !== null && position <= lineTip;
+						if (stage.active === isActive) {
+							return;
+						}
 
-						marker.dataset.active = isActive ? 'true' : 'false';
-						if (content) {
-							content.dataset.active = isActive ? 'true' : 'false';
-							content.style.opacity = isActive ? '1' : String(inactiveOpacity);
+						stage.active = isActive;
+						stage.marker.dataset.active = isActive ? 'true' : 'false';
+						if (stage.content) {
+							stage.content.dataset.active = isActive ? 'true' : 'false';
+							stage.content.style.opacity = isActive ? '1' : String(inactiveOpacity);
 						}
 					});
 				};
 
-				markers.forEach((marker) => {
-					marker.dataset.active = 'false';
-				});
 				cacheMarkerPositions();
 				updateMarkers(0);
 
