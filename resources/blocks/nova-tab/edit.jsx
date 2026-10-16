@@ -1,10 +1,17 @@
+import { useContext } from '@wordpress/element';
 import { InnerBlocks, RichText, useBlockProps } from '@wordpress/block-editor';
+import { ActiveTabContext } from '../nova-tabs/edit';
 
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit({ attributes, clientId, setAttributes }) {
+	const activeClientId = useContext(ActiveTabContext);
+	const isActive = activeClientId === null || activeClientId === clientId;
+
 	return (
 		<div
 			{...useBlockProps({
-				className: 'min-w-0 max-w-full pt-6 text-base leading-8 text-nova-text',
+				className: `min-w-0 max-w-full pt-6 text-base leading-8 text-nova-text ${
+					isActive ? '' : 'hidden'
+				}`,
 			})}
 		>
 			<RichText
