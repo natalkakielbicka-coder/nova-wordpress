@@ -1,4 +1,4 @@
-import { RichText, useBlockProps } from '@wordpress/block-editor';
+import { InnerBlocks, RichText, useBlockProps } from '@wordpress/block-editor';
 
 export default function Edit({ attributes, setAttributes }) {
 	return (
@@ -9,6 +9,17 @@ export default function Edit({ attributes, setAttributes }) {
 				onChange={(value) => setAttributes({ title: value })}
 				placeholder="Tytuł zakładki..."
 				allowedFormats={[]}
+			/>
+			<InnerBlocks
+				allowedBlocks={[
+					'core/paragraph',
+					'core/heading',
+					'core/image',
+					'core/list',
+					'core/buttons',
+					'core/group',
+				]}
+				templateLock={false}
 			/>
 		</div>
 	);
