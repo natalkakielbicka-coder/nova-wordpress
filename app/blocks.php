@@ -20,6 +20,7 @@ add_action('init', function () {
         'nova-accordion',
         'nova-timeline',
         'nova-tabs',
+        'nova-tab',
         'nova-project-meta',
         'nova-project-meta-item',
     ];
@@ -69,6 +70,7 @@ add_filter('allowed_block_types_all', function ($allowed_block_types, $block_edi
 		'nova/accordion',
 		'nova/timeline',
 		'nova/tabs',
+		'nova/tab',
 		'nova/project-meta',
 		'nova/project-meta-item',
 	];

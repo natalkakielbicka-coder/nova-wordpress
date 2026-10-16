@@ -10,6 +10,7 @@ import '../blocks/nova-content';
 import '../blocks/nova-accordion';
 import '../blocks/nova-timeline';
 import '../blocks/nova-tabs';
+import '../blocks/nova-tab';
 import '../blocks/nova-project-meta';
 import '../blocks/nova-project-meta-item';
 import '../editor/nova-sidebar';
