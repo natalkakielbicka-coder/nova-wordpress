@@ -79,3 +79,81 @@ test('NOVA Tabs supports keyboard navigation', async ({ page }) => {
 	await triggers.nth(0).press('End');
 	await expectActiveTab(triggerCount - 1);
 });
+
+test('NOVA Tabs is responsive without horizontal page overflow', async ({ page }) => {
+	const viewports = [
+		{ width: 320, height: 720 },
+		{ width: 375, height: 812 },
+		{ width: 768, height: 1024 },
+	];
+
+	await page.goto(pageUrl);
+
+	for (const viewport of viewports) {
+		await page.setViewportSize(viewport);
+
+		const tabs = page.locator('[data-nova-tabs]');
+		await expect(tabs).toBeVisible();
+		await expect
+			.poll(() =>
+				page.evaluate(
+					() => document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+				),
+			)
+			.toBe(true);
+
+		const triggers = tabs.locator('[data-nova-tab-trigger]');
+		const triggerCount = await triggers.count();
+		expect(triggerCount).toBeGreaterThanOrEqual(2);
+
+		const panels = tabs.locator('[data-nova-tab-panel]');
+		await expect(panels).toHaveCount(triggerCount);
+
+		const navigation = tabs.locator('nav');
+		await expect(navigation).toBeVisible();
+
+		const expectTriggerInNavigation = async (trigger) => {
+			await trigger.scrollIntoViewIfNeeded();
+			await expect(trigger).toBeVisible();
+			await expect
+				.poll(() =>
+					trigger.evaluate((element) => {
+						const navigationElement = element.closest('nav');
+						const triggerRect = element.getBoundingClientRect();
+						const navigationRect = navigationElement.getBoundingClientRect();
+
+						return (
+							triggerRect.left >= navigationRect.left &&
+							triggerRect.right <= navigationRect.right
+						);
+					}),
+				)
+				.toBe(true);
+		};
+
+		const firstTrigger = triggers.nth(0);
+		const activeTrigger = tabs.locator('[data-nova-tab-trigger][aria-selected="true"]');
+		await expect(activeTrigger).toBeVisible();
+		await expectTriggerInNavigation(activeTrigger);
+		await expectTriggerInNavigation(firstTrigger);
+
+		const lastTrigger = triggers.nth(triggerCount - 1);
+		const navigationOverflows = await navigation.evaluate(
+			(element) => element.scrollWidth > element.clientWidth,
+		);
+		await expectTriggerInNavigation(lastTrigger);
+
+		if (navigationOverflows) {
+			await expect.poll(() => navigation.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
+		}
+
+		await lastTrigger.click();
+
+		const lastPanelId = await lastTrigger.getAttribute('aria-controls');
+		expect(lastPanelId).toBeTruthy();
+		await expect(lastTrigger).toHaveAttribute('aria-selected', 'true');
+		await expect(
+			tabs.locator(`[data-nova-tab-panel][id="${lastPanelId}"]`),
+		).toBeVisible();
+	}
+});
