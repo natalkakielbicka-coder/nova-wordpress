@@ -4,6 +4,12 @@
 	"name": "nova/tabs",
 	"title": "NOVA Tabs",
 	"category": "nova",
+	"attributes": {
+		"styleVariant": {
+			"type": "string",
+			"default": "underline"
+		}
+	},
 	"supports": {
 		"html": false
 	},
