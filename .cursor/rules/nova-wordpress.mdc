@@ -1,0 +1,51 @@
+---
+description: Architektura i zasady pracy nad motywem NOVA WordPress
+alwaysApply: true
+---
+
+# NOVA WordPress
+
+Communicate with the user in Polish. Write code, comments, and this rule’s constraints in the established project language.
+
+## Verified stack
+
+Do not infer Sage 10 vs 11 from docs. Current repo facts:
+
+- WordPress theme, requires WP 6.6+ (`style.css`)
+- Sage Starter Theme **11.1.0** (`style.css` Version)
+- Acorn **^5.0**, PHP **>=8.2** (`composer.json`)
+- Blade views, Gutenberg **block.json apiVersion 3**
+- Vite **^8**, Tailwind CSS **^4** (`@tailwindcss/vite`), GSAP **^3.15** (`package.json`)
+- React via `@wordpress/block-editor`, `@wordpress/blocks`, `@wordpress/components` (no direct `react` dependency)
+
+## Architecture
+
+- `app/` — PHP (`App\`), hooks, providers, composers, repositories
+- `resources/views/` — Blade
+- `resources/blocks/` — Gutenberg blocks
+- `resources/js/` — front-end JS; `resources/js/editor.js` — editor entry
+- `resources/css/` — Tailwind 4 and component CSS
+
+Dynamic blocks: `block.json`, `index.jsx`, `edit.jsx`, `render.php`, register in `app/blocks.php`, import in `resources/js/editor.js`.
+
+## Do
+
+- Read the relevant files before changing anything. Do not guess.
+- Reuse existing components, helpers, composers, tokens, and modules before adding new ones.
+- Keep NOVA design tokens (`nova-ink`, `nova-text`, `nova-muted`, `nova-line`, `nova-background`, `nova-white`, `font-sans`, `font-serif`) and `data-theme` dark mode in sync with `theme.json`.
+- Escape and sanitize with WordPress APIs. Preserve accessibility (labels, roles, keyboard, button types).
+- Respect `prefers-reduced-motion`. GSAP/animation initializers must return an idempotent cleanup.
+- Load new JS modules conditionally (DOM guard + dynamic `import`) from `app.js`; do not dump page logic into the orchestrator.
+- Prefer small diffs: one feature per stage. Change only files required for the task.
+
+## Do not
+
+- Do not add npm or Composer dependencies without explicit user approval.
+- Do not edit unrelated files. Do not remove existing behavior during refactors.
+- Never `git commit` or `git push` unless the user explicitly asks.
+
+## After each change
+
+If tools are available, run `npm run build` and `git diff --check`. Report only checks that actually ran.
+
+Finish with: changed files, check results, and any risks.
