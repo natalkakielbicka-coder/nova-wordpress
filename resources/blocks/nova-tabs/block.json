@@ -8,6 +8,10 @@
 		"styleVariant": {
 			"type": "string",
 			"default": "underline"
+		},
+		"tabsAlignment": {
+			"type": "string",
+			"default": "left"
 		}
 	},
 	"supports": {

@@ -9,20 +9,23 @@ export const ActiveTabContext = createContext(null);
 
 const navigationStyles = {
 	underline: {
-		nav: 'mb-6 flex max-w-full gap-6 overflow-x-auto overscroll-x-contain whitespace-nowrap border-b border-nova-line',
+		nav: 'mb-6 max-w-full overflow-x-auto overscroll-x-contain border-b border-nova-line',
+		items: 'flex w-max min-w-full gap-6 whitespace-nowrap',
 		tab:
 			'relative inline-flex items-center border-b-2 border-transparent px-1 py-3 text-sm font-medium text-nova-muted hover:bg-nova-background hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink aria-pressed:border-nova-ink aria-pressed:text-nova-ink',
 		wrapper: 'inline-flex shrink-0 items-center border-b-2 border-transparent',
 	},
 	pills: {
-		nav: 'mb-6 flex max-w-full gap-2 overflow-x-auto overscroll-x-contain whitespace-nowrap',
+		nav: 'mb-6 max-w-full overflow-x-auto overscroll-x-contain',
+		items: 'flex w-max min-w-full gap-2 whitespace-nowrap',
 		tab:
 			'relative inline-flex items-center rounded-full border-0 px-4 py-2 text-sm font-medium text-nova-muted hover:bg-nova-background hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink aria-pressed:bg-nova-ink aria-pressed:text-nova-white',
 		wrapper: 'inline-flex shrink-0 items-center',
 		activeWrapper: '',
 	},
 	segmented: {
-		nav: 'mb-6 flex max-w-full gap-1 overflow-x-auto overscroll-x-contain whitespace-nowrap rounded-lg bg-nova-background p-1',
+		nav: 'mb-6 max-w-full overflow-x-auto overscroll-x-contain rounded-lg bg-nova-background',
+		items: 'flex w-max min-w-full gap-1 whitespace-nowrap p-1',
 		tab:
 			'relative inline-flex items-center rounded-md border-0 px-4 py-2 text-sm font-medium text-nova-muted hover:bg-nova-white hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink aria-pressed:bg-nova-white aria-pressed:text-nova-ink',
 		wrapper: 'inline-flex shrink-0 items-center rounded-md',
@@ -30,10 +33,18 @@ const navigationStyles = {
 	},
 };
 
+const alignmentStyles = {
+	left: 'justify-start',
+	center: 'justify-center',
+	right: 'justify-end',
+};
+
 export default function Edit({ attributes, clientId, setAttributes }) {
 	const requestedVariant = attributes.styleVariant ?? 'underline';
 	const styleVariant = navigationStyles[requestedVariant] ? requestedVariant : 'underline';
 	const styles = navigationStyles[styleVariant];
+	const requestedAlignment = attributes.tabsAlignment ?? 'left';
+	const tabsAlignment = alignmentStyles[requestedAlignment] ? requestedAlignment : 'left';
 	const { blocks, selectedTabId } = useSelect(
 		(select) => {
 			const blockEditor = select('core/block-editor');
@@ -142,6 +153,16 @@ export default function Edit({ attributes, clientId, setAttributes }) {
 						]}
 						onChange={(value) => setAttributes({ styleVariant: value })}
 					/>
+					<SelectControl
+						label="Wyrównanie nawigacji"
+						value={tabsAlignment}
+						options={[
+							{ label: 'Do lewej', value: 'left' },
+							{ label: 'Na środku', value: 'center' },
+							{ label: 'Do prawej', value: 'right' },
+						]}
+						onChange={(value) => setAttributes({ tabsAlignment: value })}
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<div {...useBlockProps({ className: 'min-w-0 max-w-full space-y-6' })}>
@@ -151,64 +172,66 @@ export default function Edit({ attributes, clientId, setAttributes }) {
 						role="group"
 						aria-label="Wybierz zakładkę"
 					>
-						{tabs.map((tab, index) => {
-							const title = tab.attributes.title?.trim() || `Zakładka ${index + 1}`;
+						<div className={`${styles.items} ${alignmentStyles[tabsAlignment]}`}>
+							{tabs.map((tab, index) => {
+								const title = tab.attributes.title?.trim() || `Zakładka ${index + 1}`;
 
-							return (
-								<div
-									key={tab.clientId}
-									className={styles.wrapper}
-								>
-									<button
-										ref={(element) => {
-											if (element) {
-												tabButtonRefs.current.set(tab.clientId, element);
-											} else {
-												tabButtonRefs.current.delete(tab.clientId);
-											}
-										}}
-										type="button"
-										aria-pressed={tab.clientId === activeTabId}
-										className={styles.tab}
-										onClick={() => setActiveClientId(tab.clientId)}
+								return (
+									<div
+										key={tab.clientId}
+										className={styles.wrapper}
 									>
-										{title}
-									</button>
-									<Button
-										icon={<Icon icon={arrowLeft} />}
-										label={`Przesuń ${title} w lewo`}
-										aria-label={`Przesuń ${title} w lewo`}
-										disabled={index === 0}
-										className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
-										onClick={(event) => moveTab(event, tab.clientId, -1)}
-									/>
-									<Button
-										icon={<Icon icon={arrowRight} />}
-										label={`Przesuń ${title} w prawo`}
-										aria-label={`Przesuń ${title} w prawo`}
-										disabled={index === tabs.length - 1}
-										className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
-										onClick={(event) => moveTab(event, tab.clientId, 1)}
-									/>
-									<Button
-										icon={<Icon icon={closeSmall} />}
-										label={`Usuń zakładkę: ${title}`}
-										aria-label={`Usuń zakładkę: ${title}`}
-										className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
-										onClick={(event) => removeTab(event, tab.clientId)}
-									/>
-								</div>
-							);
-						})}
-						<button
-							ref={addButtonRef}
-							type="button"
-							aria-label="Dodaj zakładkę"
-							className="inline-flex shrink-0 items-center justify-center border-b-2 border-transparent px-3 py-3 text-lg font-medium text-nova-muted hover:bg-nova-background hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
-							onClick={addTab}
-						>
-							+
-						</button>
+										<button
+											ref={(element) => {
+												if (element) {
+													tabButtonRefs.current.set(tab.clientId, element);
+												} else {
+													tabButtonRefs.current.delete(tab.clientId);
+												}
+											}}
+											type="button"
+											aria-pressed={tab.clientId === activeTabId}
+											className={styles.tab}
+											onClick={() => setActiveClientId(tab.clientId)}
+										>
+											{title}
+										</button>
+										<Button
+											icon={<Icon icon={arrowLeft} />}
+											label={`Przesuń ${title} w lewo`}
+											aria-label={`Przesuń ${title} w lewo`}
+											disabled={index === 0}
+											className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+											onClick={(event) => moveTab(event, tab.clientId, -1)}
+										/>
+										<Button
+											icon={<Icon icon={arrowRight} />}
+											label={`Przesuń ${title} w prawo`}
+											aria-label={`Przesuń ${title} w prawo`}
+											disabled={index === tabs.length - 1}
+											className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+											onClick={(event) => moveTab(event, tab.clientId, 1)}
+										/>
+										<Button
+											icon={<Icon icon={closeSmall} />}
+											label={`Usuń zakładkę: ${title}`}
+											aria-label={`Usuń zakładkę: ${title}`}
+											className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+											onClick={(event) => removeTab(event, tab.clientId)}
+										/>
+									</div>
+								);
+							})}
+							<button
+								ref={addButtonRef}
+								type="button"
+								aria-label="Dodaj zakładkę"
+								className="inline-flex shrink-0 items-center justify-center border-b-2 border-transparent px-3 py-3 text-lg font-medium text-nova-muted hover:bg-nova-background hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+								onClick={addTab}
+							>
+								+
+							</button>
+						</div>
 					</div>
 					<ActiveTabContext.Provider value={activeTabId}>
 						<InnerBlocks
