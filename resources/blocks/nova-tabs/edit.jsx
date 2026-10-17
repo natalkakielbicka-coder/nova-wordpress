@@ -3,7 +3,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 import { createBlock } from '@wordpress/blocks';
 import { Button } from '@wordpress/components';
-import { Icon, closeSmall } from '@wordpress/icons';
+import { Icon, arrowLeft, arrowRight, closeSmall } from '@wordpress/icons';
 
 export const ActiveTabContext = createContext(null);
 
@@ -35,7 +35,7 @@ export default function Edit({ clientId }) {
 	const pendingAddClientId = useRef(null);
 	const tabButtonRefs = useRef(new Map());
 	const addButtonRef = useRef(null);
-	const { insertBlock, removeBlock } = useDispatch('core/block-editor');
+	const { insertBlock, removeBlock, moveBlockToPosition } = useDispatch('core/block-editor');
 
 	useEffect(() => {
 		if (selectedTabId) {
@@ -89,6 +89,19 @@ export default function Edit({ clientId }) {
 		removeBlock(tabClientId, false);
 	};
 
+	const moveTab = (event, tabClientId, direction) => {
+		event.stopPropagation();
+
+		const currentIndex = blocks.findIndex((block) => block.clientId === tabClientId);
+		const targetIndex = currentIndex + direction;
+
+		if (currentIndex === -1 || targetIndex < 0 || targetIndex >= blocks.length) {
+			return;
+		}
+
+		moveBlockToPosition(tabClientId, clientId, clientId, targetIndex);
+	};
+
 	return (
 		<div {...useBlockProps({ className: 'min-w-0 max-w-full space-y-6' })}>
 			<div className="mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8">
@@ -122,6 +135,22 @@ export default function Edit({ clientId }) {
 								>
 									{title}
 								</button>
+								<Button
+									icon={<Icon icon={arrowLeft} />}
+									label={`Przesuń ${title} w lewo`}
+									aria-label={`Przesuń ${title} w lewo`}
+									disabled={index === 0}
+									className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+									onClick={(event) => moveTab(event, tab.clientId, -1)}
+								/>
+								<Button
+									icon={<Icon icon={arrowRight} />}
+									label={`Przesuń ${title} w prawo`}
+									aria-label={`Przesuń ${title} w prawo`}
+									disabled={index === tabs.length - 1}
+									className="!min-h-0 !min-w-0 !p-1 text-nova-muted hover:text-nova-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nova-ink"
+									onClick={(event) => moveTab(event, tab.clientId, 1)}
+								/>
 								<Button
 									icon={<Icon icon={closeSmall} />}
 									label={`Usuń zakładkę: ${title}`}
