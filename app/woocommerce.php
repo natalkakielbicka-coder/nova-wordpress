@@ -403,34 +403,6 @@ add_action('wp', function () {
 });
 
 /**
- * Prepare Mini-Cart block assets before wp_head().
- */
-add_action('wp', function () {
-    if (! class_exists('WooCommerce')) {
-        return;
-    }
-
-    if (! class_exists('WP_Block_Type_Registry')) {
-        return;
-    }
-
-    $block = \WP_Block_Type_Registry::get_instance()
-        ->get_registered('woocommerce/mini-cart');
-
-    if (! $block) {
-        return;
-    }
-
-    foreach ((array) $block->script_handles as $handle) {
-        wp_enqueue_script($handle);
-    }
-
-    foreach ((array) $block->view_script_handles as $handle) {
-        wp_enqueue_script($handle);
-    }
-});
-
-/**
  * Custom order confirmation message.
  */
 add_filter('woocommerce_thankyou_order_received_text', function ($message, $order) {
