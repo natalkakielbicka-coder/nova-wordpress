@@ -1,0 +1,43 @@
+---
+description: PHP, Acorn and Blade development conventions for NOVA
+globs: app/**/*.php,resources/views/**/*.blade.php,functions.php
+alwaysApply: false
+---
+
+# PHP, Acorn, and Blade
+
+PHP **>=8.2**, Acorn **^5.0**. PSR-4: `App\` → `app/`. Keep `functions.php` as the Acorn bootstrap (`ThemeServiceProvider` + `collect([...])->each` theme file loader). Do not invent Controllers, Http, Models, or `config/` layers — those directories are not in this theme.
+
+## Where PHP lives
+
+Hook modules loaded from `functions.php`: `app/setup.php`, `filters.php`, `post-types.php`, `blocks.php`, `block-bindings.php`, `admin-projects.php`, `archive-query.php`, `woocommerce.php`.
+
+- Classes: `app/Providers/ThemeServiceProvider.php`, `app/View/Composers/`, `app/Repositories/`, `app/Support/`
+- Bind new services in `ThemeServiceProvider`, same pattern as `ProjectRepository` and `FavoriteProductsRepository`
+- Put WordPress actions/filters in the matching `app/*.php` module; do not register them from Blade
+
+## Data vs templates
+
+Prepare data in View Composers or repositories, then pass it to Blade (`with()`). Follow existing composers (`App`, `Site`, `Post`, `Comments`, `Project`, `ProjectArchive`, `ProjectsSection`).
+
+- Blade is presentation only: `resources/views/` uses `layouts/`, `sections/`, `partials/`, `components/`, `forms/`
+- No WP_Query, `$wpdb`, or business logic in template loops; reuse `ProjectRepository` / `ProjectData` instead of querying per card
+- Prefer WP APIs and existing repositories over raw SQL. If SQL is required, always `$wpdb->prepare()` variable values
+
+## Blade escaping
+
+- `{{ }}` for normal text and attributes (escaped)
+- `{!! !!}` only for trusted/sanitized HTML (`the_content`, post thumbnails, WooCommerce markup)
+- Escape for context in PHP: `esc_html`, `esc_attr`, `esc_url`, `wp_kses_post`
+
+## Writes, auth, integrations
+
+- Sanitize and validate at the request boundary
+- State-changing admin / AJAX / REST: verify nonce (this theme uses `wp_rest` for favorites) **and** `current_user_can()` — a nonce is not authorization
+- ACF: use `get_field()` in composers/support code, not ad-hoc in every template, when the task touches ACF (options and project/testimonial/about fields already exist)
+- Meta Box is not used in this repo; do not add it unless the task requires it
+- WooCommerce: `app/woocommerce.php`; guard with `class_exists('WooCommerce')` / `function_exists('wc_get_product')`; preserve cart, checkout, and Store API behavior
+
+## Scope
+
+Reuse existing composers, repositories, and helpers. Do not add Composer packages or refactor beyond the task.
