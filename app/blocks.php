@@ -32,16 +32,6 @@ add_action('init', function () {
     }
 });
 
-add_action('wp_enqueue_scripts', function () {
-    wp_register_script_module(
-        'nova/accordion',
-        get_theme_file_uri('resources/blocks/nova-accordion/view.js'),
-        ['@wordpress/interactivity']
-    );
-
-    wp_enqueue_script_module('nova/accordion');
-});
-
 add_filter('allowed_block_types_all', function ($allowed_block_types, $block_editor_context) {
 	$blocks = [
 		'core/heading',

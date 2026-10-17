@@ -18,7 +18,6 @@ export default defineConfig({
 				'resources/js/app.js',
 				'resources/css/editor.css',
 				'resources/js/editor.js',
-				'resources/blocks/nova-accordion/view.js',
 				'resources/js/admin-projects.jsx',
 			],
 			refresh: true,

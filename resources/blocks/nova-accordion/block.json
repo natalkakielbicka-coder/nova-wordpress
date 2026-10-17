@@ -53,5 +53,6 @@
 		"anchor": true,
 		"interactivity": true
 	},
+	"viewScriptModule": "file:./view.js",
 	"render": "file:./render.php"
 }
