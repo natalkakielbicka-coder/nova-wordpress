@@ -25,6 +25,10 @@
 			"type": "string",
 			"default": "left"
 		},
+		"animate": {
+			"type": "boolean",
+			"default": false
+		},
 		"items": {
 			"type": "array",
 			"default": [

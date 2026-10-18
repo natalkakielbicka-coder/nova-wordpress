@@ -1,6 +1,6 @@
 import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
 
-import { Button, PanelBody, SelectControl } from '@wordpress/components';
+import { Button, PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
 	const {
@@ -9,6 +9,7 @@ export default function Edit({ attributes, setAttributes }) {
 		headingAlignment = 'left',
 		items = [],
 		columns = 3,
+		animate = false,
 	} = attributes;
 
 	// Klasy odpowiadające liczbie kolumn
@@ -94,6 +95,13 @@ export default function Edit({ attributes, setAttributes }) {
 							{ label: 'Na środku', value: 'center' },
 						]}
 						onChange={(value) => setAttributes({ headingAlignment: value })}
+					/>
+
+					<ToggleControl
+						label="Animuj liczby"
+						help="Odliczaj wartości po przewinięciu strony do sekcji."
+						checked={animate}
+						onChange={(value) => setAttributes({ animate: value })}
 					/>
 				</PanelBody>
 			</InspectorControls>
