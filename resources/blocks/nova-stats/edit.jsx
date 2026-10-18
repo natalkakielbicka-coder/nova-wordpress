@@ -23,6 +23,12 @@ export default function Edit({ attributes, setAttributes }) {
 		});
 	};
 
+	const removeItem = (index) => {
+		const updatedItems = items.filter((_, itemIndex) => itemIndex !== index);
+
+		setAttributes({ items: updatedItems });
+	};
+
 	const blockProps = useBlockProps();
 
 	return (
@@ -55,6 +61,15 @@ export default function Edit({ attributes, setAttributes }) {
 							placeholder="Opis statystyki..."
 							allowedFormats={[]}
 						/>
+
+						<Button
+							variant="secondary"
+							isDestructive
+							className="mt-4"
+							onClick={() => removeItem(index)}
+						>
+							Usuń statystykę
+						</Button>
 					</div>
 				))}
 			</div>
