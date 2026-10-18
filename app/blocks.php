@@ -23,6 +23,7 @@ add_action('init', function () {
         'nova-tab',
         'nova-project-meta',
         'nova-project-meta-item',
+		'nova-stats',
     ];
 
     foreach ($blocks as $block) {
@@ -63,6 +64,7 @@ add_filter('allowed_block_types_all', function ($allowed_block_types, $block_edi
 		'nova/tab',
 		'nova/project-meta',
 		'nova/project-meta-item',
+		'nova/stats',
 	];
 
 	$post_type = $block_editor_context->post->post_type ?? null;

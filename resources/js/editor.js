@@ -14,6 +14,7 @@ import '../blocks/nova-tab';
 import '../blocks/nova-project-meta';
 import '../blocks/nova-project-meta-item';
 import '../editor/nova-sidebar';
+import '../blocks/nova-stats';
 import '../editor/landing-template';
 
 domReady(() => {
