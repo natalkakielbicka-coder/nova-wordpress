@@ -1,9 +1,20 @@
-import { RichText, useBlockProps } from '@wordpress/block-editor';
-import { Button } from '@wordpress/components';
+import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-editor';
+
+import { Button, PanelBody, SelectControl } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
-	const { heading, items = [] } = attributes;
+	const { heading, items = [], columns = 3 } = attributes;
 
+	// Klasy odpowiadające liczbie kolumn
+	const gridClasses = {
+		2: 'md:grid-cols-2',
+		3: 'md:grid-cols-3',
+		4: 'md:grid-cols-4',
+	};
+
+	const gridClass = gridClasses[columns] || gridClasses[3];
+
+	// Aktualizacja wybranej statystyki
 	const updateItem = (index, field, value) => {
 		const updatedItems = items.map((item, itemIndex) =>
 			itemIndex === index ? { ...item, [field]: value } : item,
@@ -12,6 +23,7 @@ export default function Edit({ attributes, setAttributes }) {
 		setAttributes({ items: updatedItems });
 	};
 
+	// Dodawanie nowej statystyki
 	const addItem = () => {
 		const newItem = {
 			value: '',
@@ -23,12 +35,14 @@ export default function Edit({ attributes, setAttributes }) {
 		});
 	};
 
+	// Usuwanie statystyki
 	const removeItem = (index) => {
 		const updatedItems = items.filter((_, itemIndex) => itemIndex !== index);
 
 		setAttributes({ items: updatedItems });
 	};
 
+	// Zmiana kolejności statystyk
 	const moveItem = (index, direction) => {
 		const newIndex = index + direction;
 
@@ -49,71 +63,96 @@ export default function Edit({ attributes, setAttributes }) {
 	const blockProps = useBlockProps();
 
 	return (
-		<section {...blockProps}>
-			<RichText
-				tagName="h2"
-				className="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
-				value={heading}
-				onChange={(value) => setAttributes({ heading: value })}
-				placeholder="Wpisz nagłówek statystyk..."
-				allowedFormats={[]}
-			/>
+		<>
+			{/* Ustawienia w panelu Gutenberga */}
+			<InspectorControls>
+				<PanelBody title="Ustawienia statystyk" initialOpen>
+					<SelectControl
+						label="Liczba kolumn"
+						value={String(columns)}
+						options={[
+							{ label: '2 kolumny', value: '2' },
+							{ label: '3 kolumny', value: '3' },
+							{ label: '4 kolumny', value: '4' },
+						]}
+						onChange={(value) => setAttributes({ columns: Number(value) })}
+					/>
+				</PanelBody>
+			</InspectorControls>
 
-			<div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-				{items.map((item, index) => (
-					<div key={index} className="border-t border-nova-line pt-6">
-						<RichText
-							tagName="p"
-							className="font-serif text-5xl text-nova-ink"
-							value={item.value || ''}
-							onChange={(value) => updateItem(index, 'value', value)}
-							placeholder="Wpisz liczbę..."
-							allowedFormats={[]}
-						/>
+			{/* Zawartość bloku */}
+			<section {...blockProps}>
+				{/* Nagłówek */}
+				<RichText
+					tagName="h2"
+					className="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
+					value={heading}
+					onChange={(value) => setAttributes({ heading: value })}
+					placeholder="Wpisz nagłówek statystyk..."
+					allowedFormats={[]}
+				/>
 
-						<RichText
-							tagName="p"
-							className="mt-4 text-base text-nova-text"
-							value={item.label || ''}
-							onChange={(value) => updateItem(index, 'label', value)}
-							placeholder="Opis statystyki..."
-							allowedFormats={[]}
-						/>
+				{/* Siatka statystyk */}
+				<div className={`mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 ${gridClass}`}>
+					{items.map((item, index) => (
+						<div key={index} className="border-t border-nova-line pt-6">
+							{/* Liczba */}
+							<RichText
+								tagName="p"
+								className="font-serif text-5xl text-nova-ink"
+								value={item.value || ''}
+								onChange={(value) => updateItem(index, 'value', value)}
+								placeholder="Wpisz liczbę..."
+								allowedFormats={[]}
+							/>
 
-						<div className="mt-4 flex flex-wrap items-center gap-2">
-							<Button
-								variant="secondary"
-								disabled={index === 0}
-								onClick={() => moveItem(index, -1)}
-								aria-label="Przesuń statystykę w górę"
-							>
-								↑
-							</Button>
+							{/* Opis */}
+							<RichText
+								tagName="p"
+								className="mt-4 text-base text-nova-text"
+								value={item.label || ''}
+								onChange={(value) => updateItem(index, 'label', value)}
+								placeholder="Opis statystyki..."
+								allowedFormats={[]}
+							/>
 
-							<Button
-								variant="secondary"
-								disabled={index === items.length - 1}
-								onClick={() => moveItem(index, 1)}
-								aria-label="Przesuń statystykę w dół"
-							>
-								↓
-							</Button>
+							{/* Przyciski zarządzania */}
+							<div className="mt-4 flex flex-wrap items-center gap-2">
+								<Button
+									variant="secondary"
+									disabled={index === 0}
+									onClick={() => moveItem(index, -1)}
+									aria-label="Przesuń statystykę w górę"
+								>
+									↑
+								</Button>
 
-							<Button
-								variant="secondary"
-								isDestructive
-								onClick={() => removeItem(index)}
-							>
-								Usuń
-							</Button>
+								<Button
+									variant="secondary"
+									disabled={index === items.length - 1}
+									onClick={() => moveItem(index, 1)}
+									aria-label="Przesuń statystykę w dół"
+								>
+									↓
+								</Button>
+
+								<Button
+									variant="secondary"
+									isDestructive
+									onClick={() => removeItem(index)}
+								>
+									Usuń
+								</Button>
+							</div>
 						</div>
-					</div>
-				))}
-			</div>
+					))}
+				</div>
 
-			<Button variant="secondary" className="mt-8" onClick={addItem}>
-				+ Dodaj statystykę
-			</Button>
-		</section>
+				{/* Dodawanie kolejnych statystyk */}
+				<Button variant="secondary" className="mt-8" onClick={addItem}>
+					+ Dodaj statystykę
+				</Button>
+			</section>
+		</>
 	);
 }

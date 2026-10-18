@@ -1,7 +1,15 @@
 <?php
-
 $heading = $attributes['heading'] ?? '';
 $items = $attributes['items'] ?? [];
+$columns = (int) ($attributes['columns'] ?? 3);
+
+$grid_classes = [
+    2 => 'md:grid-cols-2',
+    3 => 'md:grid-cols-3',
+    4 => 'md:grid-cols-4',
+];
+
+$grid_class = $grid_classes[$columns] ?? $grid_classes[3];
 ?>
 
 <section <?php echo get_block_wrapper_attributes(); ?>>
@@ -13,7 +21,7 @@ $items = $attributes['items'] ?? [];
     <?php endif; ?>
 
     
-<div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+<div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 <?php echo esc_attr($grid_class); ?>">
 
     <?php foreach ($items as $item) : ?>
         <?php
