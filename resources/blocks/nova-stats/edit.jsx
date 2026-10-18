@@ -3,7 +3,7 @@ import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-edi
 import { Button, PanelBody, SelectControl } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
-	const { heading, items = [], columns = 3 } = attributes;
+	const { eyebrow = '', heading, items = [], columns = 3 } = attributes;
 
 	// Klasy odpowiadające liczbie kolumn
 	const gridClasses = {
@@ -84,6 +84,15 @@ export default function Edit({ attributes, setAttributes }) {
 
 			{/* Zawartość bloku */}
 			<section {...blockProps}>
+				<RichText
+					tagName="p"
+					className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
+					value={eyebrow}
+					onChange={(value) => setAttributes({ eyebrow: value })}
+					placeholder="Wpisz nadtytuł..."
+					allowedFormats={[]}
+				/>
+
 				{/* Nagłówek */}
 				<RichText
 					tagName="h2"
