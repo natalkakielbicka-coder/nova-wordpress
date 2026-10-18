@@ -1,4 +1,5 @@
 import { RichText, useBlockProps } from '@wordpress/block-editor';
+import { Button } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
 	const { heading, items = [] } = attributes;
@@ -9,6 +10,17 @@ export default function Edit({ attributes, setAttributes }) {
 		);
 
 		setAttributes({ items: updatedItems });
+	};
+
+	const addItem = () => {
+		const newItem = {
+			value: '',
+			label: '',
+		};
+
+		setAttributes({
+			items: [...items, newItem],
+		});
 	};
 
 	const blockProps = useBlockProps();
@@ -46,6 +58,10 @@ export default function Edit({ attributes, setAttributes }) {
 					</div>
 				))}
 			</div>
+
+			<Button variant="secondary" className="mt-8" onClick={addItem}>
+				+ Dodaj statystykę
+			</Button>
 		</section>
 	);
 }
