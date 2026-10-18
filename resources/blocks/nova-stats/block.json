@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "nova/stats",
+  "version": "1.0.0",
+  "title": "NOVA Stats",
+  "category": "nova",
+  "icon": "chart-bar",
+  "description": "Sekcja statystyk i osiągnięć.",
+  "textdomain": "nova-wordpress",
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": ""
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "columns": {
+      "type": "number",
+      "default": 3
+    },
+    "items": {
+      "type": "array",
+      "default": [
+        {
+          "value": "12+",
+          "label": "Lat doświadczenia"
+        },
+        {
+          "value": "80+",
+          "label": "Zrealizowanych projektów"
+        },
+        {
+          "value": "100%",
+          "label": "Zaangażowania"
+        }
+      ]
+    }
+  },
+  "supports": {
+    "html": false,
+    "anchor": true
+  },
+  "render": "file:./render.php"
+}
