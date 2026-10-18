@@ -112,7 +112,7 @@ export default function Edit({ attributes, setAttributes }) {
 
 					<RichText
 						tagName="h2"
-						className="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
+						className="font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
 						value={heading}
 						onChange={(value) => setAttributes({ heading: value })}
 						placeholder="Wpisz nagłówek statystyk..."
@@ -121,7 +121,7 @@ export default function Edit({ attributes, setAttributes }) {
 				</header>
 
 				{/* Siatka statystyk */}
-				<div className={`mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 ${gridClass}`}>
+				<div className={`grid grid-cols-1 gap-8 sm:grid-cols-2 ${gridClass}`}>
 					{items.map((item, index) => (
 						<div key={index} className="border-t border-nova-line pt-6">
 							{/* Liczba */}
