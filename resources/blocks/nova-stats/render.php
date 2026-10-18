@@ -12,7 +12,9 @@ $grid_classes = [
 $grid_class = $grid_classes[$columns] ?? $grid_classes[3];
 ?>
 
-<section <?php echo get_block_wrapper_attributes(); ?>>
+<section <?php echo get_block_wrapper_attributes([
+    'class' => 'w-full',
+]); ?>>
 
     <?php if ($heading) : ?>
         <h2 class="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">

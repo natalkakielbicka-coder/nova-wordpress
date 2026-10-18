@@ -60,7 +60,9 @@ export default function Edit({ attributes, setAttributes }) {
 		setAttributes({ items: updatedItems });
 	};
 
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps({
+		className: 'w-full',
+	});
 
 	return (
 		<>
