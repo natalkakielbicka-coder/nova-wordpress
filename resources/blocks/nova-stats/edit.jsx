@@ -29,6 +29,23 @@ export default function Edit({ attributes, setAttributes }) {
 		setAttributes({ items: updatedItems });
 	};
 
+	const moveItem = (index, direction) => {
+		const newIndex = index + direction;
+
+		if (newIndex < 0 || newIndex >= items.length) {
+			return;
+		}
+
+		const updatedItems = [...items];
+
+		[updatedItems[index], updatedItems[newIndex]] = [
+			updatedItems[newIndex],
+			updatedItems[index],
+		];
+
+		setAttributes({ items: updatedItems });
+	};
+
 	const blockProps = useBlockProps();
 
 	return (
@@ -63,14 +80,33 @@ export default function Edit({ attributes, setAttributes }) {
 							allowedFormats={[]}
 						/>
 
-						<Button
-							variant="secondary"
-							isDestructive
-							className="mt-4"
-							onClick={() => removeItem(index)}
-						>
-							Usuń statystykę
-						</Button>
+						<div className="mt-4 flex flex-wrap items-center gap-2">
+							<Button
+								variant="secondary"
+								disabled={index === 0}
+								onClick={() => moveItem(index, -1)}
+								aria-label="Przesuń statystykę w górę"
+							>
+								↑
+							</Button>
+
+							<Button
+								variant="secondary"
+								disabled={index === items.length - 1}
+								onClick={() => moveItem(index, 1)}
+								aria-label="Przesuń statystykę w dół"
+							>
+								↓
+							</Button>
+
+							<Button
+								variant="secondary"
+								isDestructive
+								onClick={() => removeItem(index)}
+							>
+								Usuń
+							</Button>
+						</div>
 					</div>
 				))}
 			</div>
