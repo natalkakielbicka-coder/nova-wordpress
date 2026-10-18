@@ -11,52 +11,57 @@ $grid_classes = [
 ];
 
 $grid_class = $grid_classes[$columns] ?? $grid_classes[3];
+
+$heading_alignment = (
+    ($attributes['headingAlignment'] ?? 'left') === 'center'
+)
+    ? 'text-center'
+    : 'text-left';
 ?>
 
 <section <?php echo get_block_wrapper_attributes([
     'class' => 'w-full',
 ]); ?>>
+    <header class="<?php echo esc_attr($heading_alignment); ?>">
 
-    <?php if (trim(wp_strip_all_tags($eyebrow)) !== '') : ?>
-        <p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
-            <?php echo esc_html(wp_strip_all_tags($eyebrow)); ?>
-        </p>
-    <?php endif; ?>
+        <?php if (trim(wp_strip_all_tags($eyebrow)) !== '') : ?>
+            <p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
+                <?php echo esc_html(wp_strip_all_tags($eyebrow)); ?>
+            </p>
+        <?php endif; ?>
 
-    <?php if ($heading) : ?>
-        <h2 class="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">
-            <?php echo esc_html($heading); ?>
-        </h2>
-    <?php endif; ?>
+        <?php if ($heading) : ?>
+            <h2 class="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">
+                <?php echo esc_html($heading); ?>
+            </h2>
+        <?php endif; ?>
 
+    </header>
     
-<div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 <?php echo esc_attr($grid_class); ?>">
+    <div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 <?php echo esc_attr($grid_class); ?>">
 
-    <?php foreach ($items as $item) : ?>
-        <?php
-        if (!is_array($item)) {
-            continue;
-        }
+        <?php foreach ($items as $item) : ?>
+            <?php
+            if (!is_array($item)) {
+                continue;
+            }
 
-        $value = $item['value'] ?? '';
-        $label = $item['label'] ?? '';
-        ?>
+            $value = $item['value'] ?? '';
+            $label = $item['label'] ?? '';
+            ?>
 
-        <div class="border-t border-nova-line pt-6">
+            <div class="border-t border-nova-line pt-6">
 
-            <p class="font-serif text-5xl text-nova-ink">
-                <?php echo esc_html($value); ?>
-            </p>
+                <p class="font-serif text-5xl text-nova-ink">
+                    <?php echo esc_html($value); ?>
+                </p>
 
-            <p class="mt-4 text-base text-nova-text">
-                <?php echo esc_html($label); ?>
-            </p>
+                <p class="mt-4 text-base text-nova-text">
+                    <?php echo esc_html($label); ?>
+                </p>
 
-        </div>
+            </div>
 
-    <?php endforeach; ?>
-
-</div>
-
-
+        <?php endforeach; ?>
+     </div>
 </section>

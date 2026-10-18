@@ -21,6 +21,10 @@
 			"type": "number",
 			"default": 3
 		},
+		"headingAlignment": {
+			"type": "string",
+			"default": "left"
+		},
 		"items": {
 			"type": "array",
 			"default": [

@@ -3,7 +3,13 @@ import { InspectorControls, RichText, useBlockProps } from '@wordpress/block-edi
 import { Button, PanelBody, SelectControl } from '@wordpress/components';
 
 export default function Edit({ attributes, setAttributes }) {
-	const { eyebrow = '', heading, items = [], columns = 3 } = attributes;
+	const {
+		eyebrow = '',
+		heading,
+		headingAlignment = 'left',
+		items = [],
+		columns = 3,
+	} = attributes;
 
 	// Klasy odpowiadające liczbie kolumn
 	const gridClasses = {
@@ -79,29 +85,40 @@ export default function Edit({ attributes, setAttributes }) {
 						]}
 						onChange={(value) => setAttributes({ columns: Number(value) })}
 					/>
+
+					<SelectControl
+						label="Wyrównanie nagłówka"
+						value={headingAlignment}
+						options={[
+							{ label: 'Do lewej', value: 'left' },
+							{ label: 'Na środku', value: 'center' },
+						]}
+						onChange={(value) => setAttributes({ headingAlignment: value })}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
 			{/* Zawartość bloku */}
 			<section {...blockProps}>
-				<RichText
-					tagName="p"
-					className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
-					value={eyebrow}
-					onChange={(value) => setAttributes({ eyebrow: value })}
-					placeholder="Wpisz nadtytuł..."
-					allowedFormats={[]}
-				/>
+				<header className={headingAlignment === 'center' ? 'text-center' : 'text-left'}>
+					<RichText
+						tagName="p"
+						className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted"
+						value={eyebrow}
+						onChange={(value) => setAttributes({ eyebrow: value })}
+						placeholder="Wpisz nadtytuł..."
+						allowedFormats={[]}
+					/>
 
-				{/* Nagłówek */}
-				<RichText
-					tagName="h2"
-					className="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
-					value={heading}
-					onChange={(value) => setAttributes({ heading: value })}
-					placeholder="Wpisz nagłówek statystyk..."
-					allowedFormats={[]}
-				/>
+					<RichText
+						tagName="h2"
+						className="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
+						value={heading}
+						onChange={(value) => setAttributes({ heading: value })}
+						placeholder="Wpisz nagłówek statystyk..."
+						allowedFormats={[]}
+					/>
+				</header>
 
 				{/* Siatka statystyk */}
 				<div className={`mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 ${gridClass}`}>
