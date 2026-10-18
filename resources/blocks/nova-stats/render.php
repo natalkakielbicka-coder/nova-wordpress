@@ -17,11 +17,16 @@ $heading_alignment = (
 )
     ? 'text-center'
     : 'text-left';
+
+$animate = !empty($attributes['animate']);
 ?>
 
-<section <?php echo get_block_wrapper_attributes([
-    'class' => 'w-full',
-]); ?>>
+<section
+    <?php echo get_block_wrapper_attributes([
+        'class' => 'w-full',
+    ]); ?>
+    data-stats-animate="<?php echo $animate ? 'true' : 'false'; ?>"
+>
     
     <?php if (trim(wp_strip_all_tags($eyebrow)) !== '' || trim(wp_strip_all_tags($heading)) !== '') : ?>
         
@@ -55,7 +60,7 @@ $heading_alignment = (
             ?>
 
             <div class="border-t border-nova-line pt-6">
-                <p class="min-w-0 break-words font-serif text-4xl leading-none tracking-tight text-nova-ink sm:text-5xl lg:text-6xl">
+                <p class="min-w-0 break-words font-serif text-4xl leading-none tracking-tight text-nova-ink sm:text-5xl lg:text-6xl"  data-stats-counter>
                     <?php echo esc_html($value); ?>
                 </p>
 

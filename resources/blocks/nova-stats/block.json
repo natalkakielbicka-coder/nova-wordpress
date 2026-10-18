@@ -52,5 +52,6 @@
 		"anchor": true,
 		"align": ["wide", "full"]
 	},
-	"render": "file:./render.php"
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
 }
