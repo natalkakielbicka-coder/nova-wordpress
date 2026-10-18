@@ -7,7 +7,7 @@ $items = $attributes['items'] ?? [];
 <section <?php echo get_block_wrapper_attributes(); ?>>
 
     <?php if ($heading) : ?>
-        <h2>
+        <h2 class="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">
             <?php echo esc_html($heading); ?>
         </h2>
     <?php endif; ?>

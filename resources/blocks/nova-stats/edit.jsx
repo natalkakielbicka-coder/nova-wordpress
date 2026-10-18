@@ -35,6 +35,7 @@ export default function Edit({ attributes, setAttributes }) {
 		<section {...blockProps}>
 			<RichText
 				tagName="h2"
+				className="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
 				value={heading}
 				onChange={(value) => setAttributes({ heading: value })}
 				placeholder="Wpisz nagłówek statystyk..."
