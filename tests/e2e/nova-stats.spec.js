@@ -93,3 +93,27 @@ test('NOVA Stats respects reduced motion', async ({ page }) => {
 	// Żadna zmiana wartości nie powinna wystąpić.
 	expect(result).toEqual(['104%']);
 });
+
+test('NOVA Stats blocks animate independently', async ({ page }) => {
+	await page.goto('http://nauka.local/poprawki/');
+
+	const blocks = page.locator('.wp-block-nova-stats[data-stats-animate="true"]');
+
+	await expect(blocks).toHaveCount(2);
+
+	const firstCounter = blocks.nth(0).locator('[data-stats-counter]').first();
+
+	const secondCounter = blocks.nth(1).locator('[data-stats-counter]').first();
+
+	await secondCounter.scrollIntoViewIfNeeded();
+
+	// Drugi blok powinien osiągnąć swoją wartość.
+	await expect(secondCounter).toHaveText('250+', {
+		timeout: 5000,
+	});
+
+	// Pierwszy blok powinien zachować swoją wartość.
+	await expect(firstCounter).toHaveText('104%', {
+		timeout: 5000,
+	});
+});
