@@ -127,7 +127,7 @@ export default function Edit({ attributes, setAttributes }) {
 							{/* Liczba */}
 							<RichText
 								tagName="p"
-								className="font-serif text-5xl text-nova-ink"
+								className="min-w-0 break-words font-serif text-4xl leading-none tracking-tight text-nova-ink sm:text-5xl lg:text-6xl"
 								value={item.value || ''}
 								onChange={(value) => updateItem(index, 'value', value)}
 								placeholder="Wpisz liczbę..."
@@ -137,7 +137,7 @@ export default function Edit({ attributes, setAttributes }) {
 							{/* Opis */}
 							<RichText
 								tagName="p"
-								className="mt-4 text-base text-nova-text"
+								className="mt-4 break-words text-sm leading-6 text-nova-text sm:text-base sm:leading-7"
 								value={item.label || ''}
 								onChange={(value) => updateItem(index, 'label', value)}
 								placeholder="Opis statystyki..."

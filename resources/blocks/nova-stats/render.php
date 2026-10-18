@@ -55,15 +55,13 @@ $heading_alignment = (
             ?>
 
             <div class="border-t border-nova-line pt-6">
-
-                <p class="font-serif text-5xl text-nova-ink">
+                <p class="min-w-0 break-words font-serif text-4xl leading-none tracking-tight text-nova-ink sm:text-5xl lg:text-6xl">
                     <?php echo esc_html($value); ?>
                 </p>
 
-                <p class="mt-4 text-base text-nova-text">
+                <p class="mt-4 break-words text-sm leading-6 text-nova-text sm:text-base sm:leading-7">
                     <?php echo esc_html($label); ?>
                 </p>
-
             </div>
 
         <?php endforeach; ?>
