@@ -22,21 +22,25 @@ $heading_alignment = (
 <section <?php echo get_block_wrapper_attributes([
     'class' => 'w-full',
 ]); ?>>
-    <header class="<?php echo esc_attr($heading_alignment); ?>">
+    
+    <?php if (trim(wp_strip_all_tags($eyebrow)) !== '' || trim(wp_strip_all_tags($heading)) !== '') : ?>
+        <header class="<?php echo esc_attr($heading_alignment); ?>">
 
-        <?php if (trim(wp_strip_all_tags($eyebrow)) !== '') : ?>
-            <p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
-                <?php echo esc_html(wp_strip_all_tags($eyebrow)); ?>
-            </p>
-        <?php endif; ?>
+            <?php if (trim(wp_strip_all_tags($eyebrow)) !== '') : ?>
+                <p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
+                    <?php echo esc_html(wp_strip_all_tags($eyebrow)); ?>
+                </p>
+            <?php endif; ?>
 
-        <?php if ($heading) : ?>
-            <h2 class="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">
-                <?php echo esc_html($heading); ?>
-            </h2>
-        <?php endif; ?>
+            <?php if (trim(wp_strip_all_tags($heading)) !== '') : ?>
+                <h2 class="mb-10 font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl">
+                    <?php echo esc_html(wp_strip_all_tags($heading)); ?>
+                </h2>
+            <?php endif; ?>
 
-    </header>
+        </header>
+    <?php endif; ?>
+
     
     <div class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 <?php echo esc_attr($grid_class); ?>">
 
