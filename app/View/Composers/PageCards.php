@@ -12,11 +12,18 @@ class PageCards extends Composer
 
     public function with(): array
     {
-        $postsCount = (int) ($this->view->getData()['postsCount'] ?? 3);
+        $viewData = $this->view->getData();
+        $postsCount = (int) ($viewData['postsCount'] ?? 3);
         $postsCount = max(1, min(12, $postsCount));
+        $postType = $viewData['postType'] ?? 'post';
+        $allowedPostTypes = ['post', 'project'];
+
+        if (!in_array($postType, $allowedPostTypes, true)) {
+            $postType = 'post';
+        }
 
         $posts = get_posts([
-            'post_type' => 'post',
+            'post_type' => $postType,
             'post_status' => 'publish',
             'numberposts' => $postsCount,
             'orderby' => 'date',
