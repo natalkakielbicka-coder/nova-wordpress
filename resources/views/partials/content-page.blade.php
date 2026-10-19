@@ -4,4 +4,4 @@
 	<nav class="page-nav" aria-label="Page">{!! $pagination !!}</nav>
 @endif
 
-@include ('sections.latest-posts')
+@includeWhen (is_page('poprawki'), 'sections.latest-posts')
