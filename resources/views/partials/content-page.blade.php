@@ -10,5 +10,6 @@
     [
         'eyebrow' => 'Z NASZEGO BLOGA',
         'sectionTitle' => 'Aktualności NOVA',
+		'postsCount' => 6,
     ]
 )
