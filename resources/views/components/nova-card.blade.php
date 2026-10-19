@@ -4,7 +4,9 @@
     'description' => '',
 ])
 
-<article class="border border-nova-line bg-nova-white p-6">
+<article {{ $attributes->class([
+    'border border-nova-line bg-nova-white p-6',
+]) }}>
 	@if ($eyebrow)
 		<p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
 			{{ $eyebrow }}

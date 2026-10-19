@@ -9,6 +9,9 @@
 		eyebrow="WORDPRESS DEVELOPMENT"
 		title="Projekt NOVA"
 		description="Nowoczesny motyw WordPress oparty na Sage 10, Blade i Tailwind CSS."
+		id="nova-featured-card"
+		class="border-2 border-nova-ink"
+		data-card-type="featured"
 	>
 		<a
 			href="{{ home_url('/projekty/') }}"
