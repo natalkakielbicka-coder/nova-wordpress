@@ -18,4 +18,8 @@
 	@if ($description)
 		<p class="mt-4 text-base leading-7 text-nova-text">{{ $description }}</p>
 	@endif
+
+	@if (trim((string) $slot) !== '')
+		<div class="mt-6">{{ $slot }}</div>
+	@endif
 </article>
