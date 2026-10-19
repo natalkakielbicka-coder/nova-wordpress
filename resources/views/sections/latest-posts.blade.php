@@ -1,5 +1,22 @@
 @if (!empty($cards))
-	<section aria-label="Najnowsze wpisy">
+	<section aria-label="{{ $sectionTitle ?? 'Najnowsze wpisy' }}">
+		@if (!empty($eyebrow) || !empty($sectionTitle))
+			<header class="mb-10">
+				@if (!empty($eyebrow))
+					<p class="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-nova-muted">
+						{{ $eyebrow }}
+					</p>
+				@endif
+
+				@if (!empty($sectionTitle))
+					<h2
+						class="font-serif text-4xl leading-tight tracking-tight text-nova-ink md:text-5xl"
+					>
+						{{ $sectionTitle }}
+					</h2>
+				@endif
+			</header>
+		@endif
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			@foreach ($cards as $card)
 				<x-nova-card

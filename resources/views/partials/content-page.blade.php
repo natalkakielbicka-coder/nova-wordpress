@@ -4,4 +4,11 @@
 	<nav class="page-nav" aria-label="Page">{!! $pagination !!}</nav>
 @endif
 
-@includeWhen (is_page('poprawki'), 'sections.latest-posts')
+@includeWhen (
+    is_page('poprawki'),
+    'sections.latest-posts',
+    [
+        'eyebrow' => 'Z NASZEGO BLOGA',
+        'sectionTitle' => 'Aktualności NOVA',
+    ]
+)
