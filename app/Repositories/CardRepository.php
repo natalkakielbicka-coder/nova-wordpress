@@ -59,4 +59,15 @@ class CardRepository implements CardRepositoryInterface
 
         return $cards;
     }
+
+    public function clearCache(): void
+    {
+        foreach (['post', 'project'] as $postType) {
+            for ($limit = 1; $limit <= 12; $limit++) {
+                delete_transient(
+                    sprintf('nova_cards_%s_%d', $postType, $limit)
+                );
+            }
+        }
+    }
 }

@@ -173,3 +173,16 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
+
+add_action('post_updated', function (
+    int $postId,
+    \WP_Post $postAfter,
+    \WP_Post $postBefore
+) {
+    if (!in_array($postAfter->post_type, ['post', 'project'], true)) {
+        return;
+    }
+
+    app(\App\Repositories\CardRepository::class)->clearCache();
+}, 10, 3);
+
