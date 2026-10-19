@@ -7,7 +7,7 @@ use Roots\Acorn\View\Composer;
 class PageCards extends Composer
 {
     protected static $views = [
-        'partials.content-page',
+        'sections.latest-posts',
     ];
 
     public function with(): array
