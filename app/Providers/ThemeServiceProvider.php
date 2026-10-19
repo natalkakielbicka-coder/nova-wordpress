@@ -4,8 +4,9 @@ namespace App\Providers;
 
 use App\Repositories\FavoriteProductsRepository;
 use App\Repositories\ProjectRepository;
+use App\Contracts\CardRepositoryInterface;
+use App\Repositories\CardRepository;
 use Roots\Acorn\Sage\SageServiceProvider;
-
 class ThemeServiceProvider extends SageServiceProvider
 {
     /**
@@ -25,6 +26,11 @@ class ThemeServiceProvider extends SageServiceProvider
         $this->app->bind(
             FavoriteProductsRepository::class,
             fn () => new FavoriteProductsRepository()
+        );
+
+        $this->app->bind(
+            CardRepositoryInterface::class,
+            CardRepository::class
         );
     }
 

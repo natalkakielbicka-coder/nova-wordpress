@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Repositories;
+use App\Contracts\CardRepositoryInterface;
 
 use WP_Post;
 
-class CardRepository
+class CardRepository implements CardRepositoryInterface
 {
     public function getLatest(
         string $postType = 'post',

@@ -2,7 +2,7 @@
 
 namespace App\View\Composers;
 
-use App\Repositories\CardRepository;
+use App\Contracts\CardRepositoryInterface;
 use Roots\Acorn\View\Composer;
 
 class PageCards extends Composer
@@ -12,7 +12,7 @@ class PageCards extends Composer
     ];
 
     public function __construct(
-        protected CardRepository $repository
+        protected CardRepositoryInterface $repository
     ) {}
 
     public function with(): array
