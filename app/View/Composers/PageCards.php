@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\Repositories\CardRepository;
 use Roots\Acorn\View\Composer;
 
 class PageCards extends Composer
@@ -10,36 +11,25 @@ class PageCards extends Composer
         'sections.latest-posts',
     ];
 
+    public function __construct(
+        protected CardRepository $repository
+    ) {}
+
     public function with(): array
     {
         $viewData = $this->view->getData();
-        $postsCount = (int) ($viewData['postsCount'] ?? 3);
-        $postsCount = max(1, min(12, $postsCount));
+
+        $postsCount = (int) (
+            $viewData['postsCount'] ?? 3
+        );
+
         $postType = $viewData['postType'] ?? 'post';
-        $allowedPostTypes = ['post', 'project'];
-
-        if (!in_array($postType, $allowedPostTypes, true)) {
-            $postType = 'post';
-        }
-
-        $posts = get_posts([
-            'post_type' => $postType,
-            'post_status' => 'publish',
-            'numberposts' => $postsCount,
-            'orderby' => 'date',
-            'order' => 'DESC',
-        ]);
-
-        $cards = array_map(function ($post) {
-            return [
-                'title' => get_the_title($post),
-                'description' => get_the_excerpt($post),
-                'url' => get_permalink($post),
-            ];
-        }, $posts);
 
         return [
-            'cards' => $cards,
+            'cards' => $this->repository->getLatest(
+                $postType,
+                $postsCount
+            ),
         ];
     }
 }
