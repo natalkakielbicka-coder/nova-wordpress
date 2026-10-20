@@ -174,39 +174,4 @@ add_action('widgets_init', function () {
     ] + $config);
 });
 
-/**
- * Czyści cache kart przed trwałym usunięciem wpisu.
- */
-add_action('before_delete_post', function (
-    int $postId,
-    \WP_Post $post
-) {
-    if (!in_array($post->post_type, ['post', 'project'], true)) {
-        return;
-    }
-
-    app(\App\Repositories\CardRepository::class)->clearCache();
-
-}, 10, 2);
-
-/**
- * Czyści cache kart po zapisaniu lub zmianie statusu wpisu.
- */
-add_action('wp_after_insert_post', function (
-    int $postId,
-    \WP_Post $post,
-    bool $update,
-    ?\WP_Post $postBefore
-) {
-    if (!in_array($post->post_type, ['post', 'project'], true)) {
-        return;
-    }
-
-    // Pomijamy rewizje i automatyczne zapisy.
-    if (wp_is_post_revision($postId) || wp_is_post_autosave($postId)) {
-        return;
-    }
-
-    app(\App\Repositories\CardRepository::class)->clearCache();
-
-}, 10, 4);
+app(\App\Support\CardCacheInvalidator::class)->register();
