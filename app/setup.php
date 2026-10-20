@@ -175,6 +175,21 @@ add_action('widgets_init', function () {
 });
 
 /**
+ * Czyści cache kart przed trwałym usunięciem wpisu.
+ */
+add_action('before_delete_post', function (
+    int $postId,
+    \WP_Post $post
+) {
+    if (!in_array($post->post_type, ['post', 'project'], true)) {
+        return;
+    }
+
+    app(\App\Repositories\CardRepository::class)->clearCache();
+
+}, 10, 2);
+
+/**
  * Czyści cache kart po zapisaniu lub zmianie statusu wpisu.
  */
 add_action('wp_after_insert_post', function (
