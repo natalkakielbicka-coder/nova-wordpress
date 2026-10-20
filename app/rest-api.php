@@ -15,4 +15,34 @@ add_action('rest_api_init', function () {
 
         'permission_callback' => '__return_true',
     ]);
+
+    register_rest_route('nova/v1', '/projects', [
+        'methods' => 'GET',
+
+        'callback' => function () {
+            $repository = app(
+                \App\Repositories\ProjectRepository::class
+            );
+
+            $projects = $repository->getLatest(6);
+
+            $data = array_map(
+                fn (array $project) => [
+                    'id' => $project['id'],
+                    'title' => $project['title'],
+                    'url' => $project['url'],
+                    'excerpt' => $project['excerpt'],
+                ],
+                $projects
+            );
+
+            return rest_ensure_response([
+                'success' => true,
+                'count' => count($data),
+                'projects' => $data,
+            ]);
+        },
+
+        'permission_callback' => '__return_true',
+    ]);
 });
